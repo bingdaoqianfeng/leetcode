@@ -1,3 +1,6 @@
+// Source : https://leetcode.com/problems/add-two-numbers/#/description
+// Yuxin Liu
+// 2017-4-13
 /**********************************************************************************
 *
 * You are given two linked lists representing two non-negative numbers.
