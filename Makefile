@@ -19,4 +19,4 @@ include $(sources:.cpp=.d)
 
 
 clean:
-	rm test $(OBJECTS)
+	rm test $(OBJECTS) main.d
