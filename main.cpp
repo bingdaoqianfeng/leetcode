@@ -14,7 +14,8 @@ using namespace std;
 //#include "9_palindromeNumber.h"
 //#include "10_regularExpressionMatching.h"
 //#include "11_containerWithMostWater.h"
-#include "14_longestCommonPrefix.h"
+//#include "14_longestCommonPrefix.h"
+#include "3Sum.h"
 
 int main(int argc, char** argv)
 {
