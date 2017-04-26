@@ -14,7 +14,8 @@
 **********************************************************************************/
 class Solution {
 public:
-    vector<string> letterCombinations(string digits) {
+	
+	void combinationstr(vector<string> &result, string digits, string str){
 		char telnums[10][4]={{'\0', '\0', '\0', '\0'},//0
 							{'\0', '\0', '\0', '\0'},//1
 							{'a', 'b', 'c', '\0'},//2
@@ -26,10 +27,40 @@ public:
 							{'t', 'u', 'v', '\0'},//8
 							{'w', 'x', 'y', 'z'},//9
 							};        
-    	vector<string> result;
+		if(digits.length() == 0){
+			result.push_back(str);
+			//cout<<str<<endl;
+			return;
+		}
+
+		string temp = digits.substr(0,1);	
+		int num = atoi(temp.c_str());
+		for(int i=0; i<4; i++){
+			string a;
+			if(telnums[num][i] == '\0')
+				break;
+			else
+				a = telnums[num][i];
+			a = str + a;
+			combinationstr(result, digits.substr(1), a);
+		}	
+		return;
+	}
+	
+    vector<string> letterCombinations(string digits) {
+		vector<string> result;
+		string str;
+		if(digits.length() == 0)
+			return result;		
+		combinationstr(result, digits, str);	
 		return result;
 	}
 	int testCase(){
+		//vector<string> result = letterCombinations("23");
+		vector<string> result = letterCombinations("2");
+		//vector<string> result = letterCombinations("123");
+		for(int i=0; i<result.size(); i++)
+			cout<<result[i]<<endl;
 		return 0;
 	}
 };
