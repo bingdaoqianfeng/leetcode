@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <stack>
 using namespace std;
 
 //#include "3_LongestSubstringWithoutRepeatingCharacters.hpp"
@@ -18,7 +19,8 @@ using namespace std;
 //#include "3Sum.h"
 //#include "15_3SumClosest.h"
 //#include "16_letterCombinationsOfAPhoneNumber.h"
-#include "18_removeNthNodeFromEndOfList.h"
+//#include "18_removeNthNodeFromEndOfList.h"
+#include "20_validParentheses.h"
 
 int main(int argc, char** argv)
 {
