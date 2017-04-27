@@ -20,7 +20,8 @@ using namespace std;
 //#include "15_3SumClosest.h"
 //#include "16_letterCombinationsOfAPhoneNumber.h"
 //#include "18_removeNthNodeFromEndOfList.h"
-#include "20_validParentheses.h"
+//#include "20_validParentheses.h"
+#include "22_generateParentheses.h"
 
 int main(int argc, char** argv)
 {
