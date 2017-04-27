@@ -22,14 +22,62 @@
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
+#include <stdio.h>
 class Solution {
 public:
-	struct ListNode {
-  		int val;
-  		ListNode *next;
-   		ListNode(int x) : val(x), next(NULL) {}
-  	};
+    struct ListNode {
+        int val;
+        ListNode *next;
+        ListNode(int x) : val(x), next(NULL) {}
+    };
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-        
+        ListNode *ptr, *pre;
+        ListNode tempHead(-1);
+        tempHead.next = head;
+        pre = &tempHead;
+        ptr = tempHead.next;
+
+        while(n && ptr){
+            ptr = ptr->next;
+            n--;
+        }
+
+        while(ptr){
+            ptr = ptr->next;
+            pre = pre->next;
+        }
+
+        pre->next = pre->next->next;
+
+        return tempHead.next;
+    }
+
+    void printList(ListNode *head){
+        while(head){
+            printf("%d ", head->val);
+            head = head->next;
+        }
+        printf("\n");
+    }
+
+    int testCase(){
+        ListNode head(-1);
+        ListNode *ptr = NULL;
+        int a[] = {1,2,3,4,5};
+        //create list
+        int len = sizeof(a)/sizeof(int);
+        ptr = &head;
+        for(int i=0; i<len; i++){
+            ListNode *node = new ListNode(a[i]);
+            ptr->next = node;
+            ptr = node;
+        }
+        printList(head.next);
+
+        int n = 2;
+        printf("n: %d\n", n);
+        ptr = removeNthFromEnd(head.next, n);
+        printList(ptr);
+        return 0;
     }
 };
