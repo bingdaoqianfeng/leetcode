@@ -21,7 +21,8 @@ using namespace std;
 //#include "16_letterCombinationsOfAPhoneNumber.h"
 //#include "18_removeNthNodeFromEndOfList.h"
 //#include "20_validParentheses.h"
-#include "22_generateParentheses.h"
+//#include "22_generateParentheses.h"
+#include "23_mergeKSortedLists.h"
 
 int main(int argc, char** argv)
 {
