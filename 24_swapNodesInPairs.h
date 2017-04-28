@@ -23,14 +23,14 @@ public:
         tempHead.next = head;
         ptr = pre = &tempHead;
 
-        int n = 0;
         while(ptr){
-            if(n<2){
-                n++;
-                ptr = ptr->next;
+            if(ptr == pre){
+                if(ptr->next)
+                    ptr = ptr->next->next;
+                else
+                    ptr = NULL;
             }
             else{
-                n = 0;
                 //swap
                 pre->next->next = ptr->next;
                 ptr->next = pre->next;
