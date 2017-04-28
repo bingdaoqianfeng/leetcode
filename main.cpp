@@ -22,7 +22,8 @@ using namespace std;
 //#include "18_removeNthNodeFromEndOfList.h"
 //#include "20_validParentheses.h"
 //#include "22_generateParentheses.h"
-#include "23_mergeKSortedLists.h"
+//#include "23_mergeKSortedLists.h"
+#include "24_swapNodesInPairs.h"
 
 int main(int argc, char** argv)
 {
