@@ -19,12 +19,13 @@ class Solution {
 public:
     bool isValidSudoku(vector< vector<char> >& board) {
 		const int n = 9;
-		bool rows[n][n] = {false};		
-		bool cols[n][n]= {false};
-		bool subbox[3][3] = {false};
+		bool rows[n][n] = {false};	 //each row record each row of board.		
+		bool cols[n][n]= {false};    //each row record each col of board.
+		bool subbox[n][n] = {false}; //each row record each subbox of board.
 		for(int i = 0; i<n; i++){
 			for(int j=0; j<n; j++){
 				char val;
+				//each row
 				val = board[i][j];
 				if(val != '.'){
 					int row = val - '0' - 1;
@@ -36,6 +37,7 @@ public:
 						return false;
 					}
 				}
+				//each col
 				val = board[j][i];
 				if(val != '.'){
 					int col = val - '0' - 1;
@@ -43,6 +45,19 @@ public:
 						cols[col][i] = true;
 					else{
 						printf("col: %d, row: %d, col: %d \n", col, j, i);
+						return false;
+					}
+				}
+				//each subbox
+				val = board[i][j];
+				if(val != '.'){
+					int realrow, realcol;
+					realrow = (i/3)*3 + j/3;
+					realcol = val - '0' - 1;
+					if(subbox[realrow][realcol] == false)
+						subbox[realrow][realcol] = true;
+					else{
+						printf("realrow: %d, realcol: %d, i: %d, j: %d\n", realrow, realcol, j, i);
 						return false;
 					}
 				}
