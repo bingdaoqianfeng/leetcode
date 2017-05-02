@@ -19,8 +19,42 @@
 **********************************************************************************/
 class Solution {
 public:
-    vector< vector<int> > combinationSum(vector<int>& candidates, int target) {
+    bool recursivecombinationSum(vector<int> candidiates, vector< vector<int> >& result, map<int, int> mymap, int target, vector<int> row, map<int, int>& targetmap) {
+		if(target == 0){
+			result.push_back(row);
+			targetmap[target] = target;
+			printf("target: %d\n", target);
+			return true;
+		}
+		if(target<0)
+			return false;	
+		
+		if(targetmap.count(target))
+			return true;	
+	
+		for(int i=candidiates.size()-1; i>=0; i--){
+			if(candidiates[i]>target)
+				continue;
+			vector<int> a = row;
+			a.push_back(candidiates[i]);
+			if(recursivecombinationSum(candidiates, result, mymap, target-candidiates[i], a, targetmap)){
+				targetmap[target] = target;
+				printf("target: %d\n", target);
+			}
+		}
+		return true;
+	}
+    
+	vector< vector<int> > combinationSum(vector<int>& candidates, int target) {
 		vector< vector<int> > result;
+		map<int, int> mymap;
+		map<int, int> targetmap;
+		vector<int> a;
+		for(int i=0; i<candidates.size(); i++){
+			mymap[candidates[i]] = candidates[i];
+		}
+		
+		recursivecombinationSum(candidates, result, mymap, target, a, targetmap);	
     	return result;
 	}
 	int testCase(){
