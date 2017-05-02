@@ -16,28 +16,28 @@
 */
 
 const int n = 9;
-bool rows[n][n] = {false};	 //each row record each row of board.		
+bool rows[n][n] = {false};   //each row record each row of board.
 bool cols[n][n]= {false};    //each row record each col of board.
 bool subbox[n][n] = {false}; //each row record each subbox of board.
 
 class Solution {
 public:
-	bool recursiveSudoku(vector< vector<char> >& board, int row, int col){
-		if(row > n)
-			return true;
+    bool recursiveSudoku(vector< vector<char> >& board, int row, int col){
+        if(row > n)
+            return true;
 
-		if(col >= n){
-			return recursiveSudoku(board, row+1, 0);	
-		}
-		return true;
-	}
+        if(col >= n){
+            return recursiveSudoku(board, row+1, 0);
+        }
+        return true;
+    }
 
-	void solveSudoku(vector< vector<char> >& board) {
-		isValidSudoku(board);
-		recursiveSudoku(board, 0, 0);
-	}
-	
-	int testCase(){
+    void solveSudoku(vector< vector<char> >& board) {
+        isValidSudoku(board);
+        recursiveSudoku(board, 0, 0);
+    }
+
+    int testCase(){
         vector< vector<char> > board(9);
         vector<string> s(9);
         s[0] = "53..7....";
@@ -58,39 +58,39 @@ public:
             }
         }
         printboard(board);
-		printf("is valaid sudoku: %d \n",isValidSudoku(board));
+        printf("is valaid sudoku: %d \n",isValidSudoku(board));
         return 0;
     }
 
     bool isValidSudoku(vector< vector<char> >& board) {
-		for(int i = 0; i<n; i++){
-			for(int j=0; j<n; j++){
-				char val;
-				//each row
-				val = board[i][j];
-				if(!isdigit(val))
-					continue;
-				
-				int idx = val - '0' - 1;
-				int realrow, realcol;
-				realrow = (i/3)*3 + j/3;
-				realcol = idx;
-				if(rows[i][idx] || cols[idx][i] || subbox[realrow][realcol]){
-					printf("realrow: %d, realcol: %d, i: %d, j: %d\n", realrow, realcol, j, i);
-					return false;
-				}
-				rows[i][idx] = cols[idx][i] = subbox[realrow][realcol] = true;
-			}
-		}		
+        for(int i = 0; i<n; i++){
+            for(int j=0; j<n; j++){
+                char val;
+                //each row
+                val = board[i][j];
+                if(!isdigit(val))
+                    continue;
+
+                int idx = val - '0' - 1;
+                int realrow, realcol;
+                realrow = (i/3)*3 + j/3;
+                realcol = idx;
+                if(rows[i][idx] || cols[idx][i] || subbox[realrow][realcol]){
+                    printf("realrow: %d, realcol: %d, i: %d, j: %d\n", realrow, realcol, j, i);
+                    return false;
+                }
+                rows[i][idx] = cols[idx][i] = subbox[realrow][realcol] = true;
+            }
+        }
         return true;
     }
-	
-	void printboard(vector< vector<char> > board){
+
+    void printboard(vector< vector<char> > board){
         for(int i = 0; i<board.size(); i++){
             for(int j=0; j<9; j++){
                 printf("%c ", board[i][j]);;
             }
             printf("\n");;
         }
-	}
+    }
 };
