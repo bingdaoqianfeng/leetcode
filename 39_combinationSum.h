@@ -19,9 +19,32 @@
 **********************************************************************************/
 class Solution {
 public:
-    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+    vector< vector<int> > combinationSum(vector<int>& candidates, int target) {
+		vector< vector<int> > result;
+    	return result;
+	}
+	int testCase(){
+		int a[] = {2,3,6,7};
+		int target = 7;
+		int len = sizeof(a)/sizeof(int);
+		vector<int> candidates(a, a+len);
+		vector< vector<int> > result;
+		result = combinationSum(candidates, target);
+		printvector(candidates, target, result);
+		return 0;
+	}
+	
+	void printvector(vector<int> candidates, int target, vector< vector<int> > result){
+		for(int i=0; i<candidates.size(); i++){
+			printf("%d ", candidates[i]);
+		}
+		printf("\ntarget: %d \n", target);
 
-
-    }
-
+		for(int i=0; i<result.size(); i++){
+			for(int j=0; j<result[i].size(); j++){
+				printf("%d ", result[i][j]);
+			}
+			printf("\n");
+		}
+	}
 };
