@@ -5,6 +5,7 @@
 #include <vector>
 #include <stack>
 #include <stdio.h>
+#include <algorithm>
 using namespace std;
 
 /****************finished*******************/
