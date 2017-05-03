@@ -6,6 +6,7 @@
 #include <stack>
 #include <stdio.h>
 #include <algorithm>
+#include <limits.h>
 using namespace std;
 
 /****************finished*******************/
@@ -29,10 +30,11 @@ using namespace std;
 //#include "24_swapNodesInPairs.h"
 //#include "36_validSudoku.h"
 //#include "37_sudokuSolver.h"
+//#include "39_combinationSum.h"
+#include "29_divideTwoInt.h"
 
 /****************to be continue*****************/
 //#include "25_reverseNodesInKGroup.h"
-#include "39_combinationSum.h"
 
 int main(int argc, char** argv)
 {
