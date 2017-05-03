@@ -26,7 +26,8 @@ public:
     };
 
     ListNode* reverseKGroup(ListNode* head, int k) {
-        return head;
+    /*该问题的解题思路与删除链表倒数第n个节点的思路一样*/
+	    return head;
     }
 
     void printList(ListNode *head){

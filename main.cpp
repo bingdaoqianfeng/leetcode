@@ -28,13 +28,14 @@ using namespace std;
 //#include "22_generateParentheses.h"
 //#include "23_mergeKSortedLists.h"
 //#include "24_swapNodesInPairs.h"
+//#include "25_reverseNodesInKGroup.h"
 //#include "36_validSudoku.h"
 //#include "37_sudokuSolver.h"
 //#include "39_combinationSum.h"
-#include "29_divideTwoInt.h"
+//#include "29_divideTwoInt.h"
 
 /****************to be continue*****************/
-//#include "25_reverseNodesInKGroup.h"
+#include "30_substringWithConcatenationOfAllWords.h"
 
 int main(int argc, char** argv)
 {
