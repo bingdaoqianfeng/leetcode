@@ -15,27 +15,35 @@
 **********************************************************************************/
 class Solution {
 public:
-	bool recursivefindSubstring(string s, vector<int>& result, int len, int index,  map<string, int> wordsmap, map<string, int> wordsfound){
-		if(s.length() < len ){
-			return false;
-		}
-		if(wordsfound.size() == wordsmap.size()){
-			result.push_back(index);
-			return true;
-		}
-
-		string substr = s.substr(0,len);
-		cout<<"substr: "<<substr<<"index: "<<index<<endl;
-		if(wordsmap.count(substr)){
-			if(!wordsfound.count(substr)){
-				wordsfound[substr] = 1;
-				return recursivefindSubstring(s.substr(len), result, len, index, wordsmap, wordsfound);
+	bool recursivefindSubstring(vector<string> words, string s, vector<int>& result, int len, int index,  map<string, int> wordsmap, map<string, int> wordsfound){
+		//cout<<"******"<<s<<"******"<<endl;
+		if(s.length() < len ||
+		   wordsfound.size() == wordsmap.size()){
+			int i;
+			for(i=0; i<words.size(); i++){
+				if(wordsfound[words[i]] != wordsmap[words[i]])
+					break;
+			}
+			if(i>=words.size()){	
+				result.push_back(index);
+				return true;
 			}
 			return false;
 		}
-		else{
-			return false;
+
+		string substr = s.substr(0,len);
+		//cout<<"substr: "<<substr<<"index: "<<index<<endl;
+		if(wordsmap.count(substr)){
+			if(!wordsfound.count(substr)){
+				wordsfound[substr] = 1;
+				return recursivefindSubstring(words, s.substr(len), result, len, index, wordsmap, wordsfound);
+			}
+			else if(wordsfound[substr] < wordsmap[substr]){
+				wordsfound[substr] += 1;
+				return recursivefindSubstring(words, s.substr(len), result, len, index, wordsmap, wordsfound);
+			}
 		}
+		return false;
 	}
     vector<int> findSubstring(string s, vector<string>& words) {
 		vector<int> result;
@@ -45,47 +53,47 @@ public:
 		map<string, int> wordsmap;
 		map<string, int> wordsfound;
 		for(int i=0; i<words.size(); i++){
-			wordsmap[words[i]] = 1;
+			if(wordsmap.count(words[i])){
+				wordsmap[words[i]] += 1;
+			}
+			else{
+				wordsmap[words[i]] = 1;
+			}
+			//cout<<wordsmap[words[i]]<<endl;
 		}
 
-		for(int i=0; i<s.length();){
-			cout<<"i: "<<i<<endl;
-			if(recursivefindSubstring(s.substr(i), result, len, i, wordsmap, wordsfound)){
-				//i += len*words.size();
-				i++;
-			}
-			else
-				i++;
+		for(int i=0; i<s.length(); i++){
+			//cout<<"i: "<<i<<endl;
+			recursivefindSubstring(words, s.substr(i), result, len, i, wordsmap, wordsfound);
 			wordsfound.clear();
 		}	
 		return result;       
     }
 	int testCase(){
-		//string s = "barfoothefoobarman";
-		//string a = "foo";
-		//string b = "bar";
-		
-		//string s = "barfoofoobarthefoobarman";
-		//string a = "bar";
-		//string b = "foo";
-		//string c = "the";
-		
-		string s = "wordgoodgoodgoodbestword";
+#if 0
+		string s = "barfoothefoobarman";  //expect [0,9]
+		string a = "foo";
+		string b = "bar";
+#endif
+#if 1
+		string s = "barfoofoobarthefoobarman";  //expect [6,9,12]
+		string a = "bar";
+		string b = "foo";
+		string c = "the";
+#endif
+#if 0
+		string s = "wordgoodgoodgoodbestword";  //expect [8]
 		string a = "word";
 		string b = "good";
 		string c = "best";
 		string d = "good";
+#endif
 		vector<string> words;
 		words.push_back(a);
 		words.push_back(b);
 		words.push_back(c);
-		words.push_back(d);
+//		words.push_back(d);
 
-		if(a == b)
-			cout<<"a == b"<<endl;
-		else
-			cout<<"a != b"<<endl;
-		
 		vector<int> result;
 		result = findSubstring(s, words);
 		printout(s, words, result);
