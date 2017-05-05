@@ -16,10 +16,9 @@
 class Solution {
 public:
     bool recursivefindSubstring(vector<string> words, string s, vector<int>& result, int len, int index,  map<string, int> wordsmap, map<string, int> wordsfound){
-        if(s.length() < len ||
-            wordsfound.size() == wordsmap.size()){
+        if(wordsfound.size() == wordsmap.size()){
             cout<<"******"<<s<<", index"<<index<<"******"<<endl;
-            map<string, int>::iterator it=wordsmap.begin(), at=wordsfound.begin(); 
+            map<string, int>::iterator it=wordsmap.begin(), at=wordsfound.begin();
             for(; it!=wordsmap.end();it++, at++){
                 cout<<it->first<<"==>"<<it->second<<endl;
                 cout<<at->first<<"==>"<<at->second<<endl;
@@ -33,12 +32,15 @@ public:
                 result.push_back(index);
                 return true;
             }
-            return false;
         }
+
+        if(s.length() < len)
+            return false;
 
         string substr = s.substr(0,len);
         //cout<<"substr: "<<substr<<"index: "<<index<<endl;
         if(wordsmap.count(substr)){
+            cout<<"substr: "<<substr<<", index: "<<index<<endl;
             if(!wordsfound.count(substr)){
                 wordsfound[substr] = 1;
                 return recursivefindSubstring(words, s.substr(len), result, len, index, wordsmap, wordsfound);
@@ -79,7 +81,7 @@ public:
         return result;
     }
     int testCase(){
-#if 0
+#if 1
         string s = "barfoothefoobarman";  //expect [0,9]
         string str[] = {"bar","foo"};
         cout<<"expect: 0,9"<<endl;
@@ -94,24 +96,27 @@ public:
         string str[] = {"word","good","best","good"};
         cout<<"expect: 8"<<endl;
 #endif
-#if 1
+#if 0
         string s = "lingmindraboofooowingdingbarrwingmonkeypoundcake";
         string str[] = {"fooo","barr","wing","ding","wing"};
         cout<<"expect: 13"<<endl;
 #endif
         vector<string> words(str, str+sizeof(str)/sizeof(string));
+        printsrc(s, words);
 
         vector<int> result;
         result = findSubstring(s, words);
-        printout(s, words, result);
+        printout(result);
         return 0;
     }
-    void printout(string s,vector<string> words, vector<int> result){
-        cout<<s<<endl;
-        for(int i=0; i<words.size(); i++)
-            cout<<words[i]<<endl;
+    void printout(vector<int> result){
         for(int i=0; i<result.size(); i++)
             printf("%d, ", result[i]);
         printf("\n");
+    }
+    void printsrc(string s,vector<string> words){
+        cout<<s<<endl;
+        for(int i=0; i<words.size(); i++)
+            cout<<words[i]<<endl;
     }
 };
