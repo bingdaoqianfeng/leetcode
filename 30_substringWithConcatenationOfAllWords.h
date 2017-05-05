@@ -52,7 +52,8 @@ public:
         }
         return false;
     }
-    vector<int> findSubstring(string s, vector<string>& words) {
+    /*该方法采用递归的思路，但是超时了*/
+    vector<int> MyfindSubstring(string s, vector<string>& words) {
         vector<int> result;
         if(s.length() == 0 || words.size() == 0)
             return result;
@@ -78,6 +79,29 @@ public:
             recursivefindSubstring(words, s.substr(i), result, len, i, wordsmap, wordsfound);
             wordsfound.clear();
         }
+        return result;
+    }
+
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> result;
+        if(s.length() == 0 || words.size() == 0)
+            return result;
+        int len = words[0].length();
+        map<string, int> wordsmap;
+        for(int i=0; i<words.size(); i++){
+            if(wordsmap.find(words[i]) != wordsmap.end()){
+                wordsmap[words[i]] += 1;
+            }
+            else{
+                wordsmap[words[i]] = 1;
+            }
+        }
+#if 1
+        for(map<string, int>::iterator it=wordsmap.begin(); it!=wordsmap.end();it++){
+            cout<<it->first<<"==>"<<it->second<<endl;
+        }
+#endif
+
         return result;
     }
     int testCase(){
