@@ -41,8 +41,45 @@ public:
 */
 
     int search(vector<int>& nums, int target) {
-        int index;
-        return index;
+        int left, mid, right;
+		if(nums.size() == 0)
+			return -1;
+		left = 0;
+		right = nums.size() - 1;
+		while(left<right){
+			mid = (left + right)/2;
+			printf("%d, %d, %d\n",left, mid, right);
+			if(nums[mid] == target)
+				return mid;
+			if(nums[left]<nums[right]){
+				if(nums[mid]<target)
+					left = mid + 1;
+				else
+					right = mid - 1;
+				continue;	
+			}
+			else{
+				if(nums[mid] < nums[right]){
+					if(nums[mid]<target<nums[right]){
+						left = mid + 1;
+					}
+					else{
+						right = mid - 1;
+					}
+					continue;
+				}
+				else{
+					if(nums[left]<target<nums[mid]){
+						right = mid - 1;
+					}
+					else{
+						left = mid + 1;
+					}
+					continue;
+				}
+			}
+		}
+        return -1;
     }
     int testCase(){
         printf("--------------------------------------\n");
@@ -53,16 +90,15 @@ public:
         }
         printArray(a);
         int rotate = random() % cnt;
-        //rotate=2;
+        rotate=2;
         printf("rotate=%d\n", rotate);
         rotate_array(a, rotate);
         printArray(a);
         int target = random() % (2*cnt);
-        //target=6;
+        target=6;
         printf("target=%d\n", target);
 
-        //int idx = search(a, cnt, target);
-        int idx;
+        int idx = search(a, target);
         if ( idx<0 ){
             printf("not found!\n");
         }else{
