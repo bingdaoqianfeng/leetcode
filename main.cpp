@@ -35,9 +35,10 @@ using namespace std;
 //#include "29_divideTwoInt.h"
 //#include "30_substringWithConcatenationOfAllWords.h"
 //#include "33_searchInRotatedSortedArray.h"
+//#include "34_searchForRange.h"
 
 /****************to be continue*****************/
-#include "34_searchForRange.h"
+#include "40_combinationSum.II.h"
 
 int main(int argc, char** argv)
 {
