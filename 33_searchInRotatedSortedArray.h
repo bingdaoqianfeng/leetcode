@@ -39,63 +39,86 @@ public:
 *由于在这样的处理中，每次问题的规模都被缩小了一半，所以最终我们一定会遇到一个问题q[l, r]满足l=r，此时我们就可以知道区间中最小数的坐标为l。
 *在知道了最小数的坐标之后，我们就可以轻易的将其回复成原来的有序序列，然后在这个有序序列的基础上进行二分查找，来找到我们想要的元素。
 */
+/*
+在使用了二分法来查找最小值之后，我们不免产生这样的疑问，是不是可以直接通过二分法来找到我们想要的数呢？
+答案是可以的，同之前一样，我们将问题抽象化，对于一个区间[l, r]，我们希望能够找到这段区间中等于某个特定数target的坐标，不妨称为q[l, r]，
+令 m = (l + r) / 2， 首先我们来看这段区间的构成：
+    如果 a[m] == target，大家应该知道怎么做
+    如果 a[l] < a[r]，说明这段区间是有序的，我们将 a[m] 与 target 进行比较
+1.1 如果 a[m] < target，容易知道 q[l, r] = q[l, m - 1]
+1.2 如果 a[m] > target，容易知道 q[l, r] = q[m + 1, r]
+    如果 a[l] > a[r]，说明这段区间是由两段有序区间组成的，此时我们分情况讨论：
+2.1 如果 a[m] >= a[l]，说明 m 处于左侧（即较高）的一段有序区间中，此时：
+2.1.1 如果 target > a[m]，我们可以知道 a[l .. m - 1] < a[m] < target，都肯定不为答案，即 q[l, r] = q[m + 1, r]
+2.1.2 如果 target < a[l]，我们可以知道 a[l + 1 .. m] > a[l] > target，都肯定不为答案，即 q[l, r] = q[m + 1, r]
+2.1.3 否则有 a[l] <= target < a[m]， 即 q[l, r] = q[l, m - 1]
+2.2 如果 a[m] < a[l], 说明 m 处于右侧（即较低）的一段有序区间中，此时仿照 2.1 的讨论，我们可以知道
+2.2.1 如果 target < a[m], 有 q[l, r] = q[l, m - 1]
+2.2.2 如果 target > a[r], 有 q[l, r] = q[l, m - 1]
+2.2.3 否则 q[l, r] = q[m + 1, r]
+由于在这样的处理中，每次问题的规模都被缩小了一半，所以最终我们一定会遇到一个问题 q[l, r] 满足 l >= r，此时我们就检查 l, r 是否相同并且 a[l], target 是否相同来得出答案了。
+*/
 
     int search(vector<int>& nums, int target) {
         int left, mid, right;
-		if(nums.size() == 0)
-			return -1;
-		left = 0;
-		right = nums.size() - 1;
-		while(left<right){
-			mid = (left + right)/2;
-			printf("%d, %d, %d\n",left, mid, right);
-			if(nums[mid] == target)
-				return mid;
-			if(nums[left]<nums[right]){
-				if(nums[mid]<target)
-					left = mid + 1;
-				else
-					right = mid - 1;
-				continue;	
-			}
-			else{
-				if(nums[mid] < nums[right]){
-					if(nums[mid]<target<nums[right]){
-						left = mid + 1;
-					}
-					else{
-						right = mid - 1;
-					}
-					continue;
-				}
-				else{
-					if(nums[left]<target<nums[mid]){
-						right = mid - 1;
-					}
-					else{
-						left = mid + 1;
-					}
-					continue;
-				}
-			}
-		}
+        if(nums.size() == 0)
+            return -1;
+        left = 0;
+        right = nums.size() - 1;
+        while(left<=right){
+            mid = (left + right)/2;
+            //printf("before left:%d, mid:%d, right:%d\n",left, mid, right);
+            if(nums[mid] == target)
+                return mid;
+            if(nums[left]<=nums[right]){
+                if(nums[mid]<target)
+                    left = mid + 1;
+                else
+                    right = mid - 1;
+            }
+            else{
+                if(nums[mid] <= nums[right]){//mid的右边是升序的队列
+                    if(nums[mid]>target){
+                        right = mid - 1;
+                    }
+                    else if(nums[mid]<target && target<=nums[right]){
+                        left = mid + 1;
+                    }
+                    else{
+                        right = mid - 1;
+                    }
+                }
+                else{//mid的左边是升序的队列
+                    if(nums[left] <= target && target < nums[mid] ){
+                        right = mid - 1;
+                    }
+                    else{
+                        left = mid + 1;
+                    }
+                }
+            }
+            //printf("after left:%d, mid:%d, right:%d\n",left, mid, right);
+        }
         return -1;
     }
     int testCase(){
         printf("--------------------------------------\n");
-        int cnt = 20;
+        int cnt = 2;//20;
         vector<int> a(cnt);
-        for(int i=0; i<a.size(); i++){
-            a[i]=i*2;
-        }
+        //for(int i=0; i<a.size(); i++){
+        //    a[i]=i*2;
+        //}
+        a[0] = 3;
+        a[1] = 1;
         printArray(a);
         int rotate = random() % cnt;
         rotate=2;
-        printf("rotate=%d\n", rotate);
-        rotate_array(a, rotate);
+        //printf("rotate=%d\n", rotate);
+        //rotate_array(a, rotate);
         printArray(a);
         int target = random() % (2*cnt);
-        target=6;
+        //target=6;
+        target=1;
         printf("target=%d\n", target);
 
         int idx = search(a, target);
