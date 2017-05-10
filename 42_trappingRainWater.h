@@ -26,8 +26,8 @@ class Solution {
 public:
 
     int trap(vector<int>& height) {
-
-
     }
-
+    int testCase(){
+        return 0;
+    }
 };
