@@ -1,0 +1,428 @@
+
+/*******************************************************************************************************/
+1. libvlc_new( int argc, const char *const *argv ) //创建一个Vlc实力。
+	1.1 vlc_custom_create( (vlc_object_t *)NULL, sizeof (*priv),"libvlc" ); //所有vlc对象的父对象,libvlc_priv_t *priv;
+	1.2 struct vlc_object_internals  //所有object都会拥有的头部结构;
+		{
+			char           *psz_name; /* given name */
+
+			/* Object variables */
+			void           *var_root;
+			vlc_mutex_t     var_lock;
+			vlc_cond_t      var_wait;
+
+			/* Objects thread synchronization */
+			int             pipes[2];
+			atomic_bool     alive;
+			atomic_bool     interrupted;
+			/* Objects management */
+			atomic_uint     refs;
+			vlc_destructor_t pf_destructor;
+
+			/* Objects tree structure */
+			vlc_object_internals_t *next;  /* next sibling */
+			vlc_object_internals_t *prev;  /* previous sibling */
+			vlc_object_internals_t *first; /* first child */
+		}
+	1.3 var_AddCallback (obj, "tree", DumpCommand, obj);
+	1.4 int libvlc_InternalInit( libvlc_int_t *p_libvlc, int i_argc, const char *ppsz_argv[] )
+	    vlc里面，所有的功能能都是以module方式加载的，主程序也不例外，libvlc-module.c: Options for the main (libvlc itself) module。
+		在libvlc_InternalInit完成对main模块的加载(vlc_entry_main).
+	1.5 所有模块的入口函数都是vlc_entry__modulename，该函数由宏定义vlc_module_begin生成。
+	1.6 所有模块的创建，初始化等，都是在vlc_entry__modulename中调用 vlc_plugin_setter (void *plugin, void *tgt, int propid, ...)实现的。
+	1.7 config_LoadCmdLine函数首先负责从所有的module中拿到支持的命令行参数，然后将用户输入的参数值解析出来。 
+		之所以需要config_LoadCmdLine，是因为VLC中所有的功能模块都是以module的方式加载的，main()功能模块也是如此，
+		因此所以VLC支持的参数和属性值，都需要动态的从各个模块中加载。
+		没有模块自己通过p_config指针存放自己的config option, confsize记录该module的config option的个数。
+		所有的option都是存放在一个全局的config的链表中，以如下结构存放。
+		struct module_config_t
+		{
+			......
+		}
+		将从用户输入的参数与从所有module中找到的option进行匹配，对于合法的option,解析出对应的value，创建对应的变量名和变量值，供后面各个模块使用。
+		
+libvlc_media_player_new(mLibVlcInstance);  //创建一个player实力。
+libvlc_media_player_event_manager(mVlcPlayerInstance)；  // Connect the event manager 
+libvlc_event_async_attach(ev, mp_events[i], vlc_event_callback, this)
+libvlc_media_new_location(mLibVlcInstance, mURL.c_str())
+libvlc_media_add_option(mVlcMedia, ffmpegopt.c_str());
+libvlc_media_player_set_media(mVlcPlayerInstance, mVlcMedia);
+
+prepareAsync
+vlc_initial
+libvlc_media_player_play
+        libvlc_media_player_stop(mVlcPlayerInstance);
+        libvlc_media_player_release(mVlcPlayerInstance);
+
+class MediaPlayerBase
+{
+public:
+
+                        MediaPlayerBase() : mCookie(0), mNotify(0) {}
+    virtual             ~MediaPlayerBase() {}
+    virtual status_t    initCheck() = 0;
+    virtual status_t    setDataSource(const char *url,
+            const char** headers, int size) = 0;
+
+    virtual status_t    setDataSource(int fd, int64_t offset, int64_t length) = 0;
+    virtual status_t    setVideoSurfaceTexture(void* nativeWindow) = 0;
+    virtual status_t    prepare() = 0;
+    virtual status_t    prepareAsync() = 0;
+    virtual status_t    start() = 0;
+    virtual status_t    stop() = 0;
+    virtual status_t    pause() = 0;
+    virtual bool        isPlaying() = 0;
+    virtual status_t    seekTo(int msec) = 0;
+    virtual status_t    getCurrentPosition(int *msec) = 0;
+    virtual status_t    getDuration(int *msec) = 0;
+    virtual status_t    reset() = 0;
+    virtual status_t    setLooping(int loop) = 0;
+    virtual status_t    getParameter(int key, const uint8_t** replyData, int* size) = 0;
+    virtual status_t    invoke(const uint8_t* requestData, int requestSize,
+            const uint8_t** replyData, int* replySize) = 0;
+
+    void    setNotifyCallback(
+            void* cookie, notify_callback_f notifyFunc) {
+        mCookie = cookie; mNotify = notifyFunc;
+    }
+
+    void    sendEvent(int msg, int ext1 = 0, int ext2 = 0,
+            const uint8_t* data = NULL, const int size = 0) {
+        if (mNotify) mNotify(mCookie, msg, ext1, ext2, data, size);
+    }
+
+private:
+    void*               mCookie;
+    notify_callback_f mNotify;
+}
+/*******************************************************************************************************/
+
+vlc退出,需要保证所以线程退出:
+video_output.c  //static void *Thread(void *object)
+
+vlc_cond_timedwait
+vlc_cond_wait
+
+--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+make  core ext framework libandroid libcorkscrew libstagefright
+
+--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+DecoderPlayVideo
+
+Video_ProcessOutput
+
+struct decoder_owner_sys_t
+{
+    int64_t         i_preroll_end;
+
+    input_thread_t  *p_input;
+    input_resource_t*p_resource;
+    input_clock_t   *p_clock;
+    int             i_last_rate;
+
+    vout_thread_t   *p_spu_vout;
+    int              i_spu_channel;
+    int64_t          i_spu_order;
+
+    sout_instance_t         *p_sout;
+    sout_packetizer_input_t *p_sout_input;
+
+    vlc_thread_t     thread;
+
+    /* Some decoders require already packetized data (ie. not truncated) */
+    decoder_t *p_packetizer;
+    bool b_packetizer;
+
+    /* Current format in use by the output */
+    video_format_t video;
+    vlc_audio_format_t audio;
+    es_format_t    sout;
+
+    /* */
+    bool           b_fmt_description;
+    es_format_t    fmt_description;
+    vlc_meta_t     *p_description;
+
+    /* fifo */
+    block_fifo_t *p_fifo;
+
+    /* Lock for communication with decoder thread */
+    vlc_mutex_t lock;
+    vlc_cond_t  wait_request;
+    vlc_cond_t  wait_acknowledge;
+
+    /* -- These variables need locking on write(only) -- */
+    audio_output_t *p_aout;
+
+    vout_thread_t   *p_vout;
+
+    /* -- Theses variables need locking on read *and* write -- */
+    bool b_exit;
+
+    /* Pause */
+    bool b_paused;
+    struct
+    {
+        mtime_t i_date;
+        int     i_ignore;
+    } pause;
+
+    /* Buffering */
+    bool b_buffering;
+    struct
+    {
+        bool b_first;
+        bool b_full;
+        int  i_count;
+
+        picture_t     *p_picture;
+        picture_t     **pp_picture_next;
+
+        subpicture_t  *p_subpic;
+        subpicture_t  **pp_subpic_next;
+
+        block_t *p_audio;
+        block_t **pp_audio_next;
+
+        block_t       *p_block;
+        block_t       **pp_block_next;
+    } buffer;
+
+    /* Flushing */
+    bool b_flushing;
+
+    /* CC */
+    struct
+    {
+        bool b_supported;
+        bool pb_present[4];
+        decoder_t *pp_decoder[4];
+    } cc;
+
+    /* Delay */
+    mtime_t i_ts_delay;
+}
+
+
+
+user@user-OptiPlex-9020:~/source/ndk/miplayer_12_29/jni/thirdparty/vlc$ grep -Rn "buffer.p_picture" *
+src/input/decoder.c:643:    if( p_owner->buffer.p_picture || p_owner->buffer.p_subpic ||
+src/input/decoder.c:646:        if(p_owner->buffer.p_picture)
+src/input/decoder.c:647:            msg_Err( p_dec, "input_DecoderStartBuffering clear bufffer because  p_owner->buffer.p_picture is not NULL");
+src/input/decoder.c:659:    p_owner->buffer.p_picture = NULL;
+src/input/decoder.c:660:    p_owner->buffer.pp_picture_next = &p_owner->buffer.p_picture;
+src/input/decoder.c:1484:    if( ( p_owner->b_buffering && !p_owner->buffer.b_first ) || p_owner->buffer.p_picture )
+src/input/decoder.c:1493:            p_picture->date - p_owner->buffer.p_picture->date > DECODER_MAX_BUFFERING_VIDEO_DURATION )
+src/input/decoder.c:1500:    b_first_buffered = p_owner->buffer.p_picture != NULL;
+src/input/decoder.c:1518:        if( p_owner->buffer.p_picture )
+src/input/decoder.c:1520:            p_picture = p_owner->buffer.p_picture;
+src/input/decoder.c:1522:            p_owner->buffer.p_picture = p_picture->p_next;
+src/input/decoder.c:1525:            b_has_more = p_owner->buffer.p_picture != NULL;
+src/input/decoder.c:1527:                p_owner->buffer.pp_picture_next = &p_owner->buffer.p_picture;
+src/input/decoder.c:1591:        if( !p_owner->buffer.p_picture )
+src/input/decoder.c:2120:    p_owner->buffer.p_picture = NULL;
+src/input/decoder.c:2154:    while( p_owner->buffer.p_picture )
+src/input/decoder.c:2156:        picture_t *p_picture = p_owner->buffer.p_picture;
+src/input/decoder.c:2158:        p_owner->buffer.p_picture = p_picture->p_next;
+src/input/decoder.c:2166:        if( !p_owner->buffer.p_picture )
+src/input/decoder.c:2167:            p_owner->buffer.pp_picture_next = &p_owner->buffer.p_picture;
+
+
+
+
+
+
+25604 03-07 16:58:18.753 16027 19667 E VLC     : main decoder: DecoderProcess EOS: 0^M
+25605 03-07 16:58:18.753 16027 19667 E VLC     : main decoder: DecoderDecodeVideo BLOCK_FLAG_CORE_EOS^M
+25606 03-07 16:58:18.753 16027 19667 E VLC     : mediacodec decoder: Decoder is draining^M
+......
+25720 03-07 16:58:18.793 16027 19667 W VLC     : mediacodec decoder: EOS sent, waiting for OutThread^M 
+......
+26062 03-07 16:58:19.173 16027 16027 I XiaomiPlayerJNI: [miui_media_MediaPlayer_pause::354]^M
+26063 03-07 16:58:19.173 16027 16027 V MediaPlayerWrapper: pause^M
+26064 03-07 16:58:19.173 16027 16027 E MiPlayer: pause: ^M
+26065 03-07 16:58:19.173 16027 16027 D GenericPlayFragment: playCompleted false position 241280, duration = 241560,  uri file:///storage/emulated/0/å°<8f>ç±³è§<86>é¢<91>æµ<8b>è¯<95>èµ<84>æº<90>/mp4_3_è§<86      >é¢<91>AVC+é<9f>³é¢<91>AAC_1920x1080_25fps_8294K.mp4^M
+26066 03-07 16:58:19.173 16027 16027 D PlayHistoryManager: last 1 seconds.^M
+26067 03-07 16:58:19.183 16027 19655 E MiPlayer: processing kWhatPause...^M
+26068 03-07 16:58:19.183 16027 19655 E MiPlayer: pause_l: (^M
+......
+26086 03-07 16:58:19.183 16027 19655 E VLC     : main input: input_ControlPush =1^M
+26087 03-07 16:58:19.183 16027 19659 W VLC     : main input: ControlPause state=3^M
+26088 03-07 16:58:19.183 16855 19255 V JavaBonjourImpl: doServiceResolved^M
+26089 03-07 16:58:19.183 16027 19658 E MiPlayer: event(Paused) is posted^M
+26090 03-07 16:58:19.183 16855 19255 D JavaBonjourImpl: serviceResolved: c79fafe374aa@å®¢å<8e><85>ç<9a><84>å°<8f>ç±³ç<94>µè§<86>._raop._tcp.local. 10.235.218.14:37916^M
+26091 03-07 16:58:19.183 16027 19655 E MiPlayer: pause_l: )^M
+26092 03-07 16:58:19.183 16027 19655 E MiPlayer: Done^M
+......
+26294 03-07 16:58:19.233 16027 16027 I DuoKanVideoView: surface destroyed!!!^M
+26295 03-07 16:58:19.233 16027 16027 D DuoKanVideoView: release enter.^M
+26296 03-07 16:58:19.233 16027 16027 I XiaomiPlayerJNI: [miui_media_MediaPlayer_reset::463]^M
+26297 03-07 16:58:19.233 16027 16027 V MediaPlayerWrapper: reset^M
+26298 03-07 16:58:19.233 16027 16027 E MiPlayer: reset: (^M
+26299 03-07 16:58:19.233 16027 16027 E MiPlayer: TimedTextPlayerDelete:807 : (^M
+26300 03-07 16:58:19.233 16027 16027 E MiTimedTextDriver: TimedTextPlayerUnSelect:383 : ( :-1^M
+26301 03-07 16:58:19.233 16027 16027 E MiTimedTextDriver: TimedTextPlayerUnSelect:389 : )^M
+26302 03-07 16:58:19.233 16027 16027 E MiTimedTextDriver:  Trace MiTimedTextDriver call ~MiTimedTextDriver:108 enter^M
+26303 03-07 16:58:19.233 16027 16027 E MiTimedTextDriver:  Trace MiTimedTextDriver call ~MiTimedTextDriver:113 stop^M
+26304 03-07 16:58:19.233 16027 16027 E MiTimedTextDriver:  Trace MiTimedTextDriver call ~MiTimedTextDriver:116 back^M
+26305 03-07 16:58:19.233 16027 16027 E MiPlayer: TimedTextPlayerDelete:816 : )^M
+26306 03-07 16:58:19.233 16027 16027 E MiPlayer: processing Reset...^M
+26307 03-07 16:58:19.233 16027 16027 E MiPlayer: vlc_destroy: (^M
+26308 03-07 16:58:19.233 16027 16027 E MiPlayer: release player instance ( ^M
+26309 03-07 16:58:19.233 16027 16027 E VLC     : main input: function input_Stop line 267^M
+26310 03-07 16:58:19.233 16027 16027 E VLC     : main input: function input_Stop line 269^M
+26311 03-07 16:58:19.233 16027 16027 E VLC     : main input: input_ControlPush =0^M
+
+
+
+
+
+
+
+--------------------------------------------------------------
+http://www.360doc.com/content/13/0130/09/6979751_263177149.shtml
+http://blog.csdn.net/yu_yuan_1314/article/details/9078287
+http://blog.csdn.net/pirateleo/article/details/7061452
+http://www.xuebuyuan.com/1799539.html
+
+ftype: 作为MP4格式的标志并包含关于文件的一些信息.
+moov: 有且只有一个“moov”.它是一种container box，子box包含了媒体的metadata信息.
+mdat(Media data box): 该类型的box也是container box，可以有多个，也可以没有（当媒体数据全部引用其他文件时），媒体数据的结构由metadata进行描述。
+
+track  表示一些sample的集合，对于媒体数据来说，track表示一个视频或音频序列。
+hint track  这个特殊的track并不包含媒体数据，而是包含了一些将其他数据track打包成流媒体的指示信息。
+sample  对于非hint track来说，video sample即为一帧视频，或一组连续视频帧，audio sample即为一段连续的压缩音频，它们统称sample。对于hint track，sample定义一个或多个流媒体包的格式。
+sample table  指明sampe时序和物理布局的表。
+chunk 一个track的几个sample组成的单元。
+
+stts：Time-To-Sample Atoms
+ctts：Composition Offset Atom。每一个视频sample都有一个解码顺序和一个显示顺序。对于一个sample来说，解码顺序和显示顺序可能不一致，比如H.264格式，因此，Composition Offset Atom就是在这种情况下被使用的。
+（1）如果解码顺序和显示顺序是一致的，Composition Offset Atom就不会出现。Time-To-Sample Atoms既提供了解码顺序也提供了显示顺序，并能够计算出每个sample的开始时间和结束时间。
+（2）如果解码顺序和显示顺序不一致，那么Time-To-Sample Atoms既提供解码顺序，Composition Offset Atom则通过差值的形式来提供显示时间。Composition Offset Atom提供了一个从解码时间到显示时间的sample一对一的映射
+stss：Sync Sample Atom，标识了媒体流中的关键帧，提供了随机访问点标记。Sync Sample Atom包含了一个table，table的每个entry标识了一个sample，该sample是媒体流的关键帧。Table中的sample号是严格按照增长的顺序排列的，如果该table不存在，那么每一个sample都可以作为随机访问点。换句话说，如果Sync Sample Atom不存在，那么所有的sample都是关键帧。
+
+
+mov_read_header()->
+mov_read_default()->  //mov_default_parse_table[i]
+mov_read_trak()->
+mov_build_index()->
+index_entries
+
+-----------------------------------------------------------------
+控制播放器调用的类:
+1. LocalPlayerActivity.java
+	LocalPlayerActivity.java (phonev6\videoplayer\src\com\miui\videoplayer):326
+        mVideoView = new DuoKanVideoView(this);
+
+2. VideoViewFactoryProvider.java
+		public IVideoView create(Activity context) {
+			IVideoView videoView = null;
+			if(!AndroidUtils.isUseSdk(mUri)){
+				DKLog.d(TAG, "create DuoKanVideoView.");
+				videoView = new DuoKanVideoView(context);
+			} else if(MediaConfig.MEDIASOURCE_SOHU_TYPE_CODE.equalsIgnoreCase(mUri.getSource())){
+				DKLog.d(TAG, "create sohuVideoView.");
+				videoView = new SohuVideoView(context);
+			} else if(!AndroidUtils.havePlayerPlugin(mUri.getSource())) {
+				DKLog.d(TAG, "create default online video view");
+				videoView = new RawUrlVideoView(context);
+			} else {
+				videoView = new DexVideoView(context, mUri.getSource());
+			}
+			return new VideoViewContainer(context, mUri.getSource(), videoView);
+
+3. VideoPlayerActivity
+handleIntent()->mController.playByIntent(mIntent)(VideoPlayerActivity.java)->
+playByIntent()->initPlay()(VideoFragment.java)->
+			
+
+4. 	
+prepareMediaPlayer()(DuoKanVideoView.java)->
+public void setDataSource(Context context, Uri uri,
+			Map<String, String> headers)(DuoKanPlayer.java)->
+
+setDataSource(Context var1, Uri var2, Map<String, String> var3) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {} //MediaPlayer.java
+
+
+播放器的基类:
+setVideoUri()(DuoKanVideoView.java)->
+DuoKanPlayer(DuoKanPlayer.java)->
+DuoKanMediaPlayer(DuoKanMediaPlayer.java)->
+MediaPlayer(MediaPlayer.java)
+
+-----------------------------------------------------------------
+
+
+
+Bus 001 Device 110: ID 2717:ff48 
+
+void *LoadNativeWindowAPI(native_window_api_t *native)
+{
+    void *p_library = dlopen("libandroid.so", RTLD_NOW);
+    if (!p_library)
+        return NULL;
+
+    native->winFromSurface =
+        (ptr_ANativeWindow_fromSurface)(dlsym(p_library, "ANativeWindow_fromSurface"));
+    native->winRelease =
+        (ptr_ANativeWindow_release)(dlsym(p_library, "ANativeWindow_release"));
+    native->winLock =
+        (ptr_ANativeWindow_lock)(dlsym(p_library, "ANativeWindow_lock"));
+    native->unlockAndPost =
+        (ptr_ANativeWindow_unlockAndPost)(dlsym(p_library, "ANativeWindow_unlockAndPost"));
+    native->setBuffersGeometry =
+        (ptr_ANativeWindow_setBuffersGeometry)(dlsym(p_library, "ANativeWindow_setBuffersGeometry"));
+
+    if (native->winFromSurface && native->winRelease && native->winLock
+        && native->unlockAndPost && native->setBuffersGeometry)
+        return p_library;
+
+    native->winFromSurface = NULL;
+    native->winRelease = NULL;
+    native->winLock = NULL;
+    native->unlockAndPost = NULL;
+    native->setBuffersGeometry = NULL;
+
+    dlclose(p_library);
+    return NULL;
+}
+
+
+native/include/android/native_window.h:124:int32_t ANativeWindow_setBuffersGeometry(ANativeWindow* window
+
+base/native/android/native_window.cpp:61:int32_t ANativeWindow_setBuffersGeometry(ANativeWindow* window, int32_t width,
+
+/system/lib/libanw.21.so
+
+/system/lib/libanw.21.so
+
+
+    char value[PROPERTY_VALUE_MAX] = {0};
+    property_get("ro.build.product", value, "unknown");
+
+ro.build.version.sdk
+
+        if (!strncmp(value, audio_delay_list[i].product_name, strlen(audio_delay_list[i].product_name))) {
+            mProduct = audio_delay_list[i].product_id;
+            break;
+        }
+
+	
+#include "cutils/properties.h"
+
+native_window.h 
+
+platforms/android-24/arch-x86_64/usr/include/android/native_window.h
+
+err = ANativeWindow_lock(sys->window, &out_anb, &out_inOutDirtyBounds);
+
+if(ANativeWindow_unlockAndPost(sys->window))
+
+ANativeWindow_setBuffersGeometry(sys->window,sys->width,sys->height,sys->halFormat)
+
+
+
+
+
