@@ -28,6 +28,11 @@ public:
     int trap(vector<int>& height) {
         int left, right, highest;
         int max = -1;
+        int trapwater = 0;
+
+        /*从左往右查找，直到遇到最高的bar停止查找，并记录下最高bar的位置。
+        在这个过程中，所有可以存水的水槽，一定是左侧的bar小于或等于右侧的bar，
+        可以存放的水量应该以左侧bar的高度为准*/
         left = 0;
         highest = -1;
         while(left<height.size()){
@@ -45,7 +50,10 @@ public:
                     right++;
                 }
                 if(right < height.size()){
-                    printf("[%d, %d]\n", left, right);
+                    printf("[%d, %d]\n", left-1, right);
+                    for(int i = left; i<right; i++){
+                        trapwater += height[left-1] - height[i];
+                    }
                     left = right;
                     max = -1;
                 }
@@ -56,6 +64,9 @@ public:
             }
         }
 
+        /*从右往左查找，直到遇到最高的bar停止查找。
+        在这个过程中，所有可以存水的水槽，一定是右侧的bar小于或等于左侧的bar，
+        可以存放的水量应该以右侧bar的高度为准*/
         if(left<height.size() && highest != -1 ){
             right = height.size() - 1;
             max = -1;
@@ -74,7 +85,10 @@ public:
                         left--;
                     }
                     if(left >= highest ){
-                        printf("[%d, %d]\n", left, right);
+                        printf("[%d, %d]\n", left, right+1);
+                        for(int i = left+1; i<=right; i++){
+                            trapwater += height[right+1] - height[i];
+                        }
                         right = left;
                         max = -1;
                     }
@@ -85,7 +99,7 @@ public:
                 }
             }
         }
-        int ret;
+        return trapwater;
     }
     int testCase(){
         int a[]={0,1,0,2,1,0,1,3,2,1,2,1};
