@@ -23,15 +23,36 @@
 class Solution {
 public:
     bool isMatch(string s, string p) {
-        bool ret = false;
-        return ret;   
+        int i, j;
+        for(i = 0, j = 0; i < s.length() && j < p.length(); i++, j++){
+            if(s[i] != p[j] && p[j] != '?'){
+                if(p[j] != '*'){
+                    return false;
+                }
+                else{
+                    while((p[j] == '?' || p[j] == '*') && j<p.length())
+                        j++;
+                    if(j >= p.length())
+                        return true;
+                    else{
+                        while(s[i] != p[j] && i<s.length()) 
+                            i++;
+                        if(i>=s.length())
+                            return false;
+                    }
+                }
+            }
+        }
+        if(i<s.length() || j<p.length())
+            return false;
+        return true;
     }
-	int testCase(){
-		string s;
-		string p;
-		s = "aa";
-		p = "a";
-		cout<<s<<" == "<<p<<" is "<<isMatch(s,p)<<endl;
-		return 0;
-	}
+    int testCase(){
+        string s;
+        string p;
+        s = "aa";
+        p = "a";
+        cout<<s<<" == "<<p<<" is "<<isMatch(s,p)<<endl;
+        return 0;
+    }
 };
