@@ -35,12 +35,13 @@ public:
                     return false;
                 }
                 else{
-                    while((p[j] == '?' || p[j] == '*') && j<p.length())
+                    while(j<p.length() && p[j] == '*')
                         j++;
                     if(j >= p.length())
                         return true;
                     do{
-						while(s[i] != p[j] && i<s.length()) 
+						//printf("s[%d]: %c, p[%d]: %c\n", i, s[i], j, p[j]);
+						while(s[i] != p[j] && p[j] != '?' && i<s.length()) 
                             i++;
                         if(i>=s.length())
                             return false;
@@ -53,7 +54,7 @@ public:
             }
         }
 		while(j<p.length()){
-			if(p[j] == '?' || p[j] == '*')
+			if(p[j] == '*')
 				j++;
 			else
 				break;
@@ -65,12 +66,17 @@ public:
     int testCase(){
         string s, p;
 		bool ret;
+        s = "c";
+        p = "*?*";
+        ret = isMatch(s,p);
+        cout<<s<<" == "<<p<<" is "<<ret<<endl;
+#if 1
         s = "b";
         p = "*?*?";
         ret = isMatch(s,p);
         cout<<s<<" == "<<p<<" is "<<ret<<endl;
-#if 1
-        s = "a";
+        
+		s = "a";
         p = "a*";
         ret = isMatch(s,p);
         cout<<s<<" == "<<p<<" is "<<ret<<endl;
