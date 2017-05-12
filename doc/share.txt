@@ -1,6 +1,6 @@
 
 /*******************************************************************************************************/
-1. libvlc_new( int argc, const char *const *argv ) //创建一个Vlc实力。
+1. libvlc_new( int argc, const char *const *argv ) //创建一个Vlc实力。加载所有module，并初始化所有option属性。
 	1.1 vlc_custom_create( (vlc_object_t *)NULL, sizeof (*priv),"libvlc" ); //所有vlc对象的父对象,libvlc_priv_t *priv;
 	1.2 struct vlc_object_internals  //所有object都会拥有的头部结构;
 		{
@@ -39,9 +39,27 @@
 		{
 			......
 		}
-		将从用户输入的参数与从所有module中找到的option进行匹配，对于合法的option,解析出对应的value，创建对应的变量名和变量值，供后面各个模块使用。
-		
-libvlc_media_player_new(mLibVlcInstance);  //创建一个player实力。
+		将用户输入的参数与所有module中找到的option进行匹配，对于合法的option,解析出对应的value，创建对应的变量名和变量值，供后面各个模块使用。
+		例如：
+		switch( CONFIG_CLASS(p_conf->i_type) )
+		{
+			case CONFIG_ITEM_STRING:
+				var_Create( p_this, psz_name, VLC_VAR_STRING );
+				var_SetString( p_this, psz_name, state.arg );
+				break;
+			case CONFIG_ITEM_INTEGER:
+				var_Create( p_this, psz_name, VLC_VAR_INTEGER );
+				var_SetInteger( p_this, psz_name,
+								strtoll(state.arg, NULL, 0));
+				break;
+			......
+		}
+	1.8 log使用AndroidDebugOutputMsg实现在android下的打印。p_libvlc中的priv->log.cb指向AndroidDebugOutputMsg，所以msg_Dbg中必须传入libvlc_int_t对象。
+	1.9 module_InitStaticModules动态加载所有模块，所有动态加载模块的入口函数都列在数组vlc_static_modules中，入口函数命名都是vlc_entry__modulename。
+	1.10 全局变量：modules：存储所有module的头指针。　config：存储所有模块的配置信息（option）。
+2. libvlc_media_player_new(mLibVlcInstance);  //创建一个player实力。
+
+
 libvlc_media_player_event_manager(mVlcPlayerInstance)；  // Connect the event manager 
 libvlc_event_async_attach(ev, mp_events[i], vlc_event_callback, this)
 libvlc_media_new_location(mLibVlcInstance, mURL.c_str())
