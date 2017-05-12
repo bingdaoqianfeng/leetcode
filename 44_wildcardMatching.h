@@ -24,6 +24,11 @@ class Solution {
 public:
     bool isMatch(string s, string p) {
         int i, j;
+		//cout<<"s: "<<s<<"  p: "<<p<<endl;
+		if((s.length() == 0 && p.length() == 0) ||
+			(p.length() == 1 && p[0] == '*'))
+			return true;
+
         for(i = 0, j = 0; i < s.length() && j < p.length(); i++, j++){
             if(s[i] != p[j] && p[j] != '?'){
                 if(p[j] != '*'){
@@ -34,25 +39,80 @@ public:
                         j++;
                     if(j >= p.length())
                         return true;
-                    else{
-                        while(s[i] != p[j] && i<s.length()) 
+                    do{
+						while(s[i] != p[j] && i<s.length()) 
                             i++;
                         if(i>=s.length())
                             return false;
-                    }
+					
+						if(isMatch(s.substr(i),p.substr(j)))
+							return true;	
+						i++;
+                    }while(i<s.length());
                 }
             }
         }
+		while(j<p.length()){
+			if(p[j] == '?' || p[j] == '*')
+				j++;
+			else
+				break;
+		}
         if(i<s.length() || j<p.length())
             return false;
         return true;
     }
     int testCase(){
-        string s;
-        string p;
-        s = "aa";
+        string s, p;
+		bool ret;
+        s = "b";
+        p = "*?*?";
+        ret = isMatch(s,p);
+        cout<<s<<" == "<<p<<" is "<<ret<<endl;
+#if 1
+        s = "a";
+        p = "a*";
+        ret = isMatch(s,p);
+        cout<<s<<" == "<<p<<" is "<<ret<<endl;
+
+        s = "aaaa";
+        p = "***a";
+        ret = isMatch(s,p);
+        cout<<s<<" == "<<p<<" is "<<ret<<endl;
+
+        s = "abefcdgiescdfimde";
+        p = "ab*cd?i*de";
+        ret = isMatch(s,p);
+        cout<<s<<" == "<<p<<" is "<<ret<<endl;
+        
+		s = "aa";
         p = "a";
         cout<<s<<" == "<<p<<" is "<<isMatch(s,p)<<endl;
-        return 0;
+
+        s = "aa";
+        p = "aa";
+        cout<<s<<" == "<<p<<" is "<<isMatch(s,p)<<endl;
+        
+		s = "aaa";
+        p = "aa";
+        cout<<s<<" == "<<p<<" is "<<isMatch(s,p)<<endl;
+		
+		s = "aa";
+        p = "*";
+        cout<<s<<" == "<<p<<" is "<<isMatch(s,p)<<endl;
+		
+		s = "aa";
+        p = "a*";
+        cout<<s<<" == "<<p<<" is "<<isMatch(s,p)<<endl;
+
+		s = "ab";
+        p = "?*";
+        cout<<s<<" == "<<p<<" is "<<isMatch(s,p)<<endl;
+		
+		s = "aab";
+        p = "c*a*b";
+        cout<<s<<" == "<<p<<" is "<<isMatch(s,p)<<endl;
+#endif     
+	   return 0;
     }
 };
