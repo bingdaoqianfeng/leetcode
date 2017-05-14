@@ -23,6 +23,42 @@
 class Solution {
 public:
     bool isMatch(string s, string p) {
+		int i, j;
+		int last_s = -1, last_p = -1;
+		for(i = 0, j = 0; i<s.length();){
+			if(j<p.length() && (s[i] == p[j] || p[j] == '?')){
+				i++;
+				j++;
+				if(i>=s.length() && j>=p.length())
+					return true;
+			}
+			else if(j<p.length() && p[j] == '*'){
+				//edge case
+				if(j + 1 >= p.length())
+					return true;
+				//skip the "*", and mark a flag
+				j++;
+				//use last_s and last_p to store where the "*" match starts.
+				last_p = j;
+				last_s = i;
+			}
+			else if(last_p != -1){
+				// if meet "*" previously, and the *s != *p
+				// reset the p, using '*' to match this situation
+				last_s++;
+				i = last_s;
+				j = last_p;				
+			}
+			else{
+				return false;
+			}
+		}
+		//edge case: "s" is done, but "p" still have chars.	
+		while(j<p.length() && p[j] == '*') j++;
+		if(j<p.length())	return false;
+		return true;
+	}
+    bool isMatchOne(string s, string p) {
         int i, j;
 		//cout<<"s: "<<s<<"  p: "<<p<<endl;
 		if((s.length() == 0 && p.length() == 0) ||
@@ -46,7 +82,7 @@ public:
                         if(i>=s.length())
                             return false;
 					
-						if(isMatch(s.substr(i),p.substr(j)))
+						if(isMatchOne(s.substr(i),p.substr(j)))
 							return true;	
 						i++;
                     }while(i<s.length());
