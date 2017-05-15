@@ -15,16 +15,42 @@
 **********************************************************************************/
 class Solution {
 public:
-    int jump(vector<int>& nums) {
-   		return 0; 
+    void recjump(vector<int>& nums, int index, int &ministeps, int jumpnum) {
+        int step = nums[index];
+        if(index+step == nums.size() - 1){
+            if(jumpnum+1<ministeps)
+                ministeps = jumpnum + 1;
+            return;
+        }
+        while(step > 0){
+            if(step+index>nums.size() - 1){
+                step--;
+            }
+            else if(index+step == nums.size() - 1){
+                if(jumpnum+1<ministeps)
+                    ministeps = jumpnum + 1;
+                return;
+            }
+            else {
+                recjump(nums, index+step, ministeps, jumpnum + 1);
+                step--;
+            }
+        }
+        return;
     }
-	int testCase(){
-		int a[] = {2,3,1,1,4};
-		vector<int> nums(a, a + sizeof(a)/sizeof(int));
-		printVector(nums);	
-		return 0;
-	}
-	void printVector( vector<int>&  pt)
+    int jump(vector<int>& nums) {
+        int ministeps = nums.size()-1;
+        recjump(nums, 0, ministeps, 0);
+        return ministeps;
+    }
+    int testCase(){
+        int a[] = {2,3,1,1,4};
+        vector<int> nums(a, a + sizeof(a)/sizeof(int));
+        printVector(nums);
+        printf("%d\n", jump(nums));
+        return 0;
+    }
+    void printVector( vector<int>&  pt)
     {
         cout << "{ ";
         for(int j=0; j<pt.size(); j++){
