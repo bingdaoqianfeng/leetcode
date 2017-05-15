@@ -38,13 +38,42 @@ public:
         }
         return;
     }
+
+    void djjump(vector<int>& nums, int index, vector<int>& result){
+        if(index<0)
+            return;
+        int step = nums[index];
+        int distance = nums.size() - 1 - index;
+        int minijump = INT_MAX;
+        while(step > 0){
+            if(step>=distance){
+                result[index] = 1;
+                return;
+            }
+            if(result[index+step] > 0 && minijump > result[index+step] + 1){
+                minijump = result[index+step] + 1;
+            }
+            step--;
+        }
+        if(minijump != INT_MAX)
+            result[index] = minijump;
+        //printf("index: %d, minijump: %d\n", index, minijump);
+        return;
+    }
+
     int jump(vector<int>& nums) {
-        int ministeps = nums.size()-1;
-        recjump(nums, 0, ministeps, 0);
-        return ministeps;
+        if(nums.size() == 0)
+            return 0;
+        vector<int> result(nums.size(), 0);
+        for(int index = nums.size()-2; index>=0; index--)
+            djjump(nums, index, result);
+        //printVector(result);
+        return result[0];
     }
     int testCase(){
-        int a[] = {2,3,1,1,4};
+        //int a[] = {2,3,1,1,4};
+        int a[] = {5,6,4,4,6,9,4,4,7,4,4,8,2,6,8,1,5,9,6,5,2,7,9,7,9,6,9,4,1,6,8,8,4,4,2,0,3,8,5};
+        //int a[] = {5,6,4,4,6,9,4,4,7,4,4,8,2,6,8,1,5,9,6,5,2,7,9,7,9,6,9,4,1,6,8,8,4,4,2,0};
         vector<int> nums(a, a + sizeof(a)/sizeof(int));
         printVector(nums);
         printf("%d\n", jump(nums));
