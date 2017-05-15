@@ -69,23 +69,41 @@ public:
 　　　　2.证明做出贪心选择后，原问题总是存在最优解，即贪心选择总是安全的。
 　　　　3.证明做出贪心选择后，剩余的子问题满足性质：其最优解与贪心选择的组合即可得到原问题的最优解，这样就得到了最优子结构。
 */
-    void Greedyalgorithm(){
-
+    int Greedyalgorithm(vector<int> nums){
+		if(nums.size()<=1)
+			return 0;
+		int coverPos = 0;
+		int step = 0;
+		for(int i = 0; i<=coverPos && i<nums.size();){
+			if(nums[i] == 0)
+				return 0;
+			if(coverPos < nums[i] + i){
+				step++;
+				coverPos = nums[i] + i;
+			}
+			if(coverPos >= nums.size() - 1){
+				return step;
+			}
+			int maxDistance = 0;
+			int maxPos = i + 1;
+			for(int j=i+1; j<=coverPos; j++){
+				if(nums[j] + j > maxDistance){
+					maxDistance = nums[j] + j;
+					maxPos = j;
+				}
+			}
+			i = maxPos;
+		}
+		printf("should on here");
+		return step;
     }
 
     int jump(vector<int>& nums) {
-        if(nums.size() == 0)
-            return 0;
-        vector<int> result(nums.size(), 0);
-        for(int index = nums.size()-2; index>=0; index--)
-            djjump(nums, index, result);
-        //printVector(result);
-        return result[0];
+        return Greedyalgorithm(nums);
     }
     int testCase(){
-        //int a[] = {2,3,1,1,4};
-        int a[] = {5,6,4,4,6,9,4,4,7,4,4,8,2,6,8,1,5,9,6,5,2,7,9,7,9,6,9,4,1,6,8,8,4,4,2,0,3,8,5};
-        //int a[] = {5,6,4,4,6,9,4,4,7,4,4,8,2,6,8,1,5,9,6,5,2,7,9,7,9,6,9,4,1,6,8,8,4,4,2,0};
+        int a[] = {2,3,1,1,4};
+        //int a[] = {5,6,4,4,6,9,4,4,7,4,4,8,2,6,8,1,5,9,6,5,2,7,9,7,9,6,9,4,1,6,8,8,4,4,2,0,3,8,5};
         vector<int> nums(a, a + sizeof(a)/sizeof(int));
         printVector(nums);
         printf("%d\n", jump(nums));
