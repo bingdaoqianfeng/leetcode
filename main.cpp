@@ -40,9 +40,10 @@ using namespace std;
 //#include "42_trappingRainWater.h"
 //#include "41_firstMissingPositive.h"
 //#include "44_wildcardMatching.h"
+//#include "45_jumpGame.II.h"
 
 /****************to be continue*****************/
-#include "45_jumpGame.II.h"
+#include "46_permutations.h"
 
 int main(int argc, char** argv)
 {
