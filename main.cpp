@@ -42,9 +42,10 @@ using namespace std;
 //#include "44_wildcardMatching.h"
 //#include "45_jumpGame.II.h"
 //#include "46_permutations.h"
+//#include "47_permutations.II.h"
 
 /****************to be continue*****************/
-#include "47_permutations.II.h"
+#include "48_rotateImage.h"
 
 int main(int argc, char** argv)
 {
