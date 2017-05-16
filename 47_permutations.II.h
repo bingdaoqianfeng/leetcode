@@ -33,6 +33,13 @@ public:
         }
         return;
     }
+/*
+*当n=1时，数组中只有一个数a1，其全排列只有一种，即为a1
+*当n=2时，数组中此时有a1a2，其全排列有两种，a1a2和a2a1，那么此时我们考虑和上面那种情况的关系，我们发现，其实就是在a1的前后两个位置分别加入了a2
+*当n=3时，数组中有a1a2a3，此时全排列有六种，分别为a1a2a3, a1a3a2, a2a1a3, a2a3a1, a3a1a2, 和 a3a2a1。那么根据上面的结论，实际上是在a1a2和a2a1的基础上在不同的位置上加入a3而得到的。
+*_ a1 _ a2 _ : a3a1a2, a1a3a2, a1a2a3
+*_ a2 _ a1 _ : a3a2a1, a2a3a1, a2a1a3
+*/
     vector< vector<int> > permuteUnique(vector<int>& nums) {
         vector< vector<int> > result;
         map<int, int> mymap;
