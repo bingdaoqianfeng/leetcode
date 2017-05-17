@@ -1,4 +1,50 @@
 
+MiPlayer支持的Header属性：
+prefer-soft-decoder:  指定播放器使用软件解码。
+normvol： 打开normvol filter。应用端需要在Header中设置对应的值。
+ignore-starttime： 忽略http中的start time值。
+user_agent/user_agent/user_agent： 设置http user agent的值。
+cookies/Cookie/Cookie： 设置http cookies的值。
+referer： 设置http referrer。
+headers： 设置http headers.
+adsave： 指定广告视频将要保存的路径。
+marlin-key: 打开marliin drm支持。
+
+
+enum vlc_decoder_errors {
+    VLC_CODEC_ERROR_BASE            = -10000,
+    VLC_AUDIO_FORMAT_UNSUPPORT      = VLC_CODEC_ERROR_BASE - 1,
+    VLC_VIDEO_FORMAT_UNSUPPORT      = VLC_CODEC_ERROR_BASE - 2,
+    VLC_VIDEO_SIZE_UNSUPPORT        = VLC_CODEC_ERROR_BASE - 3,
+    VLC_VIDEO_FRAMERATE_UNSUPPORT   = VLC_CODEC_ERROR_BASE - 4,
+    VLC_VIDEO_OPENMAX_FAIL          = VLC_CODEC_ERROR_BASE - 5,
+    VLC_VIDEO_MSTAR_5011ERROR       = VLC_CODEC_ERROR_BASE - 6,
+    VLC_VIDEO_SURFACEVIEW_DESTROYED = VLC_CODEC_ERROR_BASE - 7,
+    VLC_VIDEO_PROFILE_UNSUPPORT     = VLC_CODEC_ERROR_BASE - 8,
+};
+
+enum vlc_decoder_errors {
+    VLC_CODEC_ERROR_BASE            = -10000,
+    VLC_AUDIO_FORMAT_UNSUPPORT      = VLC_CODEC_ERROR_BASE - 1,
+    VLC_VIDEO_FORMAT_UNSUPPORT      = VLC_CODEC_ERROR_BASE - 2,
+    VLC_VIDEO_SIZE_UNSUPPORT        = VLC_CODEC_ERROR_BASE - 3,
+    VLC_VIDEO_FRAMERATE_UNSUPPORT   = VLC_CODEC_ERROR_BASE - 4,
+    VLC_VIDEO_OPENMAX_FAIL          = VLC_CODEC_ERROR_BASE - 5,
+    VLC_VIDEO_MSTAR_5011ERROR       = VLC_CODEC_ERROR_BASE - 6,
+    VLC_VIDEO_SURFACEVIEW_DESTROYED = VLC_CODEC_ERROR_BASE - 7,
+    VLC_VIDEO_PROFILE_UNSUPPORT     = VLC_CODEC_ERROR_BASE - 8,
+    VLC_INPUT_ERROR_BASE            = -10100,
+    VLC_INPUT_THREAD_CREATE_ERROR   = VLC_INPUT_ERROR_BASE - 1,
+    VLC_INPUT_SOURCE_OPEN_FAILED    = VLC_INPUT_ERROR_BASE - 2,
+    VLC_INPUT_DEMUX_CREATE_FAILED   = VLC_INPUT_ERROR_BASE - 3,
+    VLC_INPUT_DEMUX_THREAD_ERROR    = VLC_INPUT_ERROR_BASE - 4,
+};
+
+
+没有用到的属性： 
+enable-fullcodec: modules/codec/avcodec/avcodec.c:415:        if( var_InheritInteger( p_dec, "enable-fullcodec" ) == 1 ) {
+
+
 /*******************************************************************************************************/
 1. libvlc_new( int argc, const char *const *argv ) //创建一个Vlc实力。加载所有module，并初始化所有option属性。
 	1.1 vlc_custom_create( (vlc_object_t *)NULL, sizeof (*priv),"libvlc" ); //所有vlc对象的父对象,libvlc_priv_t *priv;
@@ -57,20 +103,40 @@
 	1.8 log使用AndroidDebugOutputMsg实现在android下的打印。p_libvlc中的priv->log.cb指向AndroidDebugOutputMsg，所以msg_Dbg中必须传入libvlc_int_t对象。
 	1.9 module_InitStaticModules动态加载所有模块，所有动态加载模块的入口函数都列在数组vlc_static_modules中，入口函数命名都是vlc_entry__modulename。
 	1.10 全局变量：modules：存储所有module的头指针。　config：存储所有模块的配置信息（option）。
+
 2. libvlc_media_player_new(mLibVlcInstance);  //创建一个player实力。
+	2.1 mp->input.p_resource = input_resource_New(VLC_OBJECT(mp));
+		p_resource的作用是什么呢？
+	2.2 mp->p_event_manager = libvlc_event_manager_new(mp, instance);
+		event_manager用来管理所有该player实力支持的event。
+	2.3 register_event(mp, Buffering); register_event(mp, EndReached);//注册具体的event到event_manager管理的队列中。
 
+3. libvlc_event_async_attach(ev, mp_events[i], vlc_event_callback, this);//将用户指定的event加入到event_manager管理的队列中，并设置该event对应的回调处理函数。
 
-libvlc_media_player_event_manager(mVlcPlayerInstance)；  // Connect the event manager 
-libvlc_event_async_attach(ev, mp_events[i], vlc_event_callback, this)
-libvlc_media_new_location(mLibVlcInstance, mURL.c_str())
-libvlc_media_add_option(mVlcMedia, ffmpegopt.c_str());
-libvlc_media_player_set_media(mVlcPlayerInstance, mVlcMedia);
+4. libvlc_media_new_location(mLibVlcInstance, mURL.c_str())
+	该函数的目的就是获得libvlc_media_t对象。
+	4.1 input_item_New(input_item_New) -> input_item_NewWithType()
+	  根据视频源地址，创建一个input_item。
+		4.1.1 input_item_SetURI( p_input, psz_uri );
+	  	  1.存放输入视频源的地址;
+	  	  2.调用GuessType()函数，根据uri判断视频源是文件，网络地址还是目录。
+		4.1.2 vlc_event_manager_init(); //每个input_item有一个event链表，该链表负责存放input_item需要处理的事件。
+            	  vlc_event_manager_register_event_type( p_em, vlc_InputItemMetaChanged );  //将input事件添加到链表中。
+		4.1.3 返回struct input_item_t()描述的input对象。
+	4.2 libvlc_media_new_from_input_item( p_instance, p_input_item );  //Create a new media descriptor object from an input_item
+		4.2.1libvlc_event_manager_t *em = p_md->p_event_manager;
+    		     libvlc_event_manager_register_event_type(em, libvlc_MediaMetaChanged);
+		
+5. libvlc_media_add_option(mVlcMedia, ffmpegopt.c_str()); //将用户设置的option选项放到input_item的ppsz_options队列中。
+
+6. libvlc_media_player_set_media(mVlcPlayerInstance, mVlcMedia);  //Set the Media descriptor associated with the instance.
+	由于mVlcMedia存储了要播放的视频源的路径信息，所有此时mVlcPlayerInstance也与具体视频建立了联系。
 
 prepareAsync
 vlc_initial
 libvlc_media_player_play
-        libvlc_media_player_stop(mVlcPlayerInstance);
-        libvlc_media_player_release(mVlcPlayerInstance);
+libvlc_media_player_stop(mVlcPlayerInstance);
+libvlc_media_player_release(mVlcPlayerInstance);
 
 class MediaPlayerBase
 {
