@@ -18,6 +18,17 @@ public:
 		return result;        
     }
 	int testCase(){
+		string s[] = {"eat", "tea", "tan", "ate", "nat", "bat"};
+		vector<string> strs(s, s+6);
+		printVector(strs);
 		return 0;
 	}
+	void printVector( vector<string>&  pt)
+    {
+        cout << "{ ";
+        for(int j=0; j<pt.size(); j++){
+            cout << pt[j] << "  ";
+        }
+        cout << "} " << endl;
+    }
 };
