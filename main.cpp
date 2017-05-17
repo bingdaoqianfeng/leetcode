@@ -53,22 +53,20 @@ struct ListNode {
   	ListNode *next;
   	ListNode(int x) : val(x), next(NULL) {}
 };
+void printVector( vector<string>&  pt);
+void printVectorVector(vector< vector<string> >& v);
+void printMatrix(vector< vector<int> > &matrix);
+void printList(ListNode *head);
+void createMatrix();
+void createBoard();
+void createList();
+void createVector();
 
 int main(int argc, char** argv)
 {
     Solution mysolution;
     mysolution.testCase();
     return 0;
-}
-
-void printStringVector( vector<string>&  pt)
-//void printStringVector( vector<int>&  pt)
-{       
-	cout << "{ ";
- 	for(int j=0; j<pt.size(); j++){
-    	cout << pt[j] << "  ";
-    }
-  	cout << "} " << endl;
 }
 
 void printList(ListNode *head){
@@ -83,7 +81,7 @@ void createVector()
 {
 	const char* s[]={"bbab","aba","abc"};
 	vector<string> v(s, s+3);
-	printStringVector(v);
+	printVector(v);
 
 	int a[]={-1, 2, 1, -4};
     vector<int> nums(a, a+sizeof(a)/sizeof(int));
@@ -148,4 +146,21 @@ void printMatrix(vector< vector<int> > &matrix)
       	cout << endl;
   	}
   	cout << endl;
+}
+
+void printVectorVector(vector< vector<string> >& v)
+{
+	cout << "[ " <<endl;
+   	for(int j=0; j<v.size(); j++){
+    	printVector(v[j]);
+  	}
+  	cout << "] " << endl;
+}
+void printVector( vector<string>&  pt)
+{
+  	cout << "[ ";
+ 	for(int j=0; j<pt.size(); j++){
+      	cout << pt[j] << "  ";
+ 	}
+  	cout << "] " << endl;
 }
