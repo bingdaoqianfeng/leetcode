@@ -44,9 +44,10 @@ using namespace std;
 //#include "46_permutations.h"
 //#include "47_permutations.II.h"
 //#include "48_rotateImage.h"
+//#include "49_groupAnagrams.h"
 
 /****************to be continue*****************/
-#include "49_groupAnagrams.h"
+#include "50_pow.h"
 
 struct ListNode {
  	int val;
