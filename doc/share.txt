@@ -44,8 +44,17 @@ enum vlc_decoder_errors {
 没有用到的属性： 
 enable-fullcodec: modules/codec/avcodec/avcodec.c:415:        if( var_InheritInteger( p_dec, "enable-fullcodec" ) == 1 ) {
 
+/*********************************MiPlayer中主要VLC全局对象**********************************************************************/
+libvlc_instance_t *mLibVlcInstance;
+libvlc_media_player_t *mVlcPlayerInstance;  //A LibVLC media player plays one media (usually in a custom drawable). 该对象代表一个播放器，用来播放具体的视频文件。
 
-/*******************************************************************************************************/
+libvlc_media_t *mVlcMedia; //libvlc_media_t is an abstract representation of a playable media. It consists of a media location and various optional meta data.　该对象代表一个要播放的视频，可以使一个文件，也可以使一个网络地址等。
+
+1. libvlc_media_player_set_media(mVlcPlayerInstance, mVlcMedia);
+将mVlcPlayerInstance与mVlcMedia两个对象建立了联系。
+mVlcPlayerInstance->p_md = mVlcMedia;
+	
+/*********************************VLC主要API**********************************************************************/
 1. libvlc_new( int argc, const char *const *argv ) //创建一个Vlc实力。加载所有module，并初始化所有option属性。
 	1.1 vlc_custom_create( (vlc_object_t *)NULL, sizeof (*priv),"libvlc" ); //所有vlc对象的父对象,libvlc_priv_t *priv;
 	1.2 struct vlc_object_internals  //所有object都会拥有的头部结构;
@@ -108,29 +117,169 @@ enable-fullcodec: modules/codec/avcodec/avcodec.c:415:        if( var_InheritInt
 	2.1 mp->input.p_resource = input_resource_New(VLC_OBJECT(mp));
 		p_resource的作用是什么呢？
 	2.2 mp->p_event_manager = libvlc_event_manager_new(mp, instance);
-		event_manager用来管理所有该player实力支持的event。
+		event_manager指向结构体libvlc_event_manager_t，用来管理所有该player的event队列。
+		typedef struct libvlc_event_manager_t
+		{
+			void * p_obj;				//指向libvlc_media_player_t对象，即player实力。
+			struct libvlc_instance_t * p_libvlc_instance;  //指向libvlc_instance_t对象,即instance。
+			vlc_array_t listeners_groups;   //存放通过register_event注册的事件到队列，如register_event(mp, Buffering);register_event(mp, MediaChanged);等等。
+			vlc_mutex_t object_lock;
+			vlc_mutex_t event_sending_lock;
+			struct libvlc_event_async_queue * async_event_queue;
+		} libvlc_event_sender_t;
+		struct libvlc_event_async_queue {
+			struct queue_elmt *first_elmt, *last_elmt;
+			vlc_mutex_t lock;
+			vlc_cond_t signal;
+			vlc_thread_t thread;
+			bool is_idle;
+			vlc_cond_t signal_idle;
+			vlc_threadvar_t is_asynch_dispatch_thread_var;
+		};
 	2.3 register_event(mp, Buffering); register_event(mp, EndReached);//注册具体的event到event_manager管理的队列中。
+		通过宏定义，将register_event注册的事件，都转换成libvlc_MediaPlayer为开头的类型，加入到event_manager队列中。具体类型则定义在libvlc_events.h的结构enum libvlc_event_e 中。
+		#define register_event(a, b) __register_event(a, libvlc_MediaPlayer ## b)
+		static inline void __register_event(libvlc_media_player_t *mp, libvlc_event_type_t type)
+		{
+			libvlc_event_manager_register_event_type(mp->p_event_manager, type);
+		}
+		libvlc_event_manager_register_event_type();
 
-3. libvlc_event_async_attach(ev, mp_events[i], vlc_event_callback, this);//将用户指定的event加入到event_manager管理的队列中，并设置该event对应的回调处理函数。
+3. libvlc_event_async_attach(ev, mp_events[i], vlc_event_callback, this);
+	将用户指定的event加入到event_manager队列中具体的事件数组中，并设置该event对应的回调处理函数。
+	该函数与register_event的区别是，register_event告诉事件队列支持哪些事件类型。
+	libvlc_event_async_attach将具体的事件加入多对应的事件类型队列中，并设置对应的处理函数。
+	typedef struct libvlc_event_listener_t
+	{
+		libvlc_event_type_t event_type;
+		void *              p_user_data;　　　　//指向player实力。
+		libvlc_callback_t   pf_callback;        //指向事件处理函数，此处是vlc_event_callback。
+		bool                is_asynchronous;　　//该位置被设置成True。
+	} libvlc_event_listener_t;
+	int event_attach( libvlc_event_manager_t * p_event_manager,
+                  libvlc_event_type_t event_type,
+                  libvlc_callback_t pf_callback, void *p_user_data,
+                  bool is_asynchronous )
+	{
+		libvlc_event_listeners_group_t * listeners_group;
+		libvlc_event_listener_t * listener;
+		int i;
 
+		listener = malloc(sizeof(libvlc_event_listener_t));
+		if( unlikely(listener == NULL) )
+			return ENOMEM;
+
+		listener->event_type = event_type;
+		listener->p_user_data = p_user_data;
+		listener->pf_callback = pf_callback;
+		listener->is_asynchronous = is_asynchronous;
+
+		vlc_mutex_lock( &p_event_manager->object_lock );
+		for( i = 0; i < vlc_array_count(&p_event_manager->listeners_groups); i++ )
+		{
+			listeners_group = vlc_array_item_at_index(&p_event_manager->listeners_groups, i);
+			if( listeners_group->event_type == listener->event_type )
+			{
+				vlc_array_append( &listeners_group->listeners, listener );
+				break;
+			}
+		}
+		vlc_mutex_unlock( &p_event_manager->object_lock );
+		free(listener);
+		return -1;
+	}
+
+	
 4. libvlc_media_new_location(mLibVlcInstance, mURL.c_str())
 	该函数的目的就是获得libvlc_media_t对象。
-	4.1 input_item_New(input_item_New) -> input_item_NewWithType()
+	4.1 input_item_New(input_item_New) -> input_item_NewWithType()   //item.c
 	  根据视频源地址，创建一个input_item。
 		4.1.1 input_item_SetURI( p_input, psz_uri );
 	  	  1.存放输入视频源的地址;
 	  	  2.调用GuessType()函数，根据uri判断视频源是文件，网络地址还是目录。
 		4.1.2 vlc_event_manager_init(); //每个input_item有一个event链表，该链表负责存放input_item需要处理的事件。
-            	  vlc_event_manager_register_event_type( p_em, vlc_InputItemMetaChanged );  //将input事件添加到链表中。
+			vlc_event_manager_init( p_em, p_input );
+			vlc_event_manager_register_event_type( p_em, vlc_InputItemMetaChanged );  //将input事件添加到链表中，此处的event都定义在vlc_events.h中。
+			vlc_event_manager_register_event_type( p_em, vlc_InputItemSubItemAdded );
+			 
+			????此处的event_manager与mp->p_event_manager中的event_manager又什么关系吗？两个队列对应的结构体不一样：
+			//input_item_t对象的event manager对象。
+			typedef struct vlc_event_manager_t
+			{
+				void * p_obj;
+				vlc_mutex_t object_lock;
+				vlc_mutex_t event_sending_lock;
+				DECL_ARRAY(struct vlc_event_listeners_group_t *) listeners_groups;
+			} vlc_event_manager_t;
+			//libvlc_media_player_t对象的event manager对象。
+			typedef struct libvlc_event_manager_t
+			{
+				void * p_obj;				//指向libvlc_media_player_t对象，即player实力。
+				struct libvlc_instance_t * p_libvlc_instance;  //指向libvlc_instance_t对象,即instance。
+				vlc_array_t listeners_groups;   //存放通过register_event注册的事件到队列，如register_event(mp, Buffering);register_event(mp, MediaChanged);等等。
+				vlc_mutex_t object_lock;
+				vlc_mutex_t event_sending_lock;
+				struct libvlc_event_async_queue * async_event_queue;
+			} libvlc_event_sender_t;
+			
 		4.1.3 返回struct input_item_t()描述的input对象。
 	4.2 libvlc_media_new_from_input_item( p_instance, p_input_item );  //Create a new media descriptor object from an input_item
-		4.2.1libvlc_event_manager_t *em = p_md->p_event_manager;
-    		     libvlc_event_manager_register_event_type(em, libvlc_MediaMetaChanged);
+		4.2.1  libvlc_event_manager_t *em = p_md->p_event_manager;
+			//libvlc_media_t对象也维护一个自己的event队列
+    		libvlc_event_manager_register_event_type(em, libvlc_MediaMetaChanged); //将事件添加到链表中，此处的event都定义在libvlc_events.h中。
+			libvlc_event_manager_register_event_type(em, libvlc_MediaSubItemAdded);
+			libvlc_event_manager_register_event_type(em, libvlc_MediaVideoSize);   
+			libvlc_event_manager_register_event_type(em, libvlc_MediaNotSupport);
+			//libvlc_MediaVideoSize和libvlc_MediaNotSupport的回调处理函数在miplayer.cpp中建立联系，如下面代码所示。
+			libvlc_event_manager_t *ev_media;
+			ev_media = libvlc_media_event_manager( mVlcMedia);
+			/*add more events which we are interested in*/
+			static const libvlc_event_type_t media_events[] = {
+				libvlc_MediaVideoSize,
+				libvlc_MediaNotSupport,
+			};
+			for(unsigned int i = 0; i < (sizeof(media_events) / sizeof(*media_events)); i++)
+			{
+				libvlc_event_async_attach(ev_media, media_events[i], vlc_event_callback, this);
+			}
+			
+			
+			//libvlc_media_t对象的event magager的结构。
+			typedef struct libvlc_event_manager_t
+			{
+				void * p_obj;
+				struct libvlc_instance_t * p_libvlc_instance;
+				vlc_array_t listeners_groups;
+				vlc_mutex_t object_lock;
+				vlc_mutex_t event_sending_lock;
+				struct libvlc_event_async_queue * async_event_queue;
+			} libvlc_event_sender_t;
+		4.2.1  install_input_item_observer( p_md );
+			注意：这里是为p_input_item中注册时事件分配对应的回调处理函数，vlc_event_manager_register_event_type( p_em, vlc_InputItemMetaChanged )即中注册的。
+			{
+				vlc_event_attach( &p_md->p_input_item->event_manager,  //vlc_InputItemSubItemAdded　-->  input_item_subitem_added();
+						  vlc_InputItemSubItemAdded,
+						  input_item_subitem_added,
+						  p_md );
+				vlc_event_attach( &p_md->p_input_item->event_manager,   //vlc_InputItemMetaChanged  -->  input_item_meta_changed();
+								  vlc_InputItemMetaChanged,
+								  input_item_meta_changed,
+								  p_md );
+				vlc_event_attach( &p_md->p_input_item->event_manager,   //vlc_InputItemDurationChanged --> input_item_duration_changed();
+								  vlc_InputItemDurationChanged,
+								  input_item_duration_changed,
+								  p_md );			
+			}
+			注：input_item_subitem_added()函数应为事件vlc_InputItemSubItemAdded被调用后，在该函数中昨晚相应处理后，会发送libvlc_MediaSubItemAdded事件。
+				到此处，我们看到input_item_t的事件通过在libvlc_media_t中为该事件设置的回调函数与libvlc_media_t中的事件建立起了联系。做到的事件的分层处理。
+				vlc_InputItemSubItemAdded（事件）-->input_item_subitem_added()(事件处理回调函数) -->　libvlc_MediaSubItemAdded（事件）
 		
 5. libvlc_media_add_option(mVlcMedia, ffmpegopt.c_str()); //将用户设置的option选项放到input_item的ppsz_options队列中。
 
 6. libvlc_media_player_set_media(mVlcPlayerInstance, mVlcMedia);  //Set the Media descriptor associated with the instance.
 	由于mVlcMedia存储了要播放的视频源的路径信息，所有此时mVlcPlayerInstance也与具体视频建立了联系。
+
+/*******************************************************************************************************/
 
 prepareAsync
 vlc_initial
