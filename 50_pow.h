@@ -30,10 +30,28 @@ public:
  *
  */
     double myPow(double x, int n) {
-		double ret;
-		return ret;   
+		double result = 1.0;
+		int sign = 1.0;
+		if(n == 0){
+			return result;
+		}
+		if(x < 0){
+			sign = -1.0;
+			x *= sign;
+		}
+		
+		for(int i = 0; i < n; i++){
+			if(INT_MAX - result <x)
+				return INT_MAX;
+			result *= x;	
+		}
+
+		return result;
     }
 	int testCase(){
+		double x = 2.0;
+		int n = 3;
+		printf("x: %lf, n: %d, pow: %lf\n", x, n, myPow(x, n));
 		return 0;
 	}
 };
