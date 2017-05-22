@@ -12,8 +12,8 @@ public:
  *      for (int i=0; i<n; i++){
  *           result *=x;
  *      }
- *   
- *   However, 
+ *
+ *   However,
  *
  *     1) We need think about the `n` is negtive number.
  *
@@ -30,28 +30,45 @@ public:
  *
  */
     double myPow(double x, int n) {
-		double result = 1.0;
-		int sign = 1.0;
-		if(n == 0){
-			return result;
-		}
-		if(x < 0){
-			sign = -1.0;
-			x *= sign;
-		}
-		
-		for(int i = 0; i < n; i++){
-			if(INT_MAX - result <x)
-				return INT_MAX;
-			result *= x;	
-		}
+        double result = 1.0;
+        int sign = 1.0;
+        int exp = n;
+        if(n == 0){
+            return result;
+        }
+        if(x < 0){
+            if(n%2 == 1)
+                sign = -1.0;
+            x *= sign;
+        }
+        if(n < 0){//如果指数是负数，那么2^(-3)的结果是1/8,即1/(2^3).
+            exp = -n;
+        }
 
-		return result;
+        for(int i = 0; i < exp; i++){
+            if(INT_MAX - result <x)
+                return INT_MAX;
+            result *= x;
+        }
+
+        if(n<0){
+            result = 1/result;
+        }
+
+        return result*sign;
     }
-	int testCase(){
-		double x = 2.0;
-		int n = 3;
-		printf("x: %lf, n: %d, pow: %lf\n", x, n, myPow(x, n));
-		return 0;
-	}
+    int testCase(){
+        double x = 2.0;
+        int n = 3;
+        printf("x: %lf, n: %d, pow: %lf\n", x, n, myPow(x, n));
+
+        x = 34.00515;
+        n = -3;
+        printf("x: %lf, n: %d, pow: %lf\n", x, n, myPow(x, n));
+
+        x = -4.48392;
+        n = 6;
+        printf("x: %lf, n: %d, pow: %lf\n", x, n, myPow(x, n));
+        return 0;
+    }
 };
