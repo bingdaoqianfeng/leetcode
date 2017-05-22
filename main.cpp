@@ -45,9 +45,10 @@ using namespace std;
 //#include "47_permutations.II.h"
 //#include "48_rotateImage.h"
 //#include "49_groupAnagrams.h"
+//#include "50_pow.h"
 
 /****************to be continue*****************/
-#include "50_pow.h"
+#include "51_nQueuens.h"
 
 struct ListNode {
  	int val;
@@ -71,43 +72,43 @@ int main(int argc, char** argv)
 }
 
 void printList(ListNode *head){
-	while(head){
-  		printf("%d ", head->val);
-     	head = head->next;
- 	}
- 	printf("\n");
+    while(head){
+        printf("%d ", head->val);
+        head = head->next;
+    }
+    printf("\n");
 }
 
 void createVector()
 {
-	const char* s[]={"bbab","aba","abc"};
-	vector<string> v(s, s+3);
-	printVector(v);
+    const char* s[]={"bbab","aba","abc"};
+    vector<string> v(s, s+3);
+    printVector(v);
 
-	int a[]={-1, 2, 1, -4};
+    int a[]={-1, 2, 1, -4};
     vector<int> nums(a, a+sizeof(a)/sizeof(int));
 }
 
 void createList()
 { //23_mergeKSortedLists.h
-	ListNode head(-1);
- 	ListNode *ptr = NULL;
+    ListNode head(-1);
+    ListNode *ptr = NULL;
     int a[] = {1,2,3,4,5};
- 	//create list
-  	int len = sizeof(a)/sizeof(int);
- 	ptr = &head;
- 	for(int i=0; i<len; i++){
- 		ListNode *node = new ListNode(a[i]);
-   		ptr->next = node;
-   		ptr = node;
- 	}
+    //create list
+    int len = sizeof(a)/sizeof(int);
+    ptr = &head;
+    for(int i=0; i<len; i++){
+        ListNode *node = new ListNode(a[i]);
+        ptr->next = node;
+        ptr = node;
+    }
     printList(head.next);
 }
 
 void createBoard(){
-	vector< vector<char> > board(9);
-  	vector<string> s(9);
-  	s[0] = "53..7....";
+    vector< vector<char> > board(9);
+    vector<string> s(9);
+    s[0] = "53..7....";
     s[1] = "6..195...";
     s[2] = ".98....6.";
     s[3] = "8...6...3";
@@ -117,51 +118,51 @@ void createBoard(){
     s[7] = "...419..5";
     s[8] = "....8..79";
     for(int i = 0; i<9; i++){
-    	string str = s[i];
-      	board[i].resize(9);
-      	for(int j=0; j<9; j++){
-     		//printf("%c ", str[j]);
-      		board[i][j] = str[j];
-    	}
- 	}
+        string str = s[i];
+        board[i].resize(9);
+        for(int j=0; j<9; j++){
+            //printf("%c ", str[j]);
+            board[i][j] = str[j];
+        }
+    }
 }
 
 void createMatrix(){
-	int n = 5;
- 	vector< vector<int> > matrix;
-  	for (int i=1; i<=n; i++) {
-    	vector<int> v;
-     	for(int j=1; j<=n; j++){
-     		v.push_back( (i-1)*n + j );
-    	}
-     	matrix.push_back(v);
- 	}
+    int n = 5;
+    vector< vector<int> > matrix;
+    for (int i=1; i<=n; i++) {
+        vector<int> v;
+        for(int j=1; j<=n; j++){
+            v.push_back( (i-1)*n + j );
+        }
+        matrix.push_back(v);
+    }
 }
 
 void printMatrix(vector< vector<int> > &matrix)
 {
-	for(int i=0; i<matrix.size(); i++){
-     	for(int j=0; j< matrix[i].size(); j++) {
-       		printf("%3d ", matrix[i][j]) ;
-   		}
-      	cout << endl;
-  	}
-  	cout << endl;
+    for(int i=0; i<matrix.size(); i++){
+        for(int j=0; j< matrix[i].size(); j++) {
+            printf("%3d ", matrix[i][j]) ;
+        }
+        cout << endl;
+    }
+    cout << endl;
 }
 
 void printVectorVector(vector< vector<string> >& v)
 {
-	cout << "[ " <<endl;
-   	for(int j=0; j<v.size(); j++){
-    	printVector(v[j]);
-  	}
-  	cout << "] " << endl;
+    cout << "[ " <<endl;
+    for(int j=0; j<v.size(); j++){
+        printVector(v[j]);
+    }
+    cout << "] " << endl;
 }
 void printVector( vector<string>&  pt)
 {
-  	cout << "[ ";
- 	for(int j=0; j<pt.size(); j++){
-      	cout << pt[j] << "  ";
- 	}
-  	cout << "] " << endl;
+    cout << "[ ";
+    for(int j=0; j<pt.size(); j++){
+        cout << pt[j] << "  ";
+    }
+    cout << "] " << endl;
 }
