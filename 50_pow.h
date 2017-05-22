@@ -30,45 +30,47 @@ public:
  *
  */
     double myPow(double x, int n) {
-        double result = 1.0;
-        int sign = 1.0;
-        int exp = n;
-        if(n == 0){
-            return result;
-        }
-        if(x < 0){
-            if(n%2 == 1)
-                sign = -1.0;
-            x *= sign;
-        }
-        if(n < 0){//如果指数是负数，那么2^(-3)的结果是1/8,即1/(2^3).
-            exp = -n;
-        }
-
-        for(int i = 0; i < exp; i++){
-            if(INT_MAX - result <x)
-                return INT_MAX;
-            result *= x;
-        }
-
+        bool sign = false;
+        unsigned int exp = n;
         if(n<0){
-            result = 1/result;
+            exp = -n;
+            sign = true;
+        }
+        double result = 1.0;
+        while (exp) {
+            if (exp & 1){
+                result *= x;
+            }
+            printf("exp: %d, result: %lf\n", exp, result);
+            exp >>= 1;
+            x *= x;
+            printf("exp: %d, x: %lf\n\n", exp, x);
         }
 
-        return result*sign;
+        return sign ? 1/result : result;
     }
     int testCase(){
-        double x = 2.0;
-        int n = 3;
-        printf("x: %lf, n: %d, pow: %lf\n", x, n, myPow(x, n));
+        double x;
+        int n;
+        x = -2.0;
+        n = 5;
+        printf("\nx: %lf, n: %d, pow: %lf\n", x, n, myPow(x, n));
 
         x = 34.00515;
         n = -3;
-        printf("x: %lf, n: %d, pow: %lf\n", x, n, myPow(x, n));
+        //printf("x: %lf, n: %d, expect: 0.00003, pow: %lf\n", x, n, myPow(x, n));
+
+        x = 0.44528;
+        n = 0;
+        //printf("x: %lf, n: %d, expect: 1.0, pow: %lf\n", x, n, myPow(x, n));
+
+        x = 8.95371;
+        n = -1;
+        //printf("x: %lf, n: %d, expect: 0.11169, pow: %lf\n", x, n, myPow(x, n));
 
         x = -4.48392;
         n = 6;
-        printf("x: %lf, n: %d, pow: %lf\n", x, n, myPow(x, n));
+        //printf("x: %lf, n: %d, pow: %lf\n", x, n, myPow(x, n));
         return 0;
     }
 };
