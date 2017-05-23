@@ -67,8 +67,46 @@ public:
         }
     }
 
+	int getPosition(vector< vector<int> >& chessboard, int n, int row, int col){
+			for(int j=col+1; j<n; j++){
+				if(chessboard[row][j] != 1){
+					return j;
+				}
+			}
+			return col;
+	}
+	
+	recurSolveNQueens(vector< vector<string> >& result, int n, int row, int col,
+					 vector< vector<int> > chessboard, vector<string> onesolution){
+		if(row == n-1){
+			string s(n, '.');
+			s[col] = 'Q';
+			onesolution.push_back(s);
+			result.push_back(onesolution);
+		}
+		int col = 0;
+		for(int i=0; i<n; i++){
+        	vector< vector<int> > tempboard = chessboard;
+			updateChessboard(tempboard, n, row, i);
+			int ret;
+			do{
+				ret = getPosition(tempboard, n, row+1, col);
+				ret = col;
+				vector<string> temp = onesolution;
+				string s(n, '.');
+				s[col] = 'Q';
+				temp.push_back(s);
+				recurSolveNQueens(result, n, row+1, )
+			}while(ret != col);
+		}
+	}
+
     vector< vector<string> > solveNQueens(int n) {
         vector< vector<string> > result;
+		vector<string> onesolution;
+        vector< vector<int> > chessboard(n, vector<int>(n, 0));
+
+		recurSolveNQueens(result, n, 0, 0, chessboard, onesolution)
 
         for(int i=0; i<n; i++){
             vector< vector<int> > chessboard(n, vector<int>(n, 0));
@@ -76,8 +114,11 @@ public:
             string s(n,'.');
             s[i] = 'Q';
             printf("i: %d\n", i);
-            updateChessboard(chessboard, n, 0, i);
+			int row = 0;
+			int col = i;
+            updateChessboard(chessboard, n, row, col);
             printVV(chessboard);
+			
         }
 
         return result;
