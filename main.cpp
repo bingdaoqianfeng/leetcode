@@ -51,9 +51,9 @@ using namespace std;
 #include "51_nQueuens.h"
 
 struct ListNode {
- 	int val;
-  	ListNode *next;
-  	ListNode(int x) : val(x), next(NULL) {}
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
 };
 void printVector( vector<string>&  pt);
 void printVectorVector(vector< vector<string> >& v);
@@ -68,6 +68,11 @@ int main(int argc, char** argv)
 {
     Solution mysolution;
     mysolution.testCase();
+
+    //how to init  two-dimensional array
+    int n = 3;
+    vector< vector<int> > chessboard(n, vector<int>(n, 0));
+
     return 0;
 }
 
