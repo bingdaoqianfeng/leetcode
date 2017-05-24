@@ -67,37 +67,28 @@ public:
         }
     }
 
-	int getPosition(vector< vector<int> >& chessboard, int n, int row, int col){
-			for(int j=col+1; j<n; j++){
-				if(chessboard[row][j] != 1){
-					return j;
-				}
-			}
-			return col;
-	}
-	
-	recurSolveNQueens(vector< vector<string> >& result, int n, int row, int col,
+	void recurSolveNQueens(vector< vector<string> >& result, int n, int row,
 					 vector< vector<int> > chessboard, vector<string> onesolution){
-		if(row == n-1){
-			string s(n, '.');
-			s[col] = 'Q';
-			onesolution.push_back(s);
-			result.push_back(onesolution);
-		}
-		int col = 0;
+		if(row >= n)
+			return;
+
 		for(int i=0; i<n; i++){
+			if(chessboard[row][i] == 1)
+				continue;
         	vector< vector<int> > tempboard = chessboard;
+			//test each col for row.
 			updateChessboard(tempboard, n, row, i);
-			int ret;
-			do{
-				ret = getPosition(tempboard, n, row+1, col);
-				ret = col;
-				vector<string> temp = onesolution;
-				string s(n, '.');
-				s[col] = 'Q';
-				temp.push_back(s);
-				recurSolveNQueens(result, n, row+1, )
-			}while(ret != col);
+        	//printVV(tempboard);
+			vector<string> temp = onesolution;
+			string s(n, '.');
+			s[i] = 'Q';
+			temp.push_back(s);
+			//printVector(temp);
+			if(row == n - 1){
+				result.push_back(temp);
+			}
+			else
+				recurSolveNQueens(result, n, row+1, tempboard, temp);
 		}
 	}
 
@@ -106,28 +97,16 @@ public:
 		vector<string> onesolution;
         vector< vector<int> > chessboard(n, vector<int>(n, 0));
 
-		recurSolveNQueens(result, n, 0, 0, chessboard, onesolution)
-
-        for(int i=0; i<n; i++){
-            vector< vector<int> > chessboard(n, vector<int>(n, 0));
-            chessboard[0][i] = 1;
-            string s(n,'.');
-            s[i] = 'Q';
-            printf("i: %d\n", i);
-			int row = 0;
-			int col = i;
-            updateChessboard(chessboard, n, row, col);
-            printVV(chessboard);
-			
-        }
-
+		recurSolveNQueens(result, n, 0, chessboard, onesolution);
+        //printVV(chessboard);
         return result;
     }
     int testCase(){
         vector< vector<string> > result;
         int n;
-        n = 3;
+        n = 5;
         result = solveNQueens(n);
+		printVectorVector(result);
         return 0;
     }
     void printVV(vector< vector<int> >& v)
@@ -151,9 +130,10 @@ public:
     }
     void printVector( vector<string>&  pt)
     {
-        cout << "[ ";
+		cout << endl;
+        cout << "[ "<<endl;
         for(int j=0; j<pt.size(); j++){
-            cout << pt[j] << "  ";
+            cout << pt[j] << "  "<<endl;
         }
         cout << "] " << endl;
     }
