@@ -1,0 +1,232 @@
+1 convert mp4 file to ts file. 
+ffmpeg.exe -i /home/wanggang/stream/shaonv.mp4 -acodec copy  -vcodec copy  -y /home/wanggang/stream/hlxprod-169-cavlc-baseline.ts
+
+2 fix error: error while loading shared libraries: libpostproc.so
+export LD_LIBRARY_PATH=/usr/local/lib/
+
+3 ffplay如何播放外挂字幕
+http://m.blog.csdn.net/blog/deyangliu/44756305 
+./ffplay -vf subtitles=/home/user/source/mediafiles/sub/Homeland.S02E12.chs.srt /home/user/source/mediafiles/sub/Homeland.S02E12.mkv
+
+---------------如何提交patch到ffmpeg develop org----------------
+git status
+git add libavcodec/parser.c
+git status
+git commit --amend
+git format-patch -1
+./tools/patcheck 0001-re-fetch-PTS-DTS-if-fetch-failed.patch 
+
+#进行regression test的命令
+make fate-rsync
+make fate
+
+----------------compile vlc---------------------
+./configure  --enable-debug  --disable-optimizations --disable-nls
+./configure --enable-debug  --disable-optimizations --disable-nls --disable-a52 --disable-lua
+http://blog.chinaunix.net/uid-20648944-id-3637113.html
+http://blog.csdn.net/c_guolin/article/details/38537687
+
+-----------------compile ffmpeg---------------------
+./configure --disable-stripping --enable-gpl --enable-libx264 --enable-debug --disable-optimizations --enable-shared
+./configure --disable-stripping --enable-gpl --enable-libx264 --enable-debug --disable-optimizations --enable-shared --enable-pic
+./configure --disable-stripping --enable-gpl --enable-libx264 --enable-libx265 --enable-debug --disable-optimizations --enable-shared --enable-ffplay
+
+#增加对外挂字幕的支持
+./configure --disable-stripping --enable-gpl --enable-libx264 --enable-libx265 --enable-debug --disable-optimizations --enable-shared --enable-ffplay --enable-libass --enable-libfreetype
+
+./configure --disable-stripping --enable-gpl --enable-libx264 --enable-debug --disable-optimizations --enable-shared --enable-ffplay --enable-libass --enable-libfreetype --enable-libmp3lame --enable-version3 --enable-libvpx --enable-libfaac --enable-libvorbis --enable-libxvid --enable-postproc --enable-nonfree --enable-avfilter --enable-pthreads
+
+
+#指定fate的安装目录
+./configure --disable-stripping --enable-gpl --enable-libx264 --enable-libx265 --enable-debug --disable-optimizations --enable-shared --enable-ffplay --samples=fate-suite/
+
+./configure --disable-stripping --enable-gpl --enable-libx264 --enable-libx265 --enable-debug --disable-optimizations --enable-shared --enable-ffplay --enable-libass --enable-libfreetype --enable-libmp3lame --enable-version3 --enable-libvpx --enable-libfaac --enable-libvorbis --enable-libxvid --enable-postproc --enable-nonfree
+
+#支持fdk_aac
+#第一步，编译fad aac，这里制定的安装目录
+git clone --depth 1 git://github.com/mstorsjo/fdk-aac.git
+cd fdk-aac/
+autoreconf -fiv
+./configure --prefix="$HOME/ffmpeg_build" --disable-shared
+make
+make install
+
+#支持libopus https://trac.ffmpeg.org/wiki/How%20to%20quickly%20compile%20FFmpeg%20with%20opus%20and%20x264
+$ git clone git://git.opus-codec.org/opus.git
+$ cd opus
+$ ./autogen.sh
+$ ./configure --enable-static --enable-shared
+$ make
+# make install
+# ldconfig
+
+#配置ffmpeg
+./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --disable-stripping --enable-gpl --enable-libx264  --enable-debug --disable-optimizations --enable-shared --enable-ffplay --enable-libass --enable-libfreetype --enable-nonfree  --enable-libfdk_aac --enable-libvpx --enable-libmp3lame --enable-libvorbis --enable-libopus
+
+----------------compile ffmpeg----------------------------
+https://trac.ffmpeg.org/wiki/How%20to%20quickly%20compile%20FFmpeg%20with%20mp3,%20aac%2B%20and%20x264
+https://trac.ffmpeg.org/wiki/How%20to%20quickly%20compile%20libx264
+https://trac.ffmpeg.org/wiki/How%20to%20quickly%20compile%20libaacplus
+http://www.linuxidc.com/Linux/2014-02/97266.htm            /*for x265*/
+http://sinclairmediatech.com/building-ffmpeg-with-libx265/
+https://trac.ffmpeg.org/wiki/Encode/H.265
+./configure --prefix=../installdir/ --disable-stripping --enable-gpl --enable-libx264 --enable-debug --disable-optimizations --enable-shared
+
+./configure  --disable-stripping --enable-gpl --enable-libx264 --enable-debug --disable-optimizations --enable-shared --enable-nonfree --enable-version3 --disable-decoders --enable-decoder=iac --enable-decoder=mp3 --enable-decoder=cook --enable-decoder=atrac3 --enable-decoder=aac --enable-decoder=mp2 --enable-decoder=mp1 --enable-decoder=ac3 --enable-decoder=pcm_s24le --enable-decoder=pcm_s16le --enable-decoder=pcm_s16be --enable-decoder=pcm_u8 --enable-decoder=pcm_s8 --enable-decoder=pcm_mulaw --enable-decoder=adpcm_ms --enable-decoder=adpcm_ima_wav --enable-decoder=flac --enable-decoder=ape --enable-decoder=vorbis --enable-decoder=truehd --enable-decoder=dca --enable-decoder=ac3 --enable-decoder=eac3 --enable-decoder=wmalossless --enable-decoder=wmapro --enable-decoder=wmav1 --enable-decoder=wmav2 --enable-decoder=wmavoice --enable-decoder=alac --enable-decoder=flv --enable-decoder=rv10 --enable-decoder=rv20 --enable-decoder=rv30 --enable-decoder=rv40 --enable-decoder=h264 --enable-decoder=vp6 --enable-decoder=vp6f --enable-decoder=mpeg1video --enable-decoder=vc1 --enable-decoder=vc1image --enable-decoder=mjpeg --enable-decoder=cinepak --enable-decoder=tscc --enable-decoder=wmv1 --enable-decoder=wmv2 --enable-decoder=vp3 --enable-decoder=vp5 --enable-decoder=vp6 --enable-decoder=vp6a --enable-decoder=vp6f --enable-decoder=vp8 --enable-decoder=h264 --enable-decoder=h264_crystalhd --enable-decoder=h264_vda --enable-decoder=h264_vdpau --enable-decoder=mpeg4 --enable-decoder=mpeg4_crystalhd --enable-decoder=mpeg4_vdpau --enable-decoder=dvdsub --enable-decoder=dvbsub --enable-decoder=pgssub --enable-decoder=xsub
+
+./configure  --disable-stripping --enable-gpl --enable-libx264 --enable-debug --disable-optimizations --enable-shared --enable-nonfree --enable-version3
+
+--enable-version3 --enable-gpl --enable-nonfree --disable-muxers --disable-encoders --disable-filters --disable-bsfs --disable-decoders --enable-decoder=iac --enable-decoder=mp3 --enable-decoder=cook --enable-decoder=atrac3 --enable-decoder=aac --enable-decoder=mp2 --enable-decoder=mp1 --enable-decoder=ac3 --enable-decoder=pcm_s24le --enable-decoder=pcm_s16le --enable-decoder=pcm_s16be --enable-decoder=pcm_u8 --enable-decoder=pcm_s8 --enable-decoder=pcm_mulaw --enable-decoder=adpcm_ms --enable-decoder=adpcm_ima_wav --enable-decoder=flac --enable-decoder=ape --enable-decoder=vorbis --enable-decoder=truehd --enable-decoder=dca --enable-decoder=ac3 --enable-decoder=eac3 --enable-decoder=wmalossless --enable-decoder=wmapro --enable-decoder=wmav1 --enable-decoder=wmav2 --enable-decoder=wmavoice --enable-decoder=alac --enable-decoder=flv --enable-decoder=rv10 --enable-decoder=rv20 --enable-decoder=rv30 --enable-decoder=rv40 --enable-decoder=h264 --enable-decoder=vp6 --enable-decoder=vp6f --enable-decoder=mpeg1video --enable-decoder=vc1 --enable-decoder=vc1image --enable-decoder=mjpeg --enable-decoder=cinepak --enable-decoder=tscc --enable-decoder=wmv1 --enable-decoder=wmv2 --enable-decoder=vp3 --enable-decoder=vp5 --enable-decoder=vp6 --enable-decoder=vp6a --enable-decoder=vp6f --enable-decoder=vp8 --enable-decoder=h264 --enable-decoder=h264_crystalhd --enable-decoder=h264_vda --enable-decoder=h264_vdpau --enable-decoder=mpeg4 --enable-decoder=mpeg4_crystalhd --enable-decoder=mpeg4_vdpau --enable-decoder=dvdsub --enable-decoder=dvbsub --enable-decoder=pgssub --enable-decoder=xsub --enable-cross-compile --arch=arm --target-os=linux --cross-prefix=/home/xw/entrapment/android//prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6/bin/arm-linux-androideabi- --extra-cflags=' -fpic -DANDROID -I/home/xw/entrapment/android/prebuilts/ndk/8/platforms/android-17/arch-arm//usr/include' --extra-ldflags=' -Wl,-T,/home/xw/entrapment/android//prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6/arm-linux-androideabi/lib/ldscripts/armelf_linux_eabi.x -Wl,-rpath-link=/home/xw/entrapment/android//out/target/product/entrapment/system/lib/ -L/home/xw/entrapment/android//out/target/product/entrapment/system/lib/ -lc -lm -ldl -nostdlib /home/xw/entrapment/android//out/target/product/entrapment/obj/lib/crtbegin_dynamic.o /home/xw/entrapment/android//prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6/lib/gcc/arm-linux-androideabi/4.6.x-google/crtend.o'
+
+-------------------------------------------------------------------------------------------------------------------------
+4 how to use map option.
+https://trac.ffmpeg.org/wiki/How%20to%20use%20-map%20option
+
+*************************************************************************************************************************************
+./ffmpeg -i /home/yuxinliu/video/HLXBRD_30/WMV/VC1WMA.wmv -c:v libx264 -c:a mp2 /home/yuxinliu/video/output/111.mp4
+./ffmpeg  -i /home/yuxinliu/video/stream/multitrack.mkv -vcodec copy -c:a copy  /home/yuxinliu/video/stream/multitrack.ts
+
+./ffmpeg -i /home/yuxinliu/video/overtime.avi -f psp  -acodec mp2 -ab 94k  -vcodec libx264 -cqp 28 -coder 1 -refs 3 -deblockalpha 1 -deblockbeta -1 -me_method umh -subq 9 -me_range 32 -trellis 2 -chromaoffset -2 -nr 0 -bf 2 -b_strategy 1 -bframebias 0 -directpred 3 -g 250 -i_qfactor 1.3 -b_qfactor 1.4 -flags2 +bpyramid+wpred+mixed_refs+8x8dct -er 2 -s 480x320 /home/yuxinliu/video/output/x264.mp4
+
+./ffmpeg -i /home/yuxinliu/video/overtime.avi -f psp  -acodec mp2 -ab 94k  -vcodec libx264 -cqp 28 -coder 1 -refs 3 -deblockalpha 1 -deblockbeta -1 -me_method umh -subq 9 -me_range 32 -trellis 2 -chromaoffset -2 -nr 0 -bf 2 -b_strategy 1 -bframebias 0 -directpred 3 -g 250 -i_qfactor 1.3 -b_qfactor 1.4 -flags2 +bpyramid+wpred+mixed_refs+8x8dct -er 2 -s 480x320 /home/yuxinliu/video/output/x264.mp4
+
+./ffmpeg -i /home/yuxinliu/video/stream/multitrack.mkv -map 0:2 -map 0:1 -map 0:0 -c copy /home/yuxinliu/video/stream/multitrack.ts
+
+ffmpeg -i /home/yuxinliu/video/stream/multitrack.mkv -map 0:0 -map 0:1 -map 0:2 -c:v libx264 -c:a:0 copy -c:a:1 copy /home/yuxinliu/video/stream/multitrack.ts
+
+#利用-ss指定转码的起始时间，该参数会让demux首先做seek到指定的时间位置，然后开始转码。
+r -ss 00:01:00.000  -i ~/source/mediafiles/tsfiles/DUHD\ 三星-50Bps.ts -c:v libx264 -c:a copy ~/source/mediafiles/test.mp4
+
+#利用map指定视频源中每个stream对应的转码后的编码格式。下面例子中源有1个video，3个audio。对video采用265编码，对于audio，不重新编码。
+./ffmpeg -i ~/source/mediafiles/10bit/2012.2009.1080p.BluRay.x264.10bit-WiKi.Sample.mkv -pix_fmt yuv420p10le -map 0:0 -map 0:1 -map 0:2 -map 0:3 -c:v libx265 -x265-params profile=main422-10 -c:a:0 copy -c:a:1 copy -c:a:2 copy  ~/source/mediafiles/debug/test.mkv
+
+#利用-r frames指定转码后视频的帧率
+./ffmpeg -i ~/source/mediafiles/4k/pt80.ukuale最顶级测试HDTV.x264.2160p.120fps.DTSES.6.1ch.mkv -r 30 -c:v libx265  -c:a copy ~/source/mediafiles/debug/pt80.ukuale最顶级测试HDTV.x265.fps30.mkv
+
+#指定视频的编码格式是yuv420
+./ffmpeg -i ~/source/mediafiles/liupeng/AFTER-EARTH_TLR-D_GEN_EN-XX_INTL_51-4K-HDTN.mp4  -pix_fmt yuv420p -c:v libx264 -c:a copy ~/source/mediafiles/liupeng/new/AFTER-EARTH_TLR-D_GEN_EN-XX_INTL_51-4K-HDTN-new.mp4
+
+#用-r可以指定编码后的帧率
+./ffmpeg -i ~/source/mediafiles/liupeng/AFTER-EARTH_TLR-D_GEN_EN-XX_INTL_51-4K-HDTN.mp4  -r 25 -c:v libx264 -c:a copy ~/source/mediafiles/debug/test.mp4
+
+#h265编码，指定输出码率 
+./ffmpeg -i ~/source/mediafiles/50fps/Terminator\ Genysis.mp4 -c:v libx265  -b:v 4M -maxrate 4M -bufsize 8M   -c:a copy ~/source/mediafiles/50fps/Terminator_h265.mp4
+
+#aac,h264编码
+./ffmpeg -i ~/source/mediafiles/src.mkv  -c:v libx264 -c:a libmp3lame output.mp4
+ffmpeg -i input.mp4 -c:v libx264 -c:a libmp3lame -b:a 384k output.mp4
+ffmpeg -loglevel verbose -re -i movie.avi  -vcodec libx264  -vprofile baseline -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://localhost:1935/hls/movie
+
+#生成HLS分片 
+http://sinclairmediatech.com/encoding-hls-with-ffmpeg/
+/home/user/source/ffmpegsrc/ffmpeg-2.2.11/ffmpeg -i ../ASS+SRT/the.big.bang.theory.s05e02.real.proper.720p.hdtv.x264-qcf.mkv -c:v libx264 -b:v 128k -flags -global_header  -f segment -segment_time 4 -segment_list test.m3u8 -segment_format mpegts stream%05d.ts
+
+/home/user/source/ffmpegsrc/ffmpeg-2.2.11/ffmpeg -i ../ASS+SRT/the.big.bang.theory.s05e02.real.proper.720p.hdtv.x264-qcf.mkv -c:v libx264 -b:v 128k -flags -global_header  -f segment -segment_time 4 -segment_list test.m3u8 -segment_format mpegts stream%05d.ts
+
+./configure –user=daemon –group=daemon –prefix=/usr/local/nginx-1.2.4/ –add-module=../nginx-rtmp-module-master –add-module=../nginx-rtmp-module-master/hls –add-module=../ngx_cache_purge-master  –with-http_stub_status_module –with-http_ssl_module –with-http_sub_module –with-md5=/usr/lib –with-sha1=/usr/lib –with-http_gzip_static_module
+
+
+./configure --prefix=/usr/local/nginx-1.8 --add-module=../nginx-rtmp-module-master --add-module=../nginx-rtmp-module-master/hls --add-module=../ngx_cache_purge-master  --with-http_stub_status_module --with-http_ssl_module --with-http_sub_module --with-md5=/usr/lib --with-sha1=/usr/lib --with-http_gzip_static_module
+
+./configure --prefix=/usr/local/nginx-1.8 --add-module=../nginx-rtmp-module-master  --add-module=../ngx_cache_purge-master  --with-http_stub_status_module --with-http_ssl_module --with-http_sub_module --with-md5=/usr/lib --with-sha1=/usr/lib --with-http_gzip_static_module
+
+#紧紧编码video。
+./ffmpeg -i ~/source/mediafiles/ATMOS/747.m2ts  -map 0:0 -map 0:1 -map 0:2 -map 0:3 -c:v libx264 -b:v 5M -maxrate 5M -c:a:0 copy -c:a:1 copy -c:a:2 copy ~/source/mediafiles/ATMOS/mkv
+
+
+-----------------------nginx---------------------------
+http://www.helping-squad.com/nginx-rtmp-hls-or-dash-streaming/
+http://my.oschina.net/u/1983790/blog/492851
+https://razvantudorica.com/12/hls-video-on-demand-streaming/
+http://sinclairmediatech.com/encoding-hls-with-ffmpeg/
+
+#配置ffmpeg
+./configure  --disable-stripping --enable-gpl --enable-libx264 --enable-libx265 --enable-debug --disable-optimizations --enable-shared --enable-ffplay --enable-libass --enable-libfreetype --enable-libmp3lame --enable-version3  --enable-libvpx --enable-libfaac --enable-libvorbis --enable-libxvid --enable-postproc --enable-nonfree  --enable-avfilter --enable-pthreads
+
+#配置nginx
+./configure --prefix=/usr/local/nginx-1.8 --add-module=../nginx-rtmp-module-master --add-module=../nginx-rtmp-module-master/hls --add-module=../ngx_cache_purge-master  --with-http_stub_status_module --with-http_ssl_module --with-http_sub_module --with-md5=/usr/lib --with-sha1=/usr/lib --with-http_gzip_static_module
+
+./ffmpeg -loglevel verbose -re -i ~/source/mediafiles/src.mkv  -vcodec libx264 -vprofile baseline -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://localhost:1935/hls/movie
+
+--------------------------wowza-------------------
+http://blog.163.com/chxliu03@126/blog/static/119257987201428356905/
+http://www.wowza.com/pricing/installer
+http://www.pagefabric.com/blogs/2013/02/18/how-to-install-wowza-media-server-on-ubuntu-12/
+
+----------------------------------------------------------------------------------------------
+
+*******************************document of ffmpeg************************************************
+http://bbs.csdn.net/topics/390700255
+https://trac.ffmpeg.org/wiki/How%20to%20quickly%20compile%20FFmpeg%20with%20mp3,%20aac%2B%20and%20x264
+https://trac.ffmpeg.org/wiki/How%20to%20quickly%20compile%20libx264
+https://trac.ffmpeg.org/wiki/How%20to%20quickly%20compile%20libaacplus
+
+******************************source code of ffmpeg*********************************************
+1. ffmpeg.c
+1.1 decode_audio()
+1.2 decode_video()
+
+2. ffmpeg_opt.c
+2.1 add_input_streams()
+2.2 choose_decoder()
+2.3 open_input_file()
+2.4 avformat_open_input()
+
+
+*********************************document of x264***************************************************
+http://wmnmtm.blog.163.com/blog/static/3824571420115673052227/
+-------------------------------------------------------------------------------------------------
+./ffmpeg -i ~/source/mediafiles/DUHD\ 三星-50Bps.ts -c:v libx264 -c:a copy ~/source/mediafiles/test.mp4
+
+-i ~/source/mediafiles/1.ts -c:v libx264 ~/source/mediafiles/test.mp4
+-i ~/source/mediafiles/Good.Night.and.Good.Luck.2005.Blue-ray.Remux.MPEG2.1080p.DD51.Fanxy@Silu.disk1.ts -c:v libx264 ~/source/mediafiles/test.mp4
+./ffmpeg_g  -i ~/source/mediafiles/debug/1.ts -c:v libx264 -c:a copy ~/source/mediafiles/debug/test.ts
+
+./ffmpeg -ss 00:10:00.000 -i ~/source/mediafiles/debug/what.if.2013.limited.1080p.bluray.x264-geckos.mkv -c:v libx264 -c:a mp2 ~/source/mediafiles/debug/test.mp4
+./ffmpeg -ss 00:10:00.000 -i ~/source/mediafiles/debug/friends.mkv -c:v libx264 -c:a mp2 ~/source/mediafiles/debug/test.mp4
+-ss 00:10:00.000 -i ~/source/mediafiles/debug/what.if.2013.limited.1080p.bluray.x264-geckos.mkv -c:v libx264 -c:a mp2 ~/source/mediafiles/debug/test.mp4
+-ss 00:10:00.000 -i ~/source/mediafiles/debug/friends.mkv -c:v libx264 -c:a mp2 ~/source/mediafiles/debug/1.mp4
+
+./ffmpeg -ss 01:10:00.000 -i /media/user/NTFS格式的移动硬盘/lyx/what.if.2013.limited.1080p.bluray.x264-geckos.mkv -c:v libx264 -c:a mp2 ~/source/mediafiles/debug/test.mp4
+
+./ffmpeg -ss 01:10:00.000 -i ~/source/mediafiles/debug/whatnew.mkv -c:v libx264 -c:a mp2 ~/source/mediafiles/debug/test.mp4
+
+./ffmpeg -ss 01:10:00.000 -i ~/source/mediafiles/mkvfiles/Saint.Seiya.Legend.of.Sanctuary.2014.BluRay.1080p.AAC.x265-MGRT.mkv -c:v libx264 -c:a mp2 ~/source/mediafiles/debug/test.mp4
+
+./ffmpeg  -i ~/source/mediafiles/tsfiles/MPEG2_Main_High/TSF_MPEG_1920x1080_AAC_48KHz_2ch.ts -c:v libx264 -c:a mp2 ~/source/mediafiles/debug/test.mp4
+
+
+./ffmpeg -ss 00:30:00.000  -i ~/source/mediafiles/tsfiles/woof_3DTV.HSBS.1080P.TS -c:v libx264 -c:a mp2 ~/source/mediafiles/debug/test.mp4
+/home/user/source/mediafiles/debug/test.mp4
+r -ss 00:01:00.000  -i ~/source/mediafiles/tsfiles/DUHD\ 三星-50Bps.ts -c:v libx264 -c:a copy ~/source/mediafiles/test.mp4
+r -ss 00:10:00.000  -i ~/source/mediafiles/tsfiles/woof_3DTV.HSBS.1080P.TS -c:v libx264 -c:a copy ~/source/mediafiles/test.mp4
+r -ss 00:00:30.000  -i ~/source/mediafiles/tsfiles/h264/Die.Hard.Blu-ray.REMUX.1080p.H.264.DTS-HD.MA.DualAudio.Silu.disk1.ts -c:v libx264 -c:a copy ~/source/mediafiles/test.mp4
+r -ss 00:30:00.000 -i ~/source/mediafiles/tsfiles/spacePanasonic2.3D.chimps/3D\ BY\ PANASONIC_Space\ Chimps_2.ts -c:v libx264 -c:a mp2 ~/source/mediafiles/debug/test.mp4
+libavformat/utils.c:av_seek_frame
+libavformat/mpegts.c:mpegts_read_packet
+libavcodec/h264_parser.c:scan_mmco_reset
+libavformat/utils.c:ff_find_last_ts
+libavformat/mpegts.c:mpegts_get_dts
+
+libavformat/mpegts.c:2168
+
+libavformat/utils.c:estimate_timings_from_pts
+
+r  -i ~/source/mediafiles/FG-1486/WebM_VP8_Unknown_1920x1080@30_5618K_Vorbis_44.1k_Stereo.webm -c:v libx264 -c:a mp2 ~/source/mediafiles/debug/test.mp4
+
+libavformat/matroskadec.c:matroska_read_header
+
+./ffmpeg -i ~/source/mediafiles/King.Kong.2005.Extended.Edition.Blu-Ray.720p.2Audio.DTS.x264-beAst.mkv -c:v libx265 -c:a copy ~/source/mediafiles/debug/test.mp4
+./ffmpeg -i ~/source/mediafiles/10bit/2012.2009.1080p.BluRay.x264.10bit-WiKi.Sample.mkv -map 0:0 -map 0:2 -map 0:3 -c:v libx265 -c:a:0 copy -c:a:1 copy ~/source/mediafiles/debug/test.mp4
+./ffmpeg -i ~/source/mediafiles/10bit/2012.2009.1080p.BluRay.x264.10bit-WiKi.Sample.mkv -map 0:0 -map 0:1 -map 0:2 -map 0:3 -c:v libx265 -c:a:0 copy -c:a:1 copy -c:a:2 copy ~/source/mediafiles/debug/test.mkv
+./ffmpeg -i ~/source/mediafiles/10bit/2012.2009.1080p.BluRay.x264.10bit-WiKi.Sample.mkv -pix_fmt yuv420p10le -map 0:0 -map 0:1 -map 0:2 -map 0:3 -c:v libx265 -x265-params profile=main422-10 -c:a:0 copy -c:a:1 copy -c:a:2 copy  ~/source/mediafiles/debug/test.mkv
+
+./ffmpeg -i ~/source/mediafiles/10bit/2012.2009.1080p.BluRay.x264.10bit-WiKi.Sample.mkv -pix_fmt yuv420p10le -c:v libx265 -x265-params bit-depth=10  -c:a copy ~/source/mediafiles/debug/test.mkv
+./ffmpeg -i ~/source/mediafiles/10bit/2012.2009.1080p.BluRay.x264.10bit-WiKi.Sample.mkv  -c:v libx265 -x265-params bit-depth=10  -c:a copy ~/source/mediafiles/debug/test.mkv
+
+#set frame rate
+./ffmpeg -i ~/source/mediafiles/4k/pt80.ukuale最顶级测试HDTV.x264.2160p.120fps.DTSES.6.1ch.mkv -r 60 -c:v libx265  -c:a copy ~/source/mediafiles/debug/pt80.ukuale最顶级测试HDTV.x265.fps60.mkv
+
+./ffmpeg -i ~/source/mediafiles/10bit/Titanic.1997.Open.Matte.1080p.BluRay.x264.10bit-WiKi.Sample.mkv -map 0:0 -map 0:1 -map 0:2 -map 0:3 -map 0:4 -map 0:5 -c:v libx265 -c:a:0 copy -c:a:1 copy -c:a:2 copy -c:a:3 copy -c:a:4 copy ~/source/mediafiles/debug/Titanic.1997.Open.Matte.1080p.BluRay.x265.10bit-WiKi.Sample.mkv
+
+./ffmpeg -i ~/source/mediafiles/10bit/Titanic.1997.Open.Matte.1080p.BluRay.x264.10bit-WiKi.Sample.mkv -map 0:0 -map 0:1 -map 0:2 -map 0:3 -map 0:4 -map 0:5 -c:v libx265 -c:a:0 copy -c:a:1 copy -c:a:2 copy -c:a:3 copy -c:a:4 copy ~/source/mediafiles/debug/Titanic.1997.Open.Matte.1080p.BluRay.x265.10bit-WiKi.Sample.mkv

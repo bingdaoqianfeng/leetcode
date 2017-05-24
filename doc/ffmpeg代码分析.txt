@@ -1,0 +1,104 @@
+-------------------------------------ffmpeg 源代码中的一些堆栈信息-------------------------------------
+1 ffmpeg中seek的堆栈
+1.1 AVI
+(gdb) bt
+#0  avi_read_seek (s=0x64d900, stream_index=0, timestamp=23400, flags=1) at libavformat/avidec.c:1618
+#1  0x00007ffff761bfd0 in seek_frame_internal (s=0x64d900, stream_index=0, timestamp=23400, flags=1) at libavformat/utils.c:2192
+#2  0x00007ffff761c136 in av_seek_frame (s=0x64d900, stream_index=-1, timestamp=780000000, flags=1) at libavformat/utils.c:2224
+#3  0x00007ffff761c333 in avformat_seek_file (s=0x64d900, stream_index=-1, min_ts=-9223372036854775808, ts=780000000, max_ts=780000000, flags=0) at libavformat/utils.c:2275
+#4  0x000000000041019e in open_input_file (o=0x7fffffffd7e0, 
+    filename=0x7fffffffe195 "/home/user/source/mediafiles/亚洲天王rain舞蹈 播放MS MPEG-4 Video v3编码、480p(720480)分辨率、30fps帧率的视频文件.avi") at ffmpeg_opt.c:875
+#5  0x000000000041818c in open_files (l=0x6370d8, inout=0x42e3cf "input", open_file=0x40f7ff <open_input_file>) at ffmpeg_opt.c:2603
+#6  0x0000000000418318 in ffmpeg_parse_options (argc=10, argv=0x7fffffffdd78) at ffmpeg_opt.c:2640
+#7  0x000000000042adc8 in main (argc=10, argv=0x7fffffffdd78) at ffmpeg.c:3625
+
+1.2 3gp
+(gdb) bt
+#0  mov_read_seek (s=0x64d900, stream_index=1, sample_time=1500000, flags=1) at libavformat/mov.c:3601
+#1  0x00007ffff761c00f in seek_frame_internal (s=0x64d900, stream_index=1, timestamp=1500000, flags=1) at libavformat/utils.c:2196
+#2  0x00007ffff761c19d in av_seek_frame (s=0x64d900, stream_index=-1, timestamp=60000000, flags=1) at libavformat/utils.c:2231
+#3  0x00007ffff761c39a in avformat_seek_file (s=0x64d900, stream_index=-1, min_ts=-9223372036854775808, ts=60000000, max_ts=60000000, flags=0) at libavformat/utils.c:2282
+#4  0x000000000041019e in open_input_file (o=0x7fffffffd840, filename=0x7fffffffe1f1 "/home/user/source/mediafiles/IN-340/HIM(JoinMe).3gp") at ffmpeg_opt.c:875
+#5  0x000000000041818c in open_files (l=0x6370d8, inout=0x42e3cf "input", open_file=0x40f7ff <open_input_file>) at ffmpeg_opt.c:2603
+#6  0x0000000000418318 in ffmpeg_parse_options (argc=10, argv=0x7fffffffddd8) at ffmpeg_opt.c:2640
+#7  0x000000000042adc8 in main (argc=10, argv=0x7fffffffddd8) at ffmpeg.c:3625
+
+
+2 ffmpeg中,parser的源文件位置
+可以设置断点在av_parser_parse2找到各个parser的源代码
+#0  h264_parse (s=0x654ac0, avctx=0x651b60, poutbuf=0x7fffffffd118, poutbuf_size=0x7fffffffd120, buf=0x7ffff7e1f040 "", buf_size=1283) at libavcodec/h264_parser.c:458
+#1  0x00007ffff66c3d02 in av_parser_parse2 (s=0x654ac0, avctx=0x651b60, poutbuf=0x7fffffffd118, poutbuf_size=0x7fffffffd120, buf=0x7ffff7e1f040 "", buf_size=1283, pts=90000, dts=86246, pos=752)
+    at libavcodec/parser.c:160
+#2  0x00007ffff76194a6 in parse_packet (s=0x64d900, pkt=0x7fffffffd1e0, stream_index=0) at libavformat/utils.c:1329
+#3  0x00007ffff761a006 in read_frame_internal (s=0x64d900, pkt=0x7fffffffd410) at libavformat/utils.c:1507
+#4  0x00007ffff761f702 in avformat_find_stream_info (ic=0x64d900, options=0x6541c0) at libavformat/utils.c:3176
+#5  0x0000000000410096 in open_input_file (o=0x7fffffffd830, filename=0x7fffffffe1c0 "/home/user/source/mediafiles/Air.Force.One.Blu-Ray.REMUX.H264.1080p.DTS.LPCM.DD51.F_Silu.DISK1.ts")
+    at ffmpeg_opt.c:861
+#6  0x000000000041818c in open_files (l=0x6370d8, inout=0x42e3cf "input", open_file=0x40f7ff <open_input_file>) at ffmpeg_opt.c:2603
+#7  0x0000000000418318 in ffmpeg_parse_options (argc=8, argv=0x7fffffffddc8) at ffmpeg_opt.c:2640
+#8  0x000000000042adc8 in main (argc=8, argv=0x7fffffffddc8) at ffmpeg.c:3625
+
+2.1 h264
+h264_parse (s=0x654ac0, avctx=0x651b60, poutbuf=0x7fffffffd118, poutbuf_size=0x7fffffffd120, buf=0x7ffff7e1f040 "", buf_size=1283) at libavcodec/h264_parser.c:458
+
+2.2 AC3
+ff_aac_ac3_parse  libavcodec/aac_ac3_parser.c:33
+
+2.3 dca
+dca_parse (s=0x6554a0, avctx=0x652620, poutbuf=0x7fffffffd118, poutbuf_size=0x7fffffffd120, buf=0x6ae0a0 "\177\376\200\001\374<>\322u\340\r:", buf_size=1006) at libavcodec/dca_parser.c:138
+
+
+3 ffmpeg中，ts文件的demux堆栈调用关系
+(gdb) bt
+#0  mpegts_probe (p=0x7fffe9258b00) at libavformat/mpegts.c:2192
+#1  0x00007ffff760b8a2 in av_probe_input_format3 (pd=0x7fffe9258bc0, is_opened=1, score_ret=0x7fffe9258b7c) at libavformat/utils.c:259
+#2  0x00007ffff760b9ae in av_probe_input_format2 (pd=0x7fffe9258bc0, is_opened=1, score_max=0x7fffe9258bf0) at libavformat/utils.c:282
+#3  0x00007ffff760be33 in av_probe_input_buffer2 (pb=0x7fffe4005700, fmt=0x7fffe40008c8, filename=0x7ffff7fc29d0 "/home/user/source/mediafiles/cctv5.ts", logctx=0x7fffe40008c0, offset=0, 
+    max_probe_size=1048576) at libavformat/utils.c:412
+#4  0x00007ffff760c168 in init_input (s=0x7fffe40008c0, filename=0x7ffff7fc29d0 "/home/user/source/mediafiles/cctv5.ts", options=0x7fffe9258cb8) at libavformat/utils.c:478
+#5  0x00007ffff760c495 in avformat_open_input (ps=0x7fffe9258e48, filename=0x7ffff7fc29d0 "/home/user/source/mediafiles/cctv5.ts", fmt=0x0, options=0x61d9f0 <format_opts>) at libavformat/utils.c:540
+#6  0x0000000000414abc in read_thread (arg=0x7ffff7ec2040) at ffplay.c:2745
+#7  0x00007ffff5576ad8 in ?? () from /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0
+#8  0x00007ffff55b6109 in ?? () from /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0
+#9  0x00007ffff5048182 in start_thread (arg=0x7fffe9259700) at pthread_create.c:312
+#10 0x00007ffff4d74efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+(gdb) c
+Continuing.
+    nan    :  0.000 fd=   0 aq=    0KB vq=    0KB sq=    0B f=0/0   
+Breakpoint 3, mpegts_read_header (s=0x7fffe40008c0) at libavformat/mpegts.c:2262
+2262	{
+(gdb) bt
+#0  mpegts_read_header (s=0x7fffe40008c0) at libavformat/mpegts.c:2262
+#1  0x00007ffff760c660 in avformat_open_input (ps=0x7fffe9258e48, filename=0x7ffff7fc29d0 "/home/user/source/mediafiles/cctv5.ts", fmt=0x0, options=0x61d9f0 <format_opts>) at libavformat/utils.c:575
+#2  0x0000000000414abc in read_thread (arg=0x7ffff7ec2040) at ffplay.c:2745
+#3  0x00007ffff5576ad8 in ?? () from /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0
+#4  0x00007ffff55b6109 in ?? () from /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0
+#5  0x00007ffff5048182 in start_thread (arg=0x7fffe9259700) at pthread_create.c:312
+#6  0x00007ffff4d74efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+(gdb) 
+
+
+4 在avcodec_open2函数中，ret = avctx->codec->init(avctx);的位置，设置断点，可以追踪到具体的decode模块。
+(gdb) bt
+#0  decode_init (avctx=0x7fffe4004a80) at libavcodec/mpegaudiodec_template.c:412
+#1  0x00007ffff67a602f in avcodec_open2 (avctx=0x7fffe4004a80, codec=0x7ffff6e27bc0 <ff_mp3_decoder>, options=0x7fffe9258c88) at libavcodec/utils.c:1450
+#2  0x00000000004141ed in stream_component_open (is=0x7ffff7ec2040, stream_index=0) at ffplay.c:2539
+#3  0x0000000000415016 in read_thread (arg=0x7ffff7ec2040) at ffplay.c:2838
+#4  0x00007ffff5576ad8 in ?? () from /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0
+#5  0x00007ffff55b6109 in ?? () from /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0
+#6  0x00007ffff5048182 in start_thread (arg=0x7fffe9259700) at pthread_create.c:312
+#7  0x00007ffff4d74efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+
+5 音频解码的堆栈调用关系
+(gdb) 
+#0  decode_frame (avctx=0x7fffe4004a80, data=0x7fffd80008c0, got_frame_ptr=0x7fffdf7fc5a0, avpkt=0x7fffdf7fc400) at libavcodec/mpegaudiodec_template.c:1702
+#1  0x00007ffff67a89da in avcodec_decode_audio4 (avctx=0x7fffe4004a80, frame=0x7fffd80008c0, got_frame_ptr=0x7fffdf7fc5a0, avpkt=0x7ffff7ec25d8) at libavcodec/utils.c:2309
+#2  0x0000000000412833 in audio_decode_frame (is=0x7ffff7ec2040) at ffplay.c:2185
+#3  0x000000000041399f in sdl_audio_callback (opaque=0x7ffff7ec2040, stream=0x7fffe40123bc "", len=1860) at ffplay.c:2391
+#4  0x00007ffff556e9b9 in ?? () from /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0
+#5  0x00007ffff5576ad8 in ?? () from /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0
+#6  0x00007ffff55b6109 in ?? () from /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0
+#7  0x00007ffff5048182 in start_thread (arg=0x7fffdf7fd700) at pthread_create.c:312
+#8  0x00007ffff4d74efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
