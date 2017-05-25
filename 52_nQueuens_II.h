@@ -43,8 +43,7 @@ public:
             rightbottomcol++;
         }
     }
-    void recurSolveNQueens(vector< vector<string> >& result, int n, int row,
-                     vector< vector<int> > chessboard, vector<string> onesolution){
+    void recurSolveNQueens(int& result, int n, int row, vector< vector<int> > chessboard){
         if(row >= n)
             return;
 
@@ -55,36 +54,30 @@ public:
             //test each col for row.
             updateChessboard(tempboard, n, row, i);
             //printVV(tempboard);
-            vector<string> temp = onesolution;
-            string s(n, '.');
-            s[i] = 'Q';
-            temp.push_back(s);
-            //printVector(temp);
             if(row == n - 1){
-                result.push_back(temp);
+                result++;
             }
             else
-                recurSolveNQueens(result, n, row+1, tempboard, temp);
+                recurSolveNQueens(result, n, row+1, tempboard);
         }
     }
 
     int totalNQueens(int n) {
-        vector< vector<string> > result;
-        vector<string> onesolution;
+        int result = 0;
         vector< vector<int> > chessboard(n, vector<int>(n, 0));
 
-        recurSolveNQueens(result, n, 0, chessboard, onesolution);
+        recurSolveNQueens(result, n, 0, chessboard);
         //printVV(chessboard);
         return result;
     }
 
     int testCase(){
-        vector< vector<string> > result;
+        int result;
         int n;
-        n = 5;
-        result = solveNQueens(n);
-        printVectorVector(result);
-        return 0;
+        n = 1;
+        result = totalNQueens(n);
+        printf("result: %d\n", result);
+		return 0;
     }
     void printVV(vector< vector<int> >& v)
     {
