@@ -46,9 +46,10 @@ using namespace std;
 //#include "48_rotateImage.h"
 //#include "49_groupAnagrams.h"
 //#include "50_pow.h"
+//#include "51_nQueuens.h"
 
 /****************to be continue*****************/
-#include "51_nQueuens.h"
+#include "52_nQueuens_II.h"
 
 struct ListNode {
     int val;
