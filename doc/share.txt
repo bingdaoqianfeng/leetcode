@@ -1,48 +1,4 @@
 
-MiPlayer支持的Header属性：
-prefer-soft-decoder:  指定播放器使用软件解码。
-normvol： 打开normvol filter。应用端需要在Header中设置对应的值。
-ignore-starttime： 忽略http中的start time值。
-user_agent/user_agent/user_agent： 设置http user agent的值。
-cookies/Cookie/Cookie： 设置http cookies的值。
-referer： 设置http referrer。
-headers： 设置http headers.
-adsave： 指定广告视频将要保存的路径。
-marlin-key: 打开marliin drm支持。
-
-
-enum vlc_decoder_errors {
-    VLC_CODEC_ERROR_BASE            = -10000,
-    VLC_AUDIO_FORMAT_UNSUPPORT      = VLC_CODEC_ERROR_BASE - 1,
-    VLC_VIDEO_FORMAT_UNSUPPORT      = VLC_CODEC_ERROR_BASE - 2,
-    VLC_VIDEO_SIZE_UNSUPPORT        = VLC_CODEC_ERROR_BASE - 3,
-    VLC_VIDEO_FRAMERATE_UNSUPPORT   = VLC_CODEC_ERROR_BASE - 4,
-    VLC_VIDEO_OPENMAX_FAIL          = VLC_CODEC_ERROR_BASE - 5,
-    VLC_VIDEO_MSTAR_5011ERROR       = VLC_CODEC_ERROR_BASE - 6,
-    VLC_VIDEO_SURFACEVIEW_DESTROYED = VLC_CODEC_ERROR_BASE - 7,
-    VLC_VIDEO_PROFILE_UNSUPPORT     = VLC_CODEC_ERROR_BASE - 8,
-};
-
-enum vlc_decoder_errors {
-    VLC_CODEC_ERROR_BASE            = -10000,
-    VLC_AUDIO_FORMAT_UNSUPPORT      = VLC_CODEC_ERROR_BASE - 1,
-    VLC_VIDEO_FORMAT_UNSUPPORT      = VLC_CODEC_ERROR_BASE - 2,
-    VLC_VIDEO_SIZE_UNSUPPORT        = VLC_CODEC_ERROR_BASE - 3,
-    VLC_VIDEO_FRAMERATE_UNSUPPORT   = VLC_CODEC_ERROR_BASE - 4,
-    VLC_VIDEO_OPENMAX_FAIL          = VLC_CODEC_ERROR_BASE - 5,
-    VLC_VIDEO_MSTAR_5011ERROR       = VLC_CODEC_ERROR_BASE - 6,
-    VLC_VIDEO_SURFACEVIEW_DESTROYED = VLC_CODEC_ERROR_BASE - 7,
-    VLC_VIDEO_PROFILE_UNSUPPORT     = VLC_CODEC_ERROR_BASE - 8,
-    VLC_INPUT_ERROR_BASE            = -10100,
-    VLC_INPUT_THREAD_CREATE_ERROR   = VLC_INPUT_ERROR_BASE - 1,
-    VLC_INPUT_SOURCE_OPEN_FAILED    = VLC_INPUT_ERROR_BASE - 2,
-    VLC_INPUT_DEMUX_CREATE_FAILED   = VLC_INPUT_ERROR_BASE - 3,
-    VLC_INPUT_DEMUX_THREAD_ERROR    = VLC_INPUT_ERROR_BASE - 4,
-};
-
-
-没有用到的属性： 
-enable-fullcodec: modules/codec/avcodec/avcodec.c:415:        if( var_InheritInteger( p_dec, "enable-fullcodec" ) == 1 ) {
 
 /*********************************MiPlayer中主要VLC全局对象**********************************************************************/
 libvlc_instance_t *mLibVlcInstance;
@@ -278,6 +234,90 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 
 6. libvlc_media_player_set_media(mVlcPlayerInstance, mVlcMedia);  //Set the Media descriptor associated with the instance.
 	由于mVlcMedia存储了要播放的视频源的路径信息，所有此时mVlcPlayerInstance也与具体视频建立了联系。
+
+7. libvlc_media_player_prepare( libvlc_media_player_t *p_mi )
+	7.1 input_thread_t *p_input_thread = input_Create( p_mi, p_mi->p_md->p_input_item, NULL,p_mi->input.p_resource );  //input.c
+	  创建input对象，该对象本身也是一个vlc_object_t的子类对象，其父对象就是mVlcPlayerInstance。input对象的结构体是input_thread_t，其中除了父类VLC_COMMON_MEMBERS，
+	  主要就是结构体input_thread_private_t *p,对该结构体的理解，有助于对整个ＶＬＣ架构的理解。
+	  p_input_thread对象非常重要，是具体播放中的核心，该对象的结构中会存储demux,decoder,aout,vaout等各个模块的对象指针。
+	  
+	  /** Private input fields */
+ 	  struct input_thread_private_t
+ 	  {  
+   		/* Global properties */
+ 		double      f_fps;    
+ 		int         i_state;     //初始化INIT_S
+        /* Current state */
+		/* Playtime configuration and state */     
+
+		/* Output */
+		bool            b_out_pace_control; /* XXX Move it ot es_sout ? */ 
+		sout_instance_t *p_sout;            /* Idem ? */
+		es_out_t        *p_es_out;          //初始化NULL
+		es_out_t *p_es_out_display;			//初始化input_EsOutNew( p_input, p_input->p->i_rate )，　
+											//p_es_out_display->pf_add     = EsOutAdd;
+											//p_es_out_display->pf_send    = EsOutSend;
+											//p_es_out_display->pf_del     = EsOutDel;
+											//p_es_out_display->pf_control = EsOutControl;
+											//p_es_out_display->pf_destroy = EsOutDelete;
+											//p_es_out_display->p_sys      = p_sys;
+											//p_sys->i_rate = i_rate;
+											///< at very beginning, es out will buffer data.
+											//p_sys->b_buffering = true;
+											//p_sys->b_cacheing = false;
+											//p_sys->buffer_update_time = 0;
+											//p_sys->b_saved_pause = false;
+											//p_sys->b_clock_update = false;
+											//p_sys->system_clock_offset = 0;
+											//p_sys->i_preroll_end = -1;
+											//p_sys->i_cache_duration_size = 0;
+											//p_sys->b_monitor_timer_started = false;
+											//if (var_InheritInteger(p_sys->p_input, "network-caching") > 0)
+											//    p_sys->buffer_enable = true;
+											//else
+											//    p_sys->buffer_enable = false;
+		
+		/* Input item */
+		input_item_t   *p_item;   //非常重要的结构体
+
+		/* Main source */
+		input_source_t input;   //非常重要的结构体
+		/* Slave sources (subs, and others) */
+		/* Resources */
+		input_resource_t *p_resource;    //p_resource->p_input = p_input;
+		input_resource_t *p_resource_private;
+
+		/* Stats counters */
+		struct {
+			counter_t *p_read_packets;
+			......
+			vlc_mutex_t counters_lock;
+		} counters;
+
+		vlc_mutex_t lock_esout;
+
+		/* Buffer of pending actions */
+		vlc_mutex_t lock_control;
+		vlc_cond_t  wait_control;
+		int i_control;
+		input_control_t control[INPUT_CONTROL_FIFO_SIZE];
+
+		bool b_abort;
+		bool is_running;
+		vlc_thread_t thread;
+
+		//Timer to update interface info
+		vlc_timer_t intf_timer;
+	  }
+	  p_priv->pf_destructor = (vlc_destructor_t)Destructor;  //input的析构函数。
+	
+	7.2 设置回调函数 
+	var_AddCallback( p_input_thread, "can-seek", input_seekable_changed, p_mi );
+    var_AddCallback( p_input_thread, "can-pause", input_pausable_changed, p_mi );
+    var_AddCallback( p_input_thread, "intf-event", input_event_changed, p_mi );
+	
+	7.3 
+	input_Prepare( p_input_thread )
 
 /*******************************************************************************************************/
 
