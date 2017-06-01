@@ -253,7 +253,8 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 		/* Output */
 		bool            b_out_pace_control; /* XXX Move it ot es_sout ? */ 
 		sout_instance_t *p_sout;            /* Idem ? */
-		es_out_t        *p_es_out;          //初始化NULL
+		es_out_t        *p_es_out;          //初始化NULL,在static int Init( input_thread_t * p_input )中调用input_EsOutTimeshiftNew( p_input, p_input->p->p_es_out_display, p_input->p->i_rate )初始化该指针,
+											//相关的锁变量p->lock_esout.
 		es_out_t *p_es_out_display;			//初始化input_EsOutNew( p_input, p_input->p->i_rate )，　
 											//p_es_out_display->pf_add     = EsOutAdd;
 											//p_es_out_display->pf_send    = EsOutSend;
@@ -289,7 +290,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 
 		/* Stats counters */
 		struct {
-			counter_t *p_read_packets;
+			counter_t *p_read_packets;    //static void InitStatistics( input_thread_t * p_input )函数中完成对该结构中的计数器的初始化工作.
 			......
 			vlc_mutex_t counters_lock;
 		} counters;
@@ -303,8 +304,8 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 		input_control_t control[INPUT_CONTROL_FIFO_SIZE];
 
 		bool b_abort;
-		bool is_running;
-		vlc_thread_t thread;
+		bool is_running;    		//!vlc_clone_named( &p_input->p->thread, Run, p_input, VLC_THREAD_PRIORITY_INPUT, "vlc-input" );
+		vlc_thread_t thread;        //指向Run的句柄。static void *Run( void *obj ) in src/input/input.c 
 
 		//Timer to update interface info
 		vlc_timer_t intf_timer;
@@ -316,8 +317,164 @@ mVlcPlayerInstance->p_md = mVlcMedia;
     var_AddCallback( p_input_thread, "can-pause", input_pausable_changed, p_mi );
     var_AddCallback( p_input_thread, "intf-event", input_event_changed, p_mi );
 	
-	7.3 
-	input_Prepare( p_input_thread )
+	7.3 input_Prepare( p_input_thread )  //Start a input_thread_t created by input_Create, and pause the thread after piple line is created. You must not start an already running input_thread_t.
+		创建主要线程static void *Run( void *obj )，该线程入口函数在src/input/input.c。
+		
+	7.4 static void *Run( void *obj ) // main thread loop. This is the "normal" thread that spawns the input processing chain, reads the stream, cleans up and waits.
+		7.4.1 Init( p_input )
+			1. 初始化所有计数统计函数;
+			2. 创建es out: 
+				p_input->p->p_es_out = input_EsOutTimeshiftNew( p_input, p_input->p->p_es_out_display, p_input->p->i_rate );
+				struct es_out_t
+				{
+					es_out_id_t *(*pf_add)    ( es_out_t *, const es_format_t * );          //point to function Add() in es_out_timeshift.c
+					int          (*pf_send)   ( es_out_t *, es_out_id_t *, block_t * );     //point to function Send() in es_out_timeshift.c
+					void         (*pf_del)    ( es_out_t *, es_out_id_t * );				//point to function Del() in es_out_timeshift.c
+					int          (*pf_control)( es_out_t *, int i_query, va_list );			//point to function Control() in es_out_timeshift.c
+					void         (*pf_destroy)( es_out_t * );								//point to function Destroy() in es_out_timeshift.c
+
+					es_out_sys_t    *p_sys;
+				};
+				struct es_out_sys_t  //defined in in es_out_timeshift.c
+				{
+					input_thread_t *p_input;			//指向input_thread_t *p_input，以前es out可以找到input对象。
+					es_out_t       *p_out;				//指向p_input->p->p_es_out_display。
+
+					/* Configuration */
+					int64_t        i_tmp_size_max;    /* Maximal temporary file size in byte */ //default value is 50*1024*1024,可以通过"input-timeshift-granularity"指定。
+					char           *psz_tmp_path;     /* Path for temporary files */   //通过"input-timeshift-path"获得。
+
+					/* Lock for all following fields */
+					vlc_mutex_t    lock;
+
+					/* */
+					bool           b_delayed;				//初始化false
+					ts_thread_t   *p_ts;
+
+					/* */
+					bool           b_input_paused;			//初始化false
+					bool           b_input_paused_source;  	//初始化false
+					int            i_input_rate;			//初始化的值为：p_input->p->i_rate
+					int            i_input_rate_source;		//初始化的值为：p_input->p->i_rate
+
+					/* */
+					int            i_es;					//初始化0
+					es_out_id_t    **pp_es;					//初始化NULL
+				}
+			3. InputSourceInit( p_input, &p_input->p->input, p_input->p->p_item->psz_uri, NULL, false )
+				根据输入源的地址和文件名，创建对应的access, stream, demux。也就是说demux对象是作为input source存储的。
+				/* input_source_t: gathers all information per input source */
+				typedef struct
+				{
+					demux_t  *p_demux; /**< Demux plugin instance */  //指向创建的demux. demux_New( p_input, p_input, psz_access, psz_demux, psz_path, NULL, p_input->p->p_es_out, false );
+				
+					/* Title infos for that input */
+					bool         b_title_demux; /* Titles/Seekpoints provided by demux */
+					int          i_title;
+					input_title_t **title;
+
+					int i_title_offset;
+					int i_seekpoint_offset;
+
+					int i_title_start;
+					int i_title_end;
+					int i_seekpoint_start;
+					int i_seekpoint_end;
+
+					/* Properties */
+					bool b_can_pause;
+					bool b_can_pace_control;
+					bool b_can_rate_control;
+					bool b_can_stream_record;
+					bool b_rescale_ts;
+
+					/* */
+					int64_t i_pts_delay;
+
+					bool       b_eof;   /* eof of demuxer */
+
+				} input_source_t;
+				3.1 access_t *p_access = access_New( p_input, p_input,
+                                         psz_access, psz_demux, psz_path );
+					源文件access.c，该文件中的函数主要负责与具体的access模块建立联系，通过access模块读取数据。改模块指负责将数据从文件或网络段读出来，或者做seek处理。不管理数据。
+					struct access_t
+					{
+						VLC_COMMON_MEMBERS
+
+						/* Module properties */
+						module_t    *p_module;			//指向access模块，  p_access->p_module = module_need( p_access, "access", psz_access, true );
+
+						/* Access name (empty if non forced) */
+						char        *psz_access;
+						char        *psz_location; /**< Location (URL with the scheme stripped) */
+						char        *psz_filepath; /**< Local file path (if applicable) */
+
+						/* Access can fill this entry to force a demuxer
+						 * XXX: fill it once you know for sure you will succeed
+						 * (if you fail, this value won't be reseted */
+						char        *psz_demux;
+
+						/* pf_read/pf_block is used to read data.
+						 * XXX A access should set one and only one of them */
+						ssize_t     (*pf_read) ( access_t *, uint8_t *, size_t );  /* Return -1 if no data yet, 0 if no more data, else real data read */
+						block_t    *(*pf_block)( access_t * );                  /* return a block of data in his 'natural' size, NULL if not yet data or eof */
+
+						/* Called for each seek.
+						 * XXX can be null */
+						int         (*pf_seek) ( access_t *, uint64_t );         /* can be null if can't seek */
+					 
+						/* Called for time seek.
+						 * if succeed, return VLC_SUCCESS */
+						int         (*pf_timeseek) ( access_t *, uint64_t );
+
+						/* Used to retreive and configure the access
+						 * XXX mandatory. look at access_query_e to know what query you *have to* support */
+						int         (*pf_control)( access_t *, int i_query, va_list args);
+
+						/* Access has to maintain them uptodate */
+						struct
+						{
+							uint64_t     i_pos;     /* idem */   	//初始化0
+							bool         b_eof;     /* idem */		//初始化false
+						} info;
+						access_sys_t *p_sys;
+
+						/* Weak link to parent input */
+						input_thread_t *p_input;    //input_thread_t *p_parent_input, 即input对象。
+					};
+
+				3.2 stream_t *p_stream = stream_AccessNew( p_access, ppsz_input_list );  //该类型是个什么概念？？？
+					源文件stream.c，该文件中的函数作为access模块的上层模块，相当于对access模块作了封装处理。该模块增加了缓存区，通过access模块读上来的数据，先存放到该模块的缓存区中，再被demux模块读走。
+					struct stream_t
+					{
+						VLC_COMMON_MEMBERS
+						/* Module properties for stream filter */
+						module_t    *p_module;
+						char        *psz_access;
+						/* Real or virtual path (it can only be changed during stream_t opening) */
+						char        *psz_path;
+						/* Stream source for stream filter */
+						stream_t *p_source;
+
+						/* */
+						int      (*pf_read)   ( stream_t *, void *p_read, unsigned int i_read );				//指向AStreamReadStream() or AStreamReadBlock()
+						int      (*pf_peek)   ( stream_t *, const uint8_t **pp_peek, unsigned int i_peek );		//指向AStreamPeekStream() or AStreamPeekBlock()
+						int      (*pf_control)( stream_t *, int i_query, va_list );           	//指向AStreamControl()
+						void     (*pf_destroy)( stream_t *);									//指向AStreamDestroy()
+
+						/* Private data for module */
+						stream_sys_t *p_sys;
+
+						/* Text reader state */
+						stream_text_t *p_text;
+
+						/* Weak link to parent input */
+						input_thread_t *p_input;
+					};
+					AStreamPrebufferStream() or AStreamPrebufferBlock(): 完成数据的预读。
+
+				
+				
 
 /*******************************************************************************************************/
 
