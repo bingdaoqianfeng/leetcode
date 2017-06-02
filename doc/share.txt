@@ -469,11 +469,61 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 						stream_text_t *p_text;
 
 						/* Weak link to parent input */
-						input_thread_t *p_input;
+						input_thread_t *p_input;		//input_thread_t *p_parent_input, 即input对象。
 					};
 					AStreamPrebufferStream() or AStreamPrebufferBlock(): 完成数据的预读。
+				3.3 in->p_demux = demux_New( p_input, p_input, psz_access, psz_demux,
+											/* Take access/stream redirections into account: */
+											p_stream->psz_path ? p_stream->psz_path : psz_path,
+											p_stream, p_input->p->p_es_out,
+											p_input->b_preparsing );
+					源文件：demux.c，负责调用具体的demux模块，完成demux功能。该模块实现了通过stream_t读取数据，调用decoder模块，并将数据送给p_es_out实现显示。
+					注意：有两个demux.c文件，src/input/demux.c属于framework层代码，是所有demux模块的抽象层，调用具体的demux模块。
+					　	　　 modules/demux/avformat/demux.c是具体的avfirnat demux模块实现。
+					struct demux_t
+					{
+						VLC_COMMON_MEMBERS
 
-				
+						/* Module properties */
+						module_t    *p_module;			//指向对应的demux模块。
+
+						/* eg informative but needed (we can have access+demux) */
+						char        *psz_access;
+						char        *psz_demux;
+						char        *psz_location;
+						char        *psz_file;
+
+						/* input stream */
+						stream_t    *s;     /* NULL in case of a access+demux in one */  //指向p_stream created by stream_AccessNew() in InputSourceInit().
+
+						/* es output */
+						es_out_t    *out;   /* our p_es_out */    //指向p_input->p->p_es_out。
+
+						/* set by demuxer */
+						int (*pf_demux)  ( demux_t * );   /* demux one frame only */		//在demux模块中进行初始化，如 modules/demux/avformat/demux.c中的OpenDemux
+						int (*pf_control)( demux_t *, int i_query, va_list args);			//在demux模块中进行初始化，如 modules/demux/avformat/demux.c中的OpenDemux
+
+						/* Demux has to maintain them uptodate
+						 * when it is responsible of seekpoint/title */
+						struct
+						{
+							unsigned int i_update;  /* Demux sets them on change,
+													   Input removes them once take into account*/
+							/* Seekpoint/Title at demux level */
+							int          i_title;       /* idem, start from 0 (could be menu) */
+							int          i_seekpoint;   /* idem, start from 0 */
+						} info;
+						demux_sys_t *p_sys;
+
+						/* Weak link to parent input */
+						input_thread_t *p_input;		//input_thread_t *p_parent_input, 即input对象。
+					}
+					
+					
+	mVlcPlayerInstance->input->access_t
+							 ->stream_t
+							 ->demux--------->decoder
+							 ->es_out_t
 				
 
 /*******************************************************************************************************/
