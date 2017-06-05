@@ -23,22 +23,38 @@ public:
 				maxval = nums[i];
 				left = right = i;
 			}	
-			len = nums.size() - i;
+			int len = nums.size() - i;
 			while(len){
 				int tempval = 0;
 				for(int j=i; j<len; j++){
 					tempval += nums[j];	
 				}
 				if(tempval>maxval){
-					maxval = nums[i];
+					maxval = tempval;
 					left = i;
 					right = i+len;
 				}	
 				len--;
 			}
-		} 
+		}
+		printf("left: %d, right: %d\n", left, right);
+		return maxval; 
     }
 	int testCase(){
+		int a[] = {-2,1,-3,4,-1,2,1,-5,4};
+		vector<int> nums(a, a+sizeof(a)/sizeof(int));
+		printVector(nums);
+		int ret = 0;
+		ret = maxSubArray(nums);
+		printf("ret: %d\n",ret);	
 		return 0;
+	}
+	void printVector( vector<int>&  pt)
+	{
+		cout << "[ ";
+		for(int i=0; i<pt.size(); i++){
+			cout << pt[i] << "  ";
+		}
+		cout << "] " << endl;
 	}
 };
