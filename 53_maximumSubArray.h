@@ -26,9 +26,10 @@ public:
 			int len = nums.size() - i;
 			while(len){
 				int tempval = 0;
-				for(int j=i; j<len; j++){
+				for(int j=i; j<(i+len); j++){
 					tempval += nums[j];	
 				}
+				//printf("i: %d, len: %d, tempval: %d\n", i, len, tempval);
 				if(tempval>maxval){
 					maxval = tempval;
 					left = i;
@@ -37,7 +38,7 @@ public:
 				len--;
 			}
 		}
-		printf("left: %d, right: %d\n", left, right);
+		//printf("result left: %d, right: %d\n", left, right);
 		return maxval; 
     }
 	int testCase(){
