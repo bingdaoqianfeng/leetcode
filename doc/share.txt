@@ -730,7 +730,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 
 					input_thread_t  *p_input;			//input_thread_t *p_input;
 					input_resource_t*p_resource;		//input_resource_t *p_resource;
-					input_clock_t   *p_clock;
+					input_clock_t   *p_clock;			//指向p_es->p_pgrm->p_clock
 					int             i_last_rate;		//INPUT_RATE_DEFAULT
 
 					vout_thread_t   *p_spu_vout;
@@ -740,7 +740,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 					sout_instance_t         *p_sout;
 					sout_packetizer_input_t *p_sout_input;
 
-					vlc_thread_t     thread;
+					vlc_thread_t     thread;		//指向该decoder对应的线程。vlc_clone_named( &p_dec->p_owner->thread, DecoderThread, p_dec, i_priority, "vlc-decoder" )
 
 					/* Some decoders require already packetized data (ie. not truncated) */
 					decoder_t *p_packetizer;
@@ -825,16 +825,19 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 				Demux()(int file modules/demux/avformat/demux.c) --> SendOut() --> es_out_Send( p_demux->out, p_sys->tk[idx], pframe ) 
 				--> out->pf_send( out, id, p_block ) -->static int Send( es_out_t *p_out, es_out_id_t *p_es, block_t *p_block )(in file es_out_timeshift.c)
 				--> static int EsOutSend( es_out_t *out, es_out_id_t *es, block_t *p_block ) (in file es_out.c)
-				--> void input_DecoderDecode( decoder_t *p_dec, block_t *p_block, bool b_do_pace ) (in file decoder.c)
+				--> void input_DecoderDecode( decoder_t *p_dec, block_t *p_block, bool b_do_pace ) (in file decoder.c)　　//Put a block_t in the decoder's fifo.
 				
 			
 
 /*************************VLC中的线程*******************************************/
 1. static void *Run( void *obj ) //in file src/input/input.c
 	该线程是视频播放的非常核心的主线程。在该线程中调用的 Init( p_input )创建了access, streamaccess, demux, decoder等模块。
-2. static void *DecoderThread( void *p_data )
+	在初始化各个模块后，该线程会循环调用MainLoopDemux()，不断通过demux(demux模块会调用streamaccess,access模块)模块，读取数据，并最终通过es_out调用input_DecoderDecode()函数，将数据帧送到decoder的fifo队列中。
+	
+2. static void *DecoderThread( void *p_data )	//in file src/input/decoder.c
 	每个video和audio流都被创建一个线程，用于解码。
 	decoder主要通过对象decoder_t和decoder_owner_sys_t控制，每个decoder_t对象都包含一个decoder_owner_sys_t对象。
+	该线程负责从p_owner->p_fifo 队列中取出数据帧，调用DecoderProcess( p_dec, p_block )完成对该数据帧的解码。
 				
 					
 	mVlcPlayerInstance->input->access_t
