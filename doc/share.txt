@@ -262,6 +262,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 											//p_es_out_display->pf_control = EsOutControl;
 											//p_es_out_display->pf_destroy = EsOutDelete;
 											//p_es_out_display->p_sys      = p_sys;
+											//p_sys->p_out = p_input->p->p_es_out_display;
 											//p_sys->i_rate = i_rate;
 											///< at very beginning, es out will buffer data.
 											//p_sys->b_buffering = true;
@@ -335,6 +336,96 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 
 					es_out_sys_t    *p_sys;
 				};
+				struct es_out_sys_t		//defined in in es_out.c
+				{
+					input_thread_t *p_input;
+
+					/* */
+					vlc_mutex_t   lock;
+
+					/* all programs */
+					int           i_pgrm;
+					es_out_pgrm_t **pgrm;
+					es_out_pgrm_t *p_pgrm;  /* Master program */
+
+					/* all es */
+					int         i_id;
+					int         i_es;
+					es_out_id_t **es;		//存放各个stream的信息。
+
+					/* mode gestion */
+					bool  b_active;
+					int         i_mode;
+
+					/* es count */
+					int         i_audio;
+					int         i_video;
+					int         i_sub;
+
+					/* es/group to select */
+					int         i_group_id;
+					int         i_audio_last, i_audio_id;
+					int         i_sub_last, i_sub_id;
+					int         i_default_sub_id;   /* As specified in container; if applicable */
+					char        **ppsz_audio_language;
+					char        **ppsz_sub_language;
+
+					/* current main es */
+					es_out_id_t *p_es_audio;	//指向当前播放的音频流
+					es_out_id_t *p_es_video;	//指向当前播放的视频流
+					es_out_id_t *p_es_sub;
+
+					/* delay */
+					int64_t i_audio_delay;
+					int64_t i_spu_delay;
+
+					/* Clock configuration */
+					mtime_t     i_pts_delay;
+					mtime_t     i_pts_jitter;
+					int         i_cr_average;
+					int         i_rate;
+
+					/* */
+					bool        b_paused;
+					mtime_t     i_paused_offset;
+					mtime_t     i_pause_date;
+
+					/* Current preroll */
+					mtime_t     i_preroll_end;
+
+					mtime_t     i_cache_duration_size;
+
+					/* Used for es out normal data buffering, in this state, 
+					   1. es out not reset clock and data buffer, it just make below module into pause.
+					   2. it set clock + delay time to new clock point, to make the system sync normally.
+					   3. in this state, all the operation be saved until buffering end except for "seek" operation. 
+					   */
+					bool        b_cacheing;
+					bool        b_saved_pause; ///< store the user specified last es_out state. 0: return to play.1: return to paused.
+					bool        b_clock_update; ///< after cacheing, we need call resume to set new sys_clock, if stop cacheing not do resume op, will do it when user call resume op.
+					mtime_t     system_clock_offset; ///< when cache complete, es_out use this offset to adjust system clock val.
+					mtime_t     stream_cache_start; ///< stream clock val when start do cache.
+					mtime_t     system_cache_start; ///< system clock val when start do cache.
+					mtime_t     ori_pts_delay;      ///< when pcr update late, system will call set pts delay and do cache,this val store the old pts delay val.
+
+					mtime_t     buffer_update_time;
+
+					/* Used for buffering */
+					bool        b_buffering;
+					mtime_t     i_buffering_extra_initial;
+					mtime_t     i_buffering_extra_stream;
+					mtime_t     i_buffering_extra_system;
+
+					/* Record */
+					sout_instance_t *p_sout_record;
+
+					bool b_monitor_timer_started;
+					// used to monitor buffer duratoin.
+					vlc_timer_t monitor_timer;
+					bool buffer_enable;
+					int i_max_networkcache_size_byte;
+				}
+				
 				struct es_out_sys_t  //defined in in es_out_timeshift.c
 				{
 					input_thread_t *p_input;			//指向input_thread_t *p_input，以前es out可以找到input对象。
@@ -363,6 +454,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 				}
 			3. InputSourceInit( p_input, &p_input->p->input, p_input->p->p_item->psz_uri, NULL, false )
 				根据输入源的地址和文件名，创建对应的access, stream, demux。也就是说demux对象是作为input source存储的。
+				该函数最后会通过demux接口，获得输入源的基本信息，如p_input->p->f_fps, in->i_pts_delay, p_input->p->i_attachment
 				/* input_source_t: gathers all information per input source */
 				typedef struct
 				{
@@ -501,7 +593,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 
 						/* set by demuxer */
 						int (*pf_demux)  ( demux_t * );   /* demux one frame only */		//在demux模块中进行初始化，如 modules/demux/avformat/demux.c中的OpenDemux
-						int (*pf_control)( demux_t *, int i_query, va_list args);			//在demux模块中进行初始化，如 modules/demux/avformat/demux.c中的OpenDemux
+						int (*pf_control)( demux_t *, int i_query, va_list args);		//在demux模块中进行初始化，如 modules/demux/avformat/demux.c中的OpenDemux
 
 						/* Demux has to maintain them uptodate
 						 * when it is responsible of seekpoint/title */
@@ -518,7 +610,229 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 						/* Weak link to parent input */
 						input_thread_t *p_input;		//input_thread_t *p_parent_input, 即input对象。
 					}
-					
+			4. StartTitle( p_input );
+			5. LoadSubtitles( p_input ); 
+			　	通过该函数实现外挂字幕。
+			6. LoadSlaves( p_input );
+			7. InitPrograms( p_input );	//该函数获得各个stream的参数，为每个stream创建decoder.
+				es_out_SetMode( p_input->p->p_es_out, ES_OUT_MODE_AUTO );
+				-->  EsOutSelect( out, p_sys->es[i], false ) //p_sys->es[i]存放了各个stream的信息。该数组的内容是在demux的open函数中初始化的：es = es_out_Add( p_demux->out, &fmt );
+				--> EsSelect(out, es);
+				--> static void EsCreateDecoder( es_out_t *out, es_out_id_t *p_es )  //in file es_out.c
+				--> p_es->p_dec = input_DecoderNew( p_input, &p_es->fmt, p_es->p_pgrm->p_clock, p_input->p->p_sout )
+				--> decoder_New( VLC_OBJECT(p_input), p_input, fmt, p_clock, p_input->p->p_resource, p_sout );　　//p_dec = CreateDecoder( p_parent, p_input, fmt, p_sout != NULL, p_resource, p_sout );
+				--> vlc_clone_named( &p_dec->p_owner->thread, DecoderThread, p_dec, i_priority, "vlc-decoder" )  
+				--> static void *DecoderThread( void *p_data )  //The decoding main loop
+				Decoder的主要结构体，通过 CreateDecoder创建并初始化：
+				struct decoder_t
+				{
+					VLC_COMMON_MEMBERS
+
+					/* Module properties */
+					module_t *          p_module;
+					decoder_sys_t *     p_sys;
+
+					/* Input format ie from demuxer (XXX: a lot of field could be invalid) */
+					es_format_t         fmt_in;
+
+					/* Output format of decoder/packetizer */
+					es_format_t         fmt_out;
+
+					/* Some decoders only accept packetized data (ie. not truncated) */
+					bool                b_need_packetized;
+
+					/* Tell the decoder if it is allowed to drop frames */
+					bool                b_pace_control;
+
+					/* */
+					picture_t *         ( * pf_decode_video )( decoder_t *, block_t ** );
+					block_t *           ( * pf_decode_audio )( decoder_t *, block_t ** );
+					subpicture_t *      ( * pf_decode_sub)   ( decoder_t *, block_t ** );
+					block_t *           ( * pf_packetize )   ( decoder_t *, block_t ** );
+					void                ( * pf_flush ) ( decoder_t * );
+
+					/* Closed Caption (CEA 608/708) extraction.
+					 * If set, it *may* be called after pf_decode_video/pf_packetize
+					 * returned data. It should return CC for the pictures returned by the
+					 * last pf_packetize/pf_decode_video call only,
+					 * pb_present will be used to known which cc channel are present (but
+					 * globaly, not necessary for the current packet */
+					block_t *           ( * pf_get_cc )      ( decoder_t *, bool pb_present[4] );
+
+					/* Meta data at codec level
+					 *  The decoder owner set it back to NULL once it has retreived what it needs.
+					 *  The decoder owner is responsible of its release except when you overwrite it.
+					 */
+					vlc_meta_t          *p_description;
+
+					/*
+					 * Owner fields
+					 * XXX You MUST not use them directly.
+					 */
+
+					/* Video output callbacks
+					 * XXX use decoder_NewPicture/decoder_DeletePicture
+					 * and decoder_LinkPicture/decoder_UnlinkPicture */
+					int             (*pf_vout_format_update)( decoder_t * );
+					picture_t      *(*pf_vout_buffer_new)( decoder_t * );
+					void            (*pf_vout_buffer_del)( decoder_t *, picture_t * );
+					void            (*pf_picture_link)   ( decoder_t *, picture_t * );
+					void            (*pf_picture_unlink) ( decoder_t *, picture_t * );
+
+					/**
+					 * Number of extra (ie in addition to the DPB) picture buffers
+					 * needed for decoding.
+					 */
+					int             i_extra_picture_buffers;
+
+					/* Audio output callbacks */
+					int             (*pf_aout_format_update)( decoder_t * );
+
+					/* SPU output callbacks
+					 * XXX use decoder_NewSubpicture and decoder_DeleteSubpicture */
+					subpicture_t   *(*pf_spu_buffer_new)( decoder_t *, const subpicture_updater_t * );
+					void            (*pf_spu_buffer_del)( decoder_t *, subpicture_t * );
+
+					/* Input attachments
+					 * XXX use decoder_GetInputAttachments */
+					int             (*pf_get_attachments)( decoder_t *p_dec, input_attachment_t ***ppp_attachment, int *pi_attachment );
+
+					/* Display date
+					 * XXX use decoder_GetDisplayDate */
+					mtime_t         (*pf_get_display_date)( decoder_t *, mtime_t );
+
+					/* Display rate
+					 * XXX use decoder_GetDisplayRate */
+					int             (*pf_get_display_rate)( decoder_t * );
+
+					/* XXX use decoder_QueueVideo */
+					int             (*pf_queue_video)( decoder_t *, picture_t * );
+					/* XXX use decoder_QueueAudio */
+					int             (*pf_queue_audio)( decoder_t *, block_t * );
+					/* XXX use decoder_QueueSub */
+					int             (*pf_queue_sub)( decoder_t *, subpicture_t *);
+
+				 
+					/* Private structure for the owner of the decoder */
+					decoder_owner_sys_t *p_owner;
+
+					bool                b_error;
+					bool                b_eos;
+					bool                b_delay_open;
+					bool                b_dvbc;
+					bool                b_exit;//if need exit
+				}
+				struct decoder_owner_sys_t
+				{
+					int64_t         i_preroll_end;
+
+					input_thread_t  *p_input;
+					input_resource_t*p_resource;
+					input_clock_t   *p_clock;
+					int             i_last_rate;
+
+					vout_thread_t   *p_spu_vout;
+					int              i_spu_channel;
+					int64_t          i_spu_order;
+
+					sout_instance_t         *p_sout;
+					sout_packetizer_input_t *p_sout_input;
+
+					vlc_thread_t     thread;
+
+					/* Some decoders require already packetized data (ie. not truncated) */
+					decoder_t *p_packetizer;
+					bool b_packetizer;
+
+					/* Current format in use by the output */
+					video_format_t video;
+					vlc_audio_format_t audio;
+					es_format_t    sout;
+
+					/* */
+					bool           b_fmt_description;
+					es_format_t    fmt_description;
+					vlc_meta_t     *p_description;
+
+					/* fifo */
+					block_fifo_t *p_fifo;
+
+					/* Lock for communication with decoder thread */
+					vlc_mutex_t lock;
+					vlc_cond_t  wait_request;
+					vlc_cond_t  wait_acknowledge;
+
+					/* -- These variables need locking on write(only) -- */
+					audio_output_t *p_aout;
+
+					vout_thread_t   *p_vout;
+
+					/* -- Theses variables need locking on read *and* write -- */
+					bool b_exit;
+
+					/* Pause */
+					bool b_paused;
+					struct
+					{
+						mtime_t i_date;
+						int     i_ignore;
+					} pause;
+
+					/* Buffering */
+					bool b_buffering;
+					struct
+					{
+						bool b_first;
+						bool b_full;
+						int  i_count;
+
+						picture_t     *p_picture;
+						picture_t     **pp_picture_next;
+
+						subpicture_t  *p_subpic;
+						subpicture_t  **pp_subpic_next;
+
+						block_t *p_audio;
+						block_t **pp_audio_next;
+
+						block_t       *p_block;
+						block_t       **pp_block_next;
+					} buffer;
+
+					/* Flushing */
+					bool b_flushing;
+
+					/* CC */
+					struct
+					{
+						bool b_supported;
+						bool pb_present[4];
+						decoder_t *pp_decoder[4];
+					} cc;
+
+					/* Delay */
+					mtime_t i_ts_delay;
+				}
+				
+		7.4.2 vlc_timer_create (&(p_input->p->intf_timer), interfaceupdate, (void*)p_input)
+		    创建定时器函数interfaceupdate(),该函数调用static void MainLoopInterface( input_thread_t *p_input )，该函数定时从demux中拿到position, time and length信息，发送给p_es_out.
+		7.4.3 static void MainLoop( input_thread_t *p_input, bool b_interactive )
+			Run线程中的核心函数，该函数无限循环，负责整个视频数据的流转。
+			1. static void MainLoopDemux( input_thread_t *p_input, bool *pb_changed, bool *pb_demux_polled, mtime_t i_start_mdate ) \\It asks the demuxer to demux some data.
+				通过p_demux->pf_demux( p_demux )调用具体的demux模块，以avformate的demux为例，此处调用的是：
+				Demux()(int file modules/demux/avformat/demux.c) --> SendOut() --> es_out_Send( p_demux->out, p_sys->tk[idx], pframe ) 
+				--> out->pf_send( out, id, p_block ) -->static int Send( es_out_t *p_out, es_out_id_t *p_es, block_t *p_block )(in file es_out_timeshift.c)
+				--> static int EsOutSend( es_out_t *out, es_out_id_t *es, block_t *p_block ) (in file es_out.c)
+				--> void input_DecoderDecode( decoder_t *p_dec, block_t *p_block, bool b_do_pace ) (in file decoder.c)
+				
+			
+
+/*************************VLC中的线程*******************************************/
+1. static void *Run( void *obj ) //in file src/input/input.c
+	该线程是视频播放的非常核心的主线程。在该线程中调用的 Init( p_input )创建了access, streamaccess, demux, decoder等模块。
+2. static void *DecoderThread( void *p_data )
+	每个video和audio流都被创建一个线程，用于解码。　
+				
 					
 	mVlcPlayerInstance->input->access_t
 							 ->stream_t
