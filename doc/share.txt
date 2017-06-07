@@ -629,7 +629,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 					VLC_COMMON_MEMBERS
 
 					/* Module properties */
-					module_t *          p_module;
+					module_t *          p_module;		//指向具体的decoder模块。LoadDecoderModule(decoder_t *p_dec) --> module_need( p_dec, "decoder", "$codec", false )
 					decoder_sys_t *     p_sys;
 
 					/* Input format ie from demuxer (XXX: a lot of field could be invalid) */
@@ -674,10 +674,10 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 					 * XXX use decoder_NewPicture/decoder_DeletePicture
 					 * and decoder_LinkPicture/decoder_UnlinkPicture */
 					int             (*pf_vout_format_update)( decoder_t * );
-					picture_t      *(*pf_vout_buffer_new)( decoder_t * );
-					void            (*pf_vout_buffer_del)( decoder_t *, picture_t * );
-					void            (*pf_picture_link)   ( decoder_t *, picture_t * );
-					void            (*pf_picture_unlink) ( decoder_t *, picture_t * );
+					picture_t      *(*pf_vout_buffer_new)( decoder_t * );					//point to static picture_t *vout_new_buffer( decoder_t *p_dec )
+					void            (*pf_vout_buffer_del)( decoder_t *, picture_t * );		//static void vout_del_buffer( decoder_t *p_dec, picture_t *p_pic )
+					void            (*pf_picture_link)   ( decoder_t *, picture_t * );		//static void vout_link_picture( decoder_t *p_dec, picture_t *p_pic )
+					void            (*pf_picture_unlink) ( decoder_t *, picture_t * );		//static void vout_unlink_picture( decoder_t *p_dec, picture_t *p_pic )
 
 					/**
 					 * Number of extra (ie in addition to the DPB) picture buffers
@@ -686,35 +686,37 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 					int             i_extra_picture_buffers;
 
 					/* Audio output callbacks */
-					int             (*pf_aout_format_update)( decoder_t * );
+					int             (*pf_aout_format_update)( decoder_t * );		//point to aout_update_format( decoder_t *p_dec )
 
 					/* SPU output callbacks
 					 * XXX use decoder_NewSubpicture and decoder_DeleteSubpicture */
-					subpicture_t   *(*pf_spu_buffer_new)( decoder_t *, const subpicture_updater_t * );
-					void            (*pf_spu_buffer_del)( decoder_t *, subpicture_t * );
+					subpicture_t   *(*pf_spu_buffer_new)( decoder_t *, const subpicture_updater_t * );		//static subpicture_t *spu_new_buffer( decoder_t *p_dec, const subpicture_updater_t *p_updater )
+					void            (*pf_spu_buffer_del)( decoder_t *, subpicture_t * );					//static void spu_del_buffer( decoder_t *p_dec, subpicture_t *p_subpic )
 
 					/* Input attachments
 					 * XXX use decoder_GetInputAttachments */
-					int             (*pf_get_attachments)( decoder_t *p_dec, input_attachment_t ***ppp_attachment, int *pi_attachment );
+					int             (*pf_get_attachments)( decoder_t *p_dec, input_attachment_t ***ppp_attachment, int *pi_attachment );	//static int DecoderGetInputAttachments( decoder_t *p_dec,
+																																			//   	input_attachment_t ***ppp_attachment,
+																																			//   	int *pi_attachment )
 
 					/* Display date
 					 * XXX use decoder_GetDisplayDate */
-					mtime_t         (*pf_get_display_date)( decoder_t *, mtime_t );
+					mtime_t         (*pf_get_display_date)( decoder_t *, mtime_t );		//static mtime_t DecoderGetDisplayDate( decoder_t *p_dec, mtime_t i_ts )
 
 					/* Display rate
 					 * XXX use decoder_GetDisplayRate */
-					int             (*pf_get_display_rate)( decoder_t * );
+					int             (*pf_get_display_rate)( decoder_t * );		//static int DecoderGetDisplayRate( decoder_t *p_dec )
 
 					/* XXX use decoder_QueueVideo */
-					int             (*pf_queue_video)( decoder_t *, picture_t * );
+					int             (*pf_queue_video)( decoder_t *, picture_t * );	//static int DecoderQueueVideo( decoder_t *p_dec, picture_t *p_pic )
 					/* XXX use decoder_QueueAudio */
-					int             (*pf_queue_audio)( decoder_t *, block_t * );
+					int             (*pf_queue_audio)( decoder_t *, block_t * );	//static int DecoderQueueAudio( decoder_t *p_dec, block_t *p_aout_buf )
 					/* XXX use decoder_QueueSub */
-					int             (*pf_queue_sub)( decoder_t *, subpicture_t *);
+					int             (*pf_queue_sub)( decoder_t *, subpicture_t *);	//static int DecoderQueueSpu( decoder_t *p_dec, subpicture_t *p_spu )
 
 				 
 					/* Private structure for the owner of the decoder */
-					decoder_owner_sys_t *p_owner;
+					decoder_owner_sys_t *p_owner;		//指向下面的结构体。p_dec->p_owner = p_owner = malloc( sizeof( decoder_owner_sys_t ) )
 
 					bool                b_error;
 					bool                b_eos;
@@ -726,10 +728,10 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 				{
 					int64_t         i_preroll_end;
 
-					input_thread_t  *p_input;
-					input_resource_t*p_resource;
+					input_thread_t  *p_input;			//input_thread_t *p_input;
+					input_resource_t*p_resource;		//input_resource_t *p_resource;
 					input_clock_t   *p_clock;
-					int             i_last_rate;
+					int             i_last_rate;		//INPUT_RATE_DEFAULT
 
 					vout_thread_t   *p_spu_vout;
 					int              i_spu_channel;
@@ -742,7 +744,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 
 					/* Some decoders require already packetized data (ie. not truncated) */
 					decoder_t *p_packetizer;
-					bool b_packetizer;
+					bool b_packetizer;				//初始化为false.
 
 					/* Current format in use by the output */
 					video_format_t video;
@@ -755,7 +757,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 					vlc_meta_t     *p_description;
 
 					/* fifo */
-					block_fifo_t *p_fifo;
+					block_fifo_t *p_fifo;		//block_FifoNew(); 该队列用于接收要解码的数据？
 
 					/* Lock for communication with decoder thread */
 					vlc_mutex_t lock;
@@ -768,50 +770,50 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 					vout_thread_t   *p_vout;
 
 					/* -- Theses variables need locking on read *and* write -- */
-					bool b_exit;
+					bool b_exit;		//init to false.
 
 					/* Pause */
-					bool b_paused;
+					bool b_paused;		//init to false.
 					struct
 					{
-						mtime_t i_date;
-						int     i_ignore;
+						mtime_t i_date;		//init to VLC_TS_INVALID
+						int     i_ignore;	//init to 0.
 					} pause;
 
 					/* Buffering */
-					bool b_buffering;
+					bool b_buffering;		//init to false.
 					struct
 					{
-						bool b_first;
-						bool b_full;
-						int  i_count;
+						bool b_first;		//init to true.
+						bool b_full;		//init to false.
+						int  i_count;		//intit to 0.
 
-						picture_t     *p_picture;
+						picture_t     *p_picture;			//init to NULL
 						picture_t     **pp_picture_next;
 
-						subpicture_t  *p_subpic;
+						subpicture_t  *p_subpic;			//init to NULL
 						subpicture_t  **pp_subpic_next;
 
-						block_t *p_audio;
+						block_t *p_audio;					//init to NULL
 						block_t **pp_audio_next;
 
-						block_t       *p_block;
+						block_t       *p_block;				//init to NULL
 						block_t       **pp_block_next;
 					} buffer;
 
 					/* Flushing */
-					bool b_flushing;
+					bool b_flushing;		//init to false.
 
 					/* CC */
 					struct
 					{
-						bool b_supported;
-						bool pb_present[4];
-						decoder_t *pp_decoder[4];
+						bool b_supported;		//init to false.
+						bool pb_present[4];		//init to false.
+						decoder_t *pp_decoder[4];	//init to NULL.
 					} cc;
 
 					/* Delay */
-					mtime_t i_ts_delay;
+					mtime_t i_ts_delay;		//Init to 0.
 				}
 				
 		7.4.2 vlc_timer_create (&(p_input->p->intf_timer), interfaceupdate, (void*)p_input)
@@ -831,7 +833,8 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 1. static void *Run( void *obj ) //in file src/input/input.c
 	该线程是视频播放的非常核心的主线程。在该线程中调用的 Init( p_input )创建了access, streamaccess, demux, decoder等模块。
 2. static void *DecoderThread( void *p_data )
-	每个video和audio流都被创建一个线程，用于解码。　
+	每个video和audio流都被创建一个线程，用于解码。
+	decoder主要通过对象decoder_t和decoder_owner_sys_t控制，每个decoder_t对象都包含一个decoder_owner_sys_t对象。
 				
 					
 	mVlcPlayerInstance->input->access_t
