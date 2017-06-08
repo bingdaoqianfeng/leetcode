@@ -837,6 +837,214 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 		7.5.1 DecoderProcess( decoder_t *p_dec, block_t *p_block )  //Decode a block
 		7.5.2 DecoderProcessVideo( decoder_t *p_dec, block_t *p_block, bool b_flush )  //Decoder video packet.
 		7.5.3 DecoderProcessAudio( decoder_t *p_dec, block_t *p_block, bool b_flush )  //Decoder audio packet.
+	7.6 static void *Thread(void *object) //video output thread. Video output thread.  in file video_output.c
+		This function does only returns when the thread is terminated. It handles the pictures arriving in the video heap and the display device events.
+		vout对象句柄存放在decoder对象中。
+		vout_thread_t *RequestVout() // in file src/input/resource.c
+		-->vout_thread_t *(vout_Request)(vlc_object_t *object, const vout_configuration_t *cfg) // in file src/video_output/video_output.c
+		-->vout_control_cmd_Init(&cmd, VOUT_CONTROL_REINIT);
+		-->int ThreadControl(vout_thread_t *vout, vout_control_cmd_t cmd)
+		-->ThreadReinit(vout_thread_t *vout, const vout_configuration_t *cfg)
+		-->int ThreadStart(vout_thread_t *vout, const vout_display_state_t *state)	
+		-->int vout_OpenWrapper(vout_thread_t *vout, const char *splitter_name, const vout_display_state_t *state) // in file src/video_output/vout_wrapper.c
+		-->sys->display.vd = vout_NewDisplay(vout, &vout->p->original, state, "$vout", double_click_timeout, hide_timeout);	
+		-->......
+		-->vd->module = module_need(vd, "vout display", module, module && *module != '\0');
+
+		struct vout_thread_t {
+			VLC_COMMON_MEMBERS
+
+			/* Private vout_thread data */
+			vout_thread_sys_t *p;
+		};
+		struct vout_thread_sys_t
+		{
+			/* Splitter module if used */
+			char            *splitter_name;
+
+			/* Input thread for dvd menu interactions */
+			vlc_object_t    *input;
+
+			/* */
+			video_format_t  original;   /* Original format ie coming from the decoder */
+			unsigned        dpb_size;
+
+			/* Snapshot interface */
+			vout_snapshot_t snapshot;
+
+			/* Statistics */
+			vout_statistic_t statistic;
+
+			/* Subpicture unit */
+			vlc_mutex_t     spu_lock;
+			spu_t           *spu;
+			vlc_fourcc_t    spu_blend_chroma;
+			filter_t        *spu_blend;
+
+			/* Video output window */
+			struct {
+				bool              is_unused;
+				vout_window_cfg_t cfg;
+				vout_window_t     *object;
+			} window;
+
+			/* Thread & synchronization */
+			vlc_thread_t    thread;		//指向tatic void *Thread(void *object) //video output thread. Video output thread.  in file video_output.c
+			bool            dead;
+			vout_control_t  control;
+
+			/* */
+			struct {
+				char           *title;
+				vout_display_t *vd;			//指向创建vout的函数：vout_NewDisplay(vout, &vout->p->original, state, "$vout",double_click_timeout, hide_timeout);
+				bool           use_dr;
+				picture_t      *filtered;
+			} display;
+
+			struct {
+				mtime_t     date;
+				mtime_t     timestamp;
+				bool        is_interlaced;
+				picture_t   *decoded;
+				picture_t   *current;
+				picture_t   *next;
+			} displayed;
+
+			struct {
+				mtime_t     last;
+				mtime_t     timestamp;
+			} step;
+
+			struct {
+				bool        is_on;
+				mtime_t     date;
+			} pause;
+
+			/* OSD title configuration */
+			struct {
+				bool        show;
+				mtime_t     timeout;
+				int         position;
+			} title;
+
+			/* */
+			bool            is_late_dropped;
+
+			/* Video filter2 chain */
+			struct {
+				vlc_mutex_t     lock;
+				char            *configuration;
+				video_format_t  format;
+				filter_chain_t  *chain_static;
+				filter_chain_t  *chain_interactive;
+			} filter;
+
+			/* */
+			vlc_mouse_t     mouse;
+
+			/* */
+			vlc_mutex_t     picture_lock;                 /**< picture heap lock */
+			picture_pool_t  *private_pool;
+			picture_pool_t  *display_pool;
+			picture_pool_t  *decoder_pool;
+			picture_fifo_t  *decoder_fifo;
+			vout_chrono_t   render;           /**< picture render time estimator */
+
+			bool lastframedropped;
+			bool miDvbcOut;
+		}
+		
+		struct vout_display_t {
+			VLC_COMMON_MEMBERS
+
+			/* Module */
+			module_t *module;		//指向具体的vout模块，如mediacodecoutput.cpp等。vd->module = module_need(vd, "vout display", module, module && *module != '\0');
+
+			/* Initial and current configuration.
+			 * You cannot modify it directly, you must use the appropriate events.
+			 *
+			 * It reflects the current values, i.e. after the event has been accepted
+			 * and applied/configured if needed.
+			 */
+			const vout_display_cfg_t *cfg;
+
+			/* video source format.
+			 *
+			 * Cropping is not requested while in the open function.
+			 * You cannot change it.
+			 */
+			video_format_t source;
+
+			/* picture_t format.
+			 *
+			 * You can only change it inside the module open function to
+			 * match what you want, and when a VOUT_DISPLAY_RESET_PICTURES control
+			 * request is made and succeeds.
+			 *
+			 * By default, it is equal to ::source except for the aspect ratio
+			 * which is undefined(0) and is ignored.
+			 */
+			video_format_t fmt;
+
+			/* Information
+			 *
+			 * You can only set them in the open function.
+			 */
+			vout_display_info_t info;
+
+			/* Return a pointer over the current picture_pool_t* (mandatory).
+			 *
+			 * For performance reasons, it is best to provide at least count
+			 * pictures but it is not mandatory.
+			 * You can return NULL when you cannot/do not want to allocate
+			 * pictures.
+			 * The vout display module keeps the ownership of the pool and can
+			 * destroy it only when closing or on invalid pictures control.
+			 */
+			picture_pool_t *(*pool)(vout_display_t *, unsigned count);
+
+			/* Prepare a picture and an optional subpicture for display (optional).
+			 *
+			 * It is called before the next pf_display call to provide as much
+			 * time as possible to prepare the given picture and the subpicture
+			 * for display.
+			 * You are guaranted that pf_display will always be called and using
+			 * the exact same picture_t and subpicture_t.
+			 * You cannot change the pixel content of the picture_t or of the
+			 * subpicture_t.
+			 */
+			void       (*prepare)(vout_display_t *, picture_t *, subpicture_t *);
+
+			/* Display a picture and an optional subpicture (mandatory).
+			 *
+			 * The picture and the optional subpicture must be displayed as soon as
+			 * possible.
+			 * You cannot change the pixel content of the picture_t or of the
+			 * subpicture_t.
+			 *
+			 * This function gives away the ownership of the picture and of the
+			 * subpicture, so you must release them as soon as possible.
+			 */
+			void       (*display)(vout_display_t *, picture_t *, subpicture_t *);
+
+			/* Control on the module (mandatory) */
+			int        (*control)(vout_display_t *, int, va_list);
+
+			/* Manage pending event (optional) */
+			void       (*manage)(vout_display_t *);
+
+			/* Private place holder for the vout_display_t module (optional)
+			 *
+			 * A module is free to use it as it wishes.
+			 */
+			vout_display_sys_t *sys;
+
+			/* Reserved for the vout_display_t owner.
+			 *
+			 * It must not be overwritten nor used directly by a module.
+			 */
+			vout_display_owner_t owner;
+		};
 
 /*************************VLC中的线程*******************************************/
 1. static void *Run( void *obj ) //in file src/input/input.c
@@ -848,6 +1056,9 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 	decoder主要通过对象decoder_t和decoder_owner_sys_t控制，每个decoder_t对象都包含一个decoder_owner_sys_t对象。
 	该线程负责从p_owner->p_fifo 队列中取出数据帧，调用DecoderProcess( p_dec, p_block )完成对该数据帧的解码。
 
+3. *Thread(void *object) //video output thread. Video output thread.  in file video_output.c
+	This function does only returns when the thread is terminated. It handles the pictures arriving in the video heap and the display device events.
+	vout模块是在该线程运行起来后，在该线程中被加载的。
 
 /*************************VLC中模块的创建关系*******************************************/	
 1. 首先会创建p_input模块，该模块会创建Run线程，在该线程中创建了access, streamaccess, demux, decoder等模块。
@@ -855,12 +1066,22 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 	streamaccess：将access模块进行了封装，支持的对数据的缓存；
 	demux: 对视频文件进行解析，分析出具体的流信息，编码参数。
 	decoder: 在InitPrograms( p_input )中被创建，video and audio个对应一个解码器，没有解码器对应一个线程。从demux中读出来的数据，通过fifo队列，与解码线程进行通信。
+	以上模块的句柄都存放在对象p_input中。
+
 2. 在decoder模块中，通过调用decoder_NewPicture（）函数，会创建vout模块。
 　　具体过程：对于每个decoder模块，在解码后，都要通过调用decoder_NewPicture（）函数，获得picture结构，将解码后的数据拷贝到picture中，在decoder_NewPicture（）函数中，
 　　会调用p_dec->pf_vout_buffer_new从ouput模块中获得picture，如果此时p_vout是空，会创建它。
 	vout: 负责解码后视频帧的render.另外，具体显示需要的picture结构也是在该模块中初始化分配的。
-				
-					
+	vout对象句柄存放在decoder对象中。
+	
+3. 在decoder模块中，通过调用decoder_NewAudioBuffer（）函数，会创建aout模块。
+　　block_t *decoder_NewAudioBuffer( decoder_t *dec, int samples )
+	-->inline int decoder_UpdateAudioFormat( decoder_t *dec )
+	-->int aout_update_format( decoder_t *p_dec )  //p_dec->pf_aout_format_update = aout_update_format;
+	-->audio_output_t *input_resource_GetAout( input_resource_t *p_resource )
+	-->audio_output_t *aout_New (vlc_object_t *parent) //Creates an audio output object and initializes an output module. 	
+
+	
 	mVlcPlayerInstance->input->access_t
 							 ->stream_t
 							 ->demux--------->decoder
