@@ -256,7 +256,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 		es_out_t        *p_es_out;          //初始化NULL,在static int Init( input_thread_t * p_input )中调用input_EsOutTimeshiftNew( p_input, p_input->p->p_es_out_display, p_input->p->i_rate )初始化该指针,
 											//相关的锁变量p->lock_esout.
 		es_out_t *p_es_out_display;			//初始化input_EsOutNew( p_input, p_input->p->i_rate )，　
-											//p_es_out_display->pf_add     = EsOutAdd;
+											//p_es_out_display->pf_add     = EsOutAdd;    //EsOutAdd中会创建program. /* Search the program */p_pgrm = EsOutProgramFind( out, fmt->i_group );
 											//p_es_out_display->pf_send    = EsOutSend;
 											//p_es_out_display->pf_del     = EsOutDel;
 											//p_es_out_display->pf_control = EsOutControl;
@@ -674,7 +674,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 					 * XXX use decoder_NewPicture/decoder_DeletePicture
 					 * and decoder_LinkPicture/decoder_UnlinkPicture */
 					int             (*pf_vout_format_update)( decoder_t * );
-					picture_t      *(*pf_vout_buffer_new)( decoder_t * );					//point to static picture_t *vout_new_buffer( decoder_t *p_dec )
+					picture_t      *(*pf_vout_buffer_new)( decoder_t * );			//point to static picture_t *vout_new_buffer( decoder_t *p_dec ),调用该函数可以创建struct decoder_owner_sys_t中的p_vout;
 					void            (*pf_vout_buffer_del)( decoder_t *, picture_t * );		//static void vout_del_buffer( decoder_t *p_dec, picture_t *p_pic )
 					void            (*pf_picture_link)   ( decoder_t *, picture_t * );		//static void vout_link_picture( decoder_t *p_dec, picture_t *p_pic )
 					void            (*pf_picture_unlink) ( decoder_t *, picture_t * );		//static void vout_unlink_picture( decoder_t *p_dec, picture_t *p_pic )
@@ -686,7 +686,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 					int             i_extra_picture_buffers;
 
 					/* Audio output callbacks */
-					int             (*pf_aout_format_update)( decoder_t * );		//point to aout_update_format( decoder_t *p_dec )
+					int             (*pf_aout_format_update)( decoder_t * );		//point to aout_update_format( decoder_t *p_dec )，调用该函数可以创建struct decoder_owner_sys_t中的p_aout;
 
 					/* SPU output callbacks
 					 * XXX use decoder_NewSubpicture and decoder_DeleteSubpicture */
@@ -765,9 +765,11 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 					vlc_cond_t  wait_acknowledge;
 
 					/* -- These variables need locking on write(only) -- */
-					audio_output_t *p_aout;
+					audio_output_t *p_aout;		//当 p_dec->pf_aout_format_update = aout_update_format被调用时，会调用input_resource_RequestVout( )创建。
 
-					vout_thread_t   *p_vout;
+					vout_thread_t   *p_vout;	//当p_dec->pf_vout_buffer_new = vout_new_buffer;被调用的视乎，会调用input_resource_GetAout( p_owner->p_resource )创建。
+												//对于每个decoder模块，在解码后，都要通过调用decoder_NewPicture（）函数，获得picture结构，将解码后的数据拷贝到picture中，
+												//在decoder_NewPicture（）函数中，会调用p_dec->pf_vout_buffer_new从ouput模块中获得picture，如果此时p_vout是空，会创建它。
 
 					/* -- Theses variables need locking on read *and* write -- */
 					bool b_exit;		//init to false.
@@ -826,8 +828,15 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 				--> out->pf_send( out, id, p_block ) -->static int Send( es_out_t *p_out, es_out_id_t *p_es, block_t *p_block )(in file es_out_timeshift.c)
 				--> static int EsOutSend( es_out_t *out, es_out_id_t *es, block_t *p_block ) (in file es_out.c)
 				--> void input_DecoderDecode( decoder_t *p_dec, block_t *p_block, bool b_do_pace ) (in file decoder.c)　　//Put a block_t in the decoder's fifo.
-				
-			
+			2. MainLoopInterface( p_input );
+			    It update the variables used by the interfaces.
+			3. MainLoopStatistic( input_thread_t *p_input )
+				It updates the globals statics.
+	7.5 static void *DecoderThread( void *p_data ) //The decoding main loop in file src/input/decoder.c
+		video and audio分别对应一个DecoderThread线程。
+		7.5.1 DecoderProcess( decoder_t *p_dec, block_t *p_block )  //Decode a block
+		7.5.2 DecoderProcessVideo( decoder_t *p_dec, block_t *p_block, bool b_flush )  //Decoder video packet.
+		7.5.3 DecoderProcessAudio( decoder_t *p_dec, block_t *p_block, bool b_flush )  //Decoder audio packet.
 
 /*************************VLC中的线程*******************************************/
 1. static void *Run( void *obj ) //in file src/input/input.c
@@ -838,6 +847,18 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 	每个video和audio流都被创建一个线程，用于解码。
 	decoder主要通过对象decoder_t和decoder_owner_sys_t控制，每个decoder_t对象都包含一个decoder_owner_sys_t对象。
 	该线程负责从p_owner->p_fifo 队列中取出数据帧，调用DecoderProcess( p_dec, p_block )完成对该数据帧的解码。
+
+
+/*************************VLC中模块的创建关系*******************************************/	
+1. 首先会创建p_input模块，该模块会创建Run线程，在该线程中创建了access, streamaccess, demux, decoder等模块。
+	access: 负责视频文件的具体读写操作；
+	streamaccess：将access模块进行了封装，支持的对数据的缓存；
+	demux: 对视频文件进行解析，分析出具体的流信息，编码参数。
+	decoder: 在InitPrograms( p_input )中被创建，video and audio个对应一个解码器，没有解码器对应一个线程。从demux中读出来的数据，通过fifo队列，与解码线程进行通信。
+2. 在decoder模块中，通过调用decoder_NewPicture（）函数，会创建vout模块。
+　　具体过程：对于每个decoder模块，在解码后，都要通过调用decoder_NewPicture（）函数，获得picture结构，将解码后的数据拷贝到picture中，在decoder_NewPicture（）函数中，
+　　会调用p_dec->pf_vout_buffer_new从ouput模块中获得picture，如果此时p_vout是空，会创建它。
+	vout: 负责解码后视频帧的render.另外，具体显示需要的picture结构也是在该模块中初始化分配的。
 				
 					
 	mVlcPlayerInstance->input->access_t
