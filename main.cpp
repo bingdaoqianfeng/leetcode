@@ -48,9 +48,10 @@ using namespace std;
 //#include "50_pow.h"
 //#include "51_nQueuens.h"
 //#include "52_nQueuens_II.h"
+//#include "53_maximumSubArray.h"
 
 /****************to be continue*****************/
-#include "53_maximumSubArray.h"
+#include "54_spiralMatrix.h"
 
 struct ListNode {
     int val;
@@ -65,6 +66,7 @@ void createMatrix();
 void createBoard();
 void createList();
 void createVector();
+vector< vector<int> > createVV(int a[], int len, int n);
 
 int main(int argc, char** argv)
 {
@@ -132,6 +134,20 @@ void createBoard(){
             board[i][j] = str[j];
         }
     }
+}
+
+vector< vector<int> > createVV(int a[], int len, int n){
+        vector< vector<int> > matrix;
+        printf("len: %d, n: %d\n", len, n);
+        vector<int> row;
+        for(int i=1; i<=len; i++){
+            row.push_back(a[i-1]);
+            if(i%n == 0){
+                matrix.push_back(row);
+                row.clear();
+            }
+        }
+        return matrix;
 }
 
 void createMatrix(){
