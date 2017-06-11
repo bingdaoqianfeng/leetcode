@@ -17,13 +17,25 @@
 class Solution {
 public:
     vector<int> spiralOrder(vector< vector<int> >& matrix) {
-        
+    	vector<int> result;
+		int top, bottom, left, right;
+		top = 0;
+		
+		for(int row = 0; row < matrix.size(); row++){
+			vector<int> row = matrix[row];
+			for(int col = 0; col < ){
+				
+			}
+		}   
     }
 	int testCase(){
 		int a[] = {1,2,3,4,5,6,7,8,9};
 		vector< vector<int> > matrix;
 		matrix = createVV(a, 9, 3);
 		printVV(matrix);
+
+		vector<int> result;
+		result = spiralOrder(matrix);
 		return 0;
 	}
 	vector< vector<int> > createVV(int a[], int len, int n){
