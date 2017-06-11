@@ -24,18 +24,15 @@ public:
 				left = right = i;
 			}	
 			int len = nums.size() - i;
-			while(len){
-				int tempval = 0;
-				for(int j=i; j<(i+len); j++){
-					tempval += nums[j];	
-				}
+			int tempval = 0;
+			for(int j=i; j<(i+len); j++){
+				tempval += nums[j];	
 				//printf("i: %d, len: %d, tempval: %d\n", i, len, tempval);
 				if(tempval>maxval){
 					maxval = tempval;
 					left = i;
 					right = i+len;
 				}	
-				len--;
 			}
 		}
 		//printf("result left: %d, right: %d\n", left, right);
