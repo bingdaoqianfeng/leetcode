@@ -19,15 +19,17 @@ public:
     vector<int> spiralOrder(vector< vector<int> >& matrix) {
     	vector<int> result;
 		int top, bottom, left, right;
+		int rows, cols;
+		if(matrix.size() == 0)
+			return result;
+		rows = matrix.size();
+		cols = matrix[0].size();
 		top = 0;
-		
-		for(int row = 0; row < matrix.size(); row++){
-			vector<int> row = matrix[row];
-			for(int col = 0; col < ){
-				
-			}
-		}   
-    }
+		bottom = rows - 1;	
+		left = 0;
+		right = cols - 1;
+    	return result;
+	}
 	int testCase(){
 		int a[] = {1,2,3,4,5,6,7,8,9};
 		vector< vector<int> > matrix;
