@@ -836,6 +836,19 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 		video and audio分别对应一个DecoderThread线程。
 		7.5.1 DecoderProcess( decoder_t *p_dec, block_t *p_block )  //Decode a block
 		7.5.2 DecoderProcessVideo( decoder_t *p_dec, block_t *p_block, bool b_flush )  //Decoder video packet.
+			-->DecoderDecodeVideo( decoder_t *p_dec, block_t *p_block )
+			-->p_pic = p_dec->pf_decode_video( p_dec, &p_block )
+			-->picture_t *DecodeVideo(decoder_t *p_dec, block_t **pp_block)  //以mediacodec为例
+			-->int DecodeCommon(decoder_t *p_dec, block_t **pp_block)
+			//送给mediacodec解码
+			-->static void *OutThread(void *data)
+			-->int Video_ProcessOutput(decoder_t *p_dec, mc_api_out *p_out, picture_t **pp_out_pic, block_t **pp_out_block) //在该函数中调用decoder_NewPicture(p_dec)，从vout模块中获得picture_t结构。
+																															//InsertInflightPicture(p_dec, p_pic->p_sys);设置picture_t的release函数。
+			-->decoder_QueueVideo(p_dec, p_pic);
+			-->DecoderPlayVideo( p_dec, p_pic, &i_displayed, &i_lost );
+			-->vout_PutPicture( p_vout, p_picture );  //It gives to the vout a picture to be displayed.  The given picture MUST comes from vout_GetPicture.
+			-->picture_fifo_Push(vout->p->decoder_fifo, picture);  //放入fifo队列中，等待*Thread(void *object)取数据。 //video output thread. Video output thread.  in file video_output.c
+			
 		7.5.3 DecoderProcessAudio( decoder_t *p_dec, block_t *p_block, bool b_flush )  //Decoder audio packet.
 	7.6 static void *Thread(void *object) //video output thread. Video output thread.  in file video_output.c
 		This function does only returns when the thread is terminated. It handles the pictures arriving in the video heap and the display device events.
@@ -879,7 +892,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 			vlc_mutex_t     spu_lock;
 			spu_t           *spu;
 			vlc_fourcc_t    spu_blend_chroma;
-			filter_t        *spu_blend;
+			filter_t        *spu_blend;		//vout->p->spu_blend = filter_NewBlend(VLC_OBJECT(vout), &fmt_spu); Create blending filter, OSD/Subtitles will work
 
 			/* Video output window */
 			struct {
@@ -902,10 +915,10 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 			} display;
 
 			struct {
-				mtime_t     date;
+				mtime_t     date;			//即将render的数据帧的显示时间
 				mtime_t     timestamp;
-				bool        is_interlaced;
-				picture_t   *decoded;
+				bool        is_interlaced;	//表示是否是interlace显示
+				picture_t   *decoded;		//指向即将render的数据帧
 				picture_t   *current;
 				picture_t   *next;
 			} displayed;
@@ -1045,6 +1058,22 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 			 */
 			vout_display_owner_t owner;
 		};
+		7.6.1 int ThreadDisplayPreparePicture(vout_thread_t *vout, bool reuse, bool frame_by_frame)
+			该函数负责从fifo中取出数据帧，并传送给filter进行预处理。
+			1. picture_t *picture = filter_chain_VideoFilter(vout->p->filter.chain_static, NULL);
+				每个vout可以包含很多filter，在render之前，先将pitcure分别送给链表中的filter进行处理。filter可以进行图片叠加，缩放等等预处理。
+				
+			2. decoded = picture_fifo_Pop(vout->p->decoder_fifo);
+				从fifo中取出数据帧,由vout->p->displayed.current或者vout->p->displayed.next。
+				
+			3. 根据系统时间和数据帧的事件戳，判断数据帧是否超时，需要丢弃。
+				const mtime_t predicted = mdate() + 0; /* TODO improve */
+                const mtime_t late = predicted - decoded->date;
+
+		7.6.2 int ThreadDisplayRenderPicture(vout_thread_t *vout, bool is_forced)
+			1. vout->p->spu_blend = filter_NewBlend(VLC_OBJECT(vout), &fmt_spu);
+				It creates a blend filter. Only the chroma properties of the dest format is used (chroma type, rgb masks and shifts)
+			2. 
 
 /*************************VLC中的线程*******************************************/
 1. static void *Run( void *obj ) //in file src/input/input.c
@@ -1059,6 +1088,25 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 3. *Thread(void *object) //video output thread. Video output thread.  in file video_output.c
 	This function does only returns when the thread is terminated. It handles the pictures arriving in the video heap and the display device events.
 	vout模块是在该线程运行起来后，在该线程中被加载的。
+	DecoderDecodeVideo()函数负责把解码后的数据帧送入fifo队列中，等待video output thread从队列中取出。
+	解码后的数据写入vout->p->decoder_fifo中的调用过程：
+	-->DecoderDecodeVideo( decoder_t *p_dec, block_t *p_block )
+	-->p_pic = p_dec->pf_decode_video( p_dec, &p_block )
+	-->picture_t *DecodeVideo(decoder_t *p_dec, block_t **pp_block)  //以mediacodec为例
+	-->int DecodeCommon(decoder_t *p_dec, block_t **pp_block)
+	//送给mediacodec解码
+	-->static void *OutThread(void *data)
+	-->int Video_ProcessOutput(decoder_t *p_dec, mc_api_out *p_out, picture_t **pp_out_pic, block_t **pp_out_block) //在该函数中调用decoder_NewPicture(p_dec)，从vout模块中获得picture_t结构。
+																													//InsertInflightPicture(p_dec, p_pic->p_sys);设置picture_t的release函数。
+	-->decoder_QueueVideo(p_dec, p_pic);
+	-->DecoderPlayVideo( p_dec, p_pic, &i_displayed, &i_lost );
+	-->vout_PutPicture( p_vout, p_picture );  //It gives to the vout a picture to be displayed.  The given picture MUST comes from vout_GetPicture.
+	-->picture_fifo_Push(vout->p->decoder_fifo, picture);  //放入fifo队列中，等待*Thread(void *object)取数据。 //video output thread. Video output thread.  in file video_output.c
+	从vout->p->decoder_fifo中读出解码后视频帧过程：
+	static void *Thread(void *object)	//in file video_output.c
+	-->static int ThreadDisplayPicture(vout_thread_t *vout, mtime_t *deadline)
+	-->static int ThreadDisplayPreparePicture(vout_thread_t *vout, bool reuse, bool frame_by_frame)
+	-->decoded = picture_fifo_Pop(vout->p->decoder_fifo);
 
 /*************************VLC中模块的创建关系*******************************************/	
 1. 首先会创建p_input模块，该模块会创建Run线程，在该线程中创建了access, streamaccess, demux, decoder等模块。
@@ -1068,18 +1116,20 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 	decoder: 在InitPrograms( p_input )中被创建，video and audio个对应一个解码器，没有解码器对应一个线程。从demux中读出来的数据，通过fifo队列，与解码线程进行通信。
 	以上模块的句柄都存放在对象p_input中。
 
-2. 在decoder模块中，通过调用decoder_NewPicture（）函数，会创建vout模块。
+2. vout模块，在decoder模块中，通过调用decoder_NewPicture（）函数，会创建vout模块。
 　　具体过程：对于每个decoder模块，在解码后，都要通过调用decoder_NewPicture（）函数，获得picture结构，将解码后的数据拷贝到picture中，在decoder_NewPicture（）函数中，
 　　会调用p_dec->pf_vout_buffer_new从ouput模块中获得picture，如果此时p_vout是空，会创建它。
 	vout: 负责解码后视频帧的render.另外，具体显示需要的picture结构也是在该模块中初始化分配的。
 	vout对象句柄存放在decoder对象中。
+	decoder模块与vout模块，通过vout->p->decoder_fifo进行数据传输，decoder将加码后的数据送入vout->p->decoder_fifo中，vout模块中的线程，会从该fifo中读出数据。
 	
-3. 在decoder模块中，通过调用decoder_NewAudioBuffer（）函数，会创建aout模块。
+3. vout模块，在decoder模块中，通过调用decoder_NewAudioBuffer（）函数，会创建aout模块
 　　block_t *decoder_NewAudioBuffer( decoder_t *dec, int samples )
 	-->inline int decoder_UpdateAudioFormat( decoder_t *dec )
-	-->int aout_update_format( decoder_t *p_dec )  //p_dec->pf_aout_format_update = aout_update_format;
-	-->audio_output_t *input_resource_GetAout( input_resource_t *p_resource )
-	-->audio_output_t *aout_New (vlc_object_t *parent) //Creates an audio output object and initializes an output module. 	
+	-->int aout_update_format( decoder_t *p_dec )  //p_dec->pf_aout_format_update = aout_update_format;  file in src/input/decoder.c
+	-->audio_output_t *input_resource_GetAout( input_resource_t *p_resource )	//file in src/input/resource.c
+	-->audio_output_t *aout_New (vlc_object_t *parent) //Creates an audio output object and initializes an output module. 	file in src/audio_output/output.c
+	-->owner->module = module_need (aout, "audio output", "$aout", false);
 
 	
 	mVlcPlayerInstance->input->access_t
