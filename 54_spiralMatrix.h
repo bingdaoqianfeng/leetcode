@@ -20,6 +20,7 @@ public:
     	vector<int> result;
 		int top, bottom, left, right;
 		int rows, cols;
+		int type = 0;
 		if(matrix.size() == 0)
 			return result;
 		rows = matrix.size();
@@ -28,6 +29,36 @@ public:
 		bottom = rows - 1;	
 		left = 0;
 		right = cols - 1;
+		while(top<=bottom){
+			switch(type%4){
+				case 0: //left to right
+					for(int i = left; i <= right; i++){
+						result.push_back(matrix[top][i]);
+					}
+					top++;
+					break;
+				case 1: //top to bottom
+					for(int i = top; i <= bottom; i++){
+						result.push_back(matrix[i][right]);
+					}
+					right--;
+					break;
+				case 2: //right to left
+					for(int i = right; i >= left; i--){
+						result.push_back(matrix[bottom][i]);
+					}
+					bottom--;
+					break;
+				case 3: //bottom to top
+					for(int i = bottom; i >= top; i--){
+						result.push_back(matrix[i][left]);
+					}
+					left++;
+					break;
+			}
+			printf("top: %d, bottom: %d, left: %d, right: %d\n", top, bottom, left, right);
+			type++;
+		}
     	return result;
 	}
 	int testCase(){
@@ -38,6 +69,15 @@ public:
 
 		vector<int> result;
 		result = spiralOrder(matrix);
+		printVector(result);
+		
+		int b[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+		matrix.clear();
+		matrix = createVV(b, 16, 4);
+		printVV(matrix);
+
+		result = spiralOrder(matrix);
+		printVector(result);
 		return 0;
 	}
 	vector< vector<int> > createVV(int a[], int len, int n){
