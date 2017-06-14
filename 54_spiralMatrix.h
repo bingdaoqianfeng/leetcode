@@ -29,7 +29,7 @@ public:
 		bottom = rows - 1;	
 		left = 0;
 		right = cols - 1;
-		while(top<=bottom){
+		while(top<=bottom && left<=right){
 			switch(type%4){
 				case 0: //left to right
 					for(int i = left; i <= right; i++){
@@ -71,9 +71,9 @@ public:
 		result = spiralOrder(matrix);
 		printVector(result);
 		
-		int b[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+		int b[] = {7,9,6};
 		matrix.clear();
-		matrix = createVV(b, 16, 4);
+		matrix = createVV(b, 3, 1);
 		printVV(matrix);
 
 		result = spiralOrder(matrix);
