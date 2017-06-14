@@ -1073,7 +1073,19 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 		7.6.2 int ThreadDisplayRenderPicture(vout_thread_t *vout, bool is_forced)
 			1. vout->p->spu_blend = filter_NewBlend(VLC_OBJECT(vout), &fmt_spu);
 				It creates a blend filter. Only the chroma properties of the dest format is used (chroma type, rgb masks and shifts)
-			2. 
+			2. vout_UpdateDisplaySourceProperties(vd, &todisplay->format);
+				该函数根据输入源对屏幕高宽比(aspect ratio)和宽高等就行调整。
+				但是原理没搞清楚。
+			3. vout_display_Prepare(vd, todisplay, subpic);  //It preparse a picture for display.
+				如果vd->prepare不为空，则调用vd->prepare(vd, picture, subpicture); //以mediacodecoutput为例，vd->prepare初始化为NULL，因此该函数什么都不作。
+			4. vout_display_Display(vd,
+                         sys->display.filtered ? sys->display.filtered
+                                                : todisplay,
+                         subpic);
+				由于在小米视频中，sys->display.filtered为NULL，所以，实际传送的参数是vout_display_Display(vd,todisplay,subpic);　todisplay就是要显示的视频帧。
+				在有filter的情况下，todisplay是被各个filter添加了subtitle或者osd的视频帧。　
+				vd->display(vd, picture, subpicture);  //以mediacodecoutput为例，vd->display指向static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)　in file mediacodecoutput.cpp.
+				
 
 /*************************VLC中的线程*******************************************/
 1. static void *Run( void *obj ) //in file src/input/input.c
