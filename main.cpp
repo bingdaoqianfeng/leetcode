@@ -50,9 +50,10 @@ using namespace std;
 //#include "52_nQueuens_II.h"
 //#include "53_maximumSubArray.h"
 //#include "54_spiralMatrix.h"
+//#include "55_jumpGame.h"
 
 /****************to be continue*****************/
-#include "55_jumpGame.h"
+#include "56_mergeIntervals.h"
 
 struct ListNode {
     int val;
