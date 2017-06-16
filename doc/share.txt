@@ -850,6 +850,14 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 			-->picture_fifo_Push(vout->p->decoder_fifo, picture);  //放入fifo队列中，等待*Thread(void *object)取数据。 //video output thread. Video output thread.  in file video_output.c
 			
 		7.5.3 DecoderProcessAudio( decoder_t *p_dec, block_t *p_block, bool b_flush )  //Decoder audio packet.
+			-->DecoderProcessAudio( p_dec, p_block, b_flush );
+			-->DecoderDecodeAudio( p_dec, p_block );
+			-->p_dec->pf_decode_audio( p_dec, &p_block ))  //call audio decoder
+			-->DecoderPlayAudio( p_dec, p_aout_buf, &i_played, &i_lost );
+			-->aout_DecPlay( p_aout, p_audio, i_rate )  // filter & mix the decoded buffer
+			
+			1. DecoderFixTs( p_dec, &p_audio->i_pts, NULL, &p_audio->i_length, &i_rate, AOUT_MAX_ADVANCE_TIME );
+
 	7.6 static void *Thread(void *object) //video output thread. Video output thread.  in file video_output.c
 		This function does only returns when the thread is terminated. It handles the pictures arriving in the video heap and the display device events.
 		vout对象句柄存放在decoder对象中。
@@ -1085,7 +1093,16 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 				由于在小米视频中，sys->display.filtered为NULL，所以，实际传送的参数是vout_display_Display(vd,todisplay,subpic);　todisplay就是要显示的视频帧。
 				在有filter的情况下，todisplay是被各个filter添加了subtitle或者osd的视频帧。　
 				vd->display(vd, picture, subpicture);  //以mediacodecoutput为例，vd->display指向static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)　in file mediacodecoutput.cpp.
-				
+		
+		7.6.3 int aout_DecPlay (audio_output_t *aout, block_t *block, int input_rate)  //filter & mix the decoded buffer
+			1. 检测block保存的音频包是否延迟或提前的太多的时间,如果是,则需要丢掉该音频数据并打印相应出错的log.
+			2. block = aout_FiltersPlay (owner->filters, block, input_rate);
+				对于需要filter的音频,调用相关的filter进行处理.
+			3. aout_DecSynchronize (aout, block->i_pts, input_rate); //Drift correction
+				对该函数不是特别的理解.
+				大概意思是根据已经输出的音频包的时间,与当前系统时间和下一个音频包的时间作比较,决定应该如何处理,是否需要插入空包等.在一切正常的情况下,该函数不需要做什么,只有在出现问题的情况下才会起作用.
+			4. aout_OutputPlay (aout, block); //Plays a decoded audio buffer. This can only be called after a succesful aout_OutputNew()
+				aout->play (aout, block)调用具体的audio ouput module,输出音频数据.
 
 /*************************VLC中的线程*******************************************/
 1. static void *Run( void *obj ) //in file src/input/input.c
