@@ -48,7 +48,7 @@ if [ -z "$ANDROID_NDK" ]; then
     exit 1
 fi
 
-ANDROID_ABI="armeabi-v7a"
+#ANDROID_ABI="armeabi-v7a"
 if [ -z "$ANDROID_ABI" ]; then
     echo "Please pass the ANDROID ABI to the correct architecture, using
                 cross_build.sh -a ARCH
@@ -64,11 +64,13 @@ if [ "${ANDROID_ABI}" = "x86" ] ; then
     TARGET_TUPLE="i686-linux-android"
     PATH_HOST="x86"
     PLATFORM_SHORT_ARCH="x86"
+    CPU="i686"
 elif [ "${ANDROID_ABI}" = "x86_64" ] ; then
     TARGET_TUPLE="x86_64-linux-android"
     PATH_HOST="x86_64"
     PLATFORM_SHORT_ARCH="x86_64"
     HAVE_64=1
+    CPU="i686"
 elif [ "${ANDROID_ABI}" = "mips" ] ; then
     TARGET_TUPLE="mipsel-linux-android"
     PATH_HOST=$TARGET_TUPLE
@@ -84,11 +86,13 @@ elif [ "${ANDROID_ABI}" = "arm64-v8a" ] ; then
     HAVE_ARM=1
     HAVE_64=1
     PLATFORM_SHORT_ARCH="arm64"
+    CPU="cortex-a8"
 elif [ "${ANDROID_ABI}" = "armeabi-v7a" -o "${ANDROID_ABI}" = "armeabi" ] ; then
     TARGET_TUPLE="arm-linux-androideabi"
     PATH_HOST=$TARGET_TUPLE
     HAVE_ARM=1
     PLATFORM_SHORT_ARCH="arm"
+    CPU="cortex-a8"
 else
     echo "Unknown ABI: '${ANDROID_ABI}'. Die, die, die!"
     exit 2
@@ -208,37 +212,93 @@ echo "Building FFmpeg"
 #CROSS_PREFIX=${PREBUILT}/bin/arm-linux-androideabi-
 #ARM_INCLUDE=${SYSROOT}/usr/include
 #ARM_LIB=${SYSROOT}/usr/lib
-PREFIX=$(pwd)/../build
-OPTIMIZE_CFLAGS=" -marm -march=armv6 "
+PREFIX=$(pwd)/build_$PLATFORM_SHORT_ARCH
+#OPTIMIZE_CFLAGS=" -marm -march=armv6 "
 ADDITIONAL_CONFIGURE_FLAG=
-cd ffmpeg-2.2.16
+SRC_PATH=ffmpeg-2.2.16-$PLATFORM_SHORT_ARCH
+echo "SRC_PATH=$SRC_PATH"
+echo "PREFIX=$PREFIX"
+cd $SRC_PATH
+
 
 ./configure \
- --arch=arm \
- --target-os=linux \
- --enable-cross-compile \
- --cross-prefix=${CROSS_COMPILE} \
- --prefix=${PREFIX} \
- --sysroot=${SYSROOT} \
- --extra-cflags=" -DANDROID ${OPTIMIZE_CFLAGS}" \
- --disable-debug \
- --enable-shared \
- --enable-static \
- --enable-ffplay \
- --enable-ffprobe \
- --enable-ffserver \
- --enable-avfilter \
- --enable-decoders \
- --enable-demuxers \
- --enable-encoders \
- --enable-filters \
- --enable-indevs \
- --enable-network \
- --enable-parsers \
- --enable-protocols \
- --enable-swscale \
+ --enable-version3 \
  --enable-gpl \
  --enable-nonfree \
+ --disable-muxers \
+ --disable-encoders \
+ --disable-filters \
+ --disable-bsfs \
+ --disable-decoders \
+ --enable-decoder=iac \
+ --enable-decoder=mp3 \
+ --enable-decoder=cook \
+ --enable-decoder=atrac3 \
+ --enable-decoder=aac \
+ --enable-decoder=mp2 \
+ --enable-decoder=mp1 \
+ --enable-decoder=ac3 \
+ --enable-decoder=pcm_s24le \
+ --enable-decoder=pcm_s16le \
+ --enable-decoder=pcm_s16be \
+ --enable-decoder=pcm_u8 \
+ --enable-decoder=pcm_s8 \
+ --enable-decoder=pcm_mulaw \
+ --enable-decoder=adpcm_ms \
+ --enable-decoder=adpcm_ima_wav \
+ --enable-decoder=flac \
+ --enable-decoder=ape \
+ --enable-decoder=vorbis \
+ --enable-decoder=truehd \
+ --enable-decoder=dca \
+ --enable-decoder=ac3 \
+ --enable-decoder=eac3 \
+ --enable-decoder=wmalossless \
+ --enable-decoder=wmapro \
+ --enable-decoder=wmav1 \
+ --enable-decoder=wmav2 \
+ --enable-decoder=wmavoice \
+ --enable-decoder=alac \
+ --enable-decoder=flv \
+ --enable-decoder=rv10 \
+ --enable-decoder=rv20 \
+ --enable-decoder=rv30 \
+ --enable-decoder=rv40 \
+ --enable-decoder=vp6 \
+ --enable-decoder=vp6f \
+ --enable-decoder=mpeg1video \
+ --enable-decoder=vc1 \
+ --enable-decoder=vc1image \
+ --enable-decoder=mjpeg \
+ --enable-decoder=cinepak \
+ --enable-decoder=tscc \
+ --enable-decoder=wmv1 \
+ --enable-decoder=wmv2 \
+ --enable-decoder=vp3 \
+ --enable-decoder=vp5 \
+ --enable-decoder=vp6 \
+ --enable-decoder=vp6a \
+ --enable-decoder=vp6f \
+ --enable-decoder=vp8 \
+ --enable-decoder=h264 \
+ --enable-decoder=h264_crystalhd \
+ --enable-decoder=h264_vda \
+ --enable-decoder=h264_vdpau \
+ --enable-decoder=mpeg4 \
+ --enable-decoder=mpeg4_crystalhd \
+ --enable-decoder=mpeg4_vdpau \
+ --enable-decoder=dvdsub \
+ --enable-decoder=dvbsub \
+ --enable-decoder=pgssub \
+ --enable-decoder=xsub \
+ --cross-prefix=${CROSS_COMPILE} \
+ --enable-cross-compile \
+ --sysroot=${SYSROOT} \
+ --target-os=linux \
+ --arch=${PLATFORM_SHORT_ARCH} \
+ --prefix=${PREFIX} \
+ --cpu=${CPU} \
+ --extra-cflags=" -DANDROID " \
  ${ADDITIONAL_CONFIGURE_FLAG}
 
 make -j
