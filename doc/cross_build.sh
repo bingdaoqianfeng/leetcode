@@ -65,21 +65,6 @@ if [ "${ANDROID_ABI}" = "x86" ] ; then
     PATH_HOST="x86"
     PLATFORM_SHORT_ARCH="x86"
     CPU="i686"
-elif [ "${ANDROID_ABI}" = "x86_64" ] ; then
-    TARGET_TUPLE="x86_64-linux-android"
-    PATH_HOST="x86_64"
-    PLATFORM_SHORT_ARCH="x86_64"
-    HAVE_64=1
-    CPU="i686"
-elif [ "${ANDROID_ABI}" = "mips" ] ; then
-    TARGET_TUPLE="mipsel-linux-android"
-    PATH_HOST=$TARGET_TUPLE
-    PLATFORM_SHORT_ARCH="mips"
-elif [ "${ANDROID_ABI}" = "mips64" ] ; then
-    TARGET_TUPLE="mips64el-linux-android"
-    PATH_HOST=$TARGET_TUPLE
-    PLATFORM_SHORT_ARCH="mips64"
-    HAVE_64=1
 elif [ "${ANDROID_ABI}" = "arm64-v8a" ] ; then
     TARGET_TUPLE="aarch64-linux-android"
     PATH_HOST=$TARGET_TUPLE
@@ -220,77 +205,8 @@ echo "SRC_PATH=$SRC_PATH"
 echo "PREFIX=$PREFIX"
 cd $SRC_PATH
 
-
+cross_config() {
 ./configure \
- --enable-version3 \
- --enable-gpl \
- --enable-nonfree \
- --disable-muxers \
- --disable-encoders \
- --disable-filters \
- --disable-bsfs \
- --disable-decoders \
- --enable-decoder=iac \
- --enable-decoder=mp3 \
- --enable-decoder=cook \
- --enable-decoder=atrac3 \
- --enable-decoder=aac \
- --enable-decoder=mp2 \
- --enable-decoder=mp1 \
- --enable-decoder=ac3 \
- --enable-decoder=pcm_s24le \
- --enable-decoder=pcm_s16le \
- --enable-decoder=pcm_s16be \
- --enable-decoder=pcm_u8 \
- --enable-decoder=pcm_s8 \
- --enable-decoder=pcm_mulaw \
- --enable-decoder=adpcm_ms \
- --enable-decoder=adpcm_ima_wav \
- --enable-decoder=flac \
- --enable-decoder=ape \
- --enable-decoder=vorbis \
- --enable-decoder=truehd \
- --enable-decoder=dca \
- --enable-decoder=ac3 \
- --enable-decoder=eac3 \
- --enable-decoder=wmalossless \
- --enable-decoder=wmapro \
- --enable-decoder=wmav1 \
- --enable-decoder=wmav2 \
- --enable-decoder=wmavoice \
- --enable-decoder=alac \
- --enable-decoder=flv \
- --enable-decoder=rv10 \
- --enable-decoder=rv20 \
- --enable-decoder=rv30 \
- --enable-decoder=rv40 \
- --enable-decoder=vp6 \
- --enable-decoder=vp6f \
- --enable-decoder=mpeg1video \
- --enable-decoder=vc1 \
- --enable-decoder=vc1image \
- --enable-decoder=mjpeg \
- --enable-decoder=cinepak \
- --enable-decoder=tscc \
- --enable-decoder=wmv1 \
- --enable-decoder=wmv2 \
- --enable-decoder=vp3 \
- --enable-decoder=vp5 \
- --enable-decoder=vp6 \
- --enable-decoder=vp6a \
- --enable-decoder=vp6f \
- --enable-decoder=vp8 \
- --enable-decoder=h264 \
- --enable-decoder=h264_crystalhd \
- --enable-decoder=h264_vda \
- --enable-decoder=h264_vdpau \
- --enable-decoder=mpeg4 \
- --enable-decoder=mpeg4_crystalhd \
- --enable-decoder=mpeg4_vdpau \
- --enable-decoder=dvdsub \
- --enable-decoder=dvbsub \
- --enable-decoder=pgssub \
- --enable-decoder=xsub \
  --cross-prefix=${CROSS_COMPILE} \
  --enable-cross-compile \
  --sysroot=${SYSROOT} \
@@ -299,7 +215,46 @@ cd $SRC_PATH
  --prefix=${PREFIX} \
  --cpu=${CPU} \
  --extra-cflags=" -DANDROID " \
- ${ADDITIONAL_CONFIGURE_FLAG}
+ --enable-version3 \
+ --disable-shared \
+ --enable-static \
+ --disable-debug \
+ --disable-ffplay \
+ --disable-ffprobe \
+ --disable-ffserver \
+ --enable-avfilter \
+ --enable-decoders \
+ --enable-demuxers \
+ --enable-encoders \
+ --enable-filters \
+ --enable-indevs \
+ --enable-network \
+ --enable-parsers \
+ --enable-protocols \
+ --enable-swscale \
+ --enable-avresample \
+ --enable-gpl \
+ --enable-nonfree \
+ --enable-protocols \
+ --disable-doc \
+ --disable-demuxer=bluray \
+ --disable-decoder=opus \
+ --disable-protocol=xlvx \
+ --enable-vfp \
+${ADDITIONAL_CONFIGURE_FLAG}
+}
+#cross_config
+#make -j 8 
+#make install
+LD_SONAME="-Wl,-soname,libffmpeg-miplayer.so"
 
-make -j
-make install
+#CC=/home/user/source/ndk/android-ndk-r11c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-gcc
+#CXX=/home/user/source/ndk/android-ndk-r11c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-g++
+#AS=/home/user/source/ndk/android-ndk-r11c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-gcc
+#LD=/home/user/source/ndk/android-ndk-r11c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-gcc
+
+rm libavcodec/log2_tab.o libavformat/log2_tab.o libswscale/log2_tab.o libavformat/golomb_tab.o
+
+$NDK_TOOLCHAIN_PATH/arm-linux-androideabi-gcc -o $PREFIX/libffmpeg.so -shared $LDFLAGS $LD_SONAME $EXTRA_LDFLAGS \
+#$CC -o $PREFIX/libffmpeg.so -shared $LDFLAGS $LD_SONAME $EXTRA_LDFLAGS \
+          libavutil/*.o libavutil/arm/*.o libavcodec/*.o libavcodec/arm/*.o libavformat/*.o  libswscale/*.o compat/*.o libavresample/*.o libavresample/arm/*.o
