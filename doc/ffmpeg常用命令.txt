@@ -1,13 +1,136 @@
-1 convert mp4 file to ts file. 
-ffmpeg.exe -i /home/wanggang/stream/shaonv.mp4 -acodec copy  -vcodec copy  -y /home/wanggang/stream/hlxprod-169-cavlc-baseline.ts
+------------------------ffmpeg基于arm的交叉编译------------------------
+http://vinsol.com/blog/2014/07/30/cross-compiling-ffmpeg-with-x264-for-android/
+https://vec.io/posts/how-to-build-ffmpeg-with-android-ndk
+https://trac.ffmpeg.org/wiki/CompilationGuide/Android
+https://developer.android.com/ndk/guides/concepts.html
+http://www.ihubin.com/blog/android-ffmpeg-demo-3/
+https://developer.android.com/ndk/guides/standalone_toolchain.html
 
-2 fix error: error while loading shared libraries: libpostproc.so
+要解决将.S文件动态编译的问题。
+
+------------------vim .bashrc------------------------------------
+#export PATH=/usr/local/jdk1.6.0_45/bin:$PATH
+#set JAVA_HOME
+#export PATH=/usr/lib/jvm/java-1.7.0-openjdk-amd64/bin:$PATH
+#export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
+#export JRE_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac:/jre:")
+#export CLASSPATH=$(readlink -f /usr/bin/javac | sed "s:/bin/javac:/lib:"):$(readlink -f /usr/bin/javac | sed "s:/bin/javac:/jre/lib:")
+
+export JAVA_HOME=/usr/local/jdk/
+export JRE_HOME=/usr/local/jdk/jre
+export PATH=/usr/local/jdk/bin:$PATH
+export CLASSPATH=.:/usr/local/jdk/lib:/usr/local/jdk/jre/lib
+export LC_CTYPE=zh_CN.UTF-8
+
+#add Add android-studio/bin/ to your PATH environment variable so you can start Android Studio from any directory.
+#export PATH=/home/user/Android/Sdk/platform-tools:$PATH
+export ANDROID_SDK=/home/user/source/ndk/android-sdk-linux
+export ANDROID_NDK="/home/user/source/ndk/android-ndk-r11c"
+export PATH=$ANDROID_NDK:$ANDROID_SDK/tools:$ANDROID_SDK/platform-tools:$PATH
+
+------------------------vim .vimrc-------------------------------------------------------------
+" indentation rules for FFmpeg: 4 spaces, no tabs
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set cindent
+set cinoptions=(0
+" Allow tabs in Makefiles.
+autocmd FileType make,automake set noexpandtab shiftwidth=8 softtabstop=8
+" Trailing whitespace and tabs are forbidden, so highlight them.
+highlight ForbiddenWhitespace ctermbg=red guibg=red
+match ForbiddenWhitespace /\s\+$\|\t/
+" Do not highlight spaces at the end of line while typing on that line.
+autocmd InsertEnter * match ForbiddenWhitespace /\t\|\s\+\%#\@<!$/
+
+---------------------------------debug----------------------------------------
+
+设置SYSROOT环境变量
+export SYSROOT="$NDK/platforms/android-21/arch-arm"
+SYSROOT表示一个目录，该目录中包含了目标的系统头文件和库，在当前上下文语境中目标表示的是arm cpu架构。路径中的"android-21"表示Android API级别，其中21表示的是Android5.0.1。
+
+"
+--enable-version3 
+--enable-gpl 
+--enable-nonfree 
+--disable-muxers 
+--disable-encoders 
+--disable-filters 
+--disable-bsfs 
+--disable-decoders 
+--enable-decoder=iac 
+--enable-decoder=mp3 
+--enable-decoder=cook 
+--enable-decoder=atrac3 
+--enable-decoder=aac 
+--enable-decoder=mp2 
+--enable-decoder=mp1 
+--enable-decoder=ac3 
+--enable-decoder=pcm_s24le 
+--enable-decoder=pcm_s16le 
+--enable-decoder=pcm_s16be 
+--enable-decoder=pcm_u8 
+--enable-decoder=pcm_s8 
+--enable-decoder=pcm_mulaw 
+--enable-decoder=adpcm_ms 
+--enable-decoder=adpcm_ima_wav 
+--enable-decoder=flac 
+--enable-decoder=ape 
+--enable-decoder=vorbis 
+--enable-decoder=truehd 
+--enable-decoder=dca 
+--enable-decoder=ac3 
+--enable-decoder=eac3 
+--enable-decoder=wmalossless 
+--enable-decoder=wmapro 
+--enable-decoder=wmav1 
+--enable-decoder=wmav2 
+--enable-decoder=wmavoice 
+--enable-decoder=alac 
+--enable-decoder=flv 
+--enable-decoder=rv10 
+--enable-decoder=rv20 
+--enable-decoder=rv30 
+--enable-decoder=rv40 
+--enable-decoder=vp6 
+--enable-decoder=vp6f 
+--enable-decoder=mpeg1video 
+--enable-decoder=vc1 
+--enable-decoder=vc1image 
+--enable-decoder=mjpeg 
+--enable-decoder=cinepak 
+--enable-decoder=tscc 
+--enable-decoder=wmv1 
+--enable-decoder=wmv2 
+--enable-decoder=vp3 
+--enable-decoder=vp5 
+--enable-decoder=vp6 
+--enable-decoder=vp6a 
+--enable-decoder=vp6f 
+--enable-decoder=vp8 
+--enable-decoder=h264 
+--enable-decoder=h264_crystalhd 
+--enable-decoder=h264_vda 
+--enable-decoder=h264_vdpau 
+--enable-decoder=mpeg4 
+--enable-decoder=mpeg4_crystalhd 
+--enable-decoder=mpeg4_vdpau 
+--enable-decoder=dvdsub 
+--enable-decoder=dvbsub 
+--enable-decoder=pgssub 
+--enable-decoder=xsub 
+--enable-cross-compile 
+--arch=arm 
+--target-os=linux 
+--cross-prefix=/home/xw/dredd/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6/bin/arm-linux-androideabi- 
+--extra-cflags=' -fpic -DANDROID -I/home/xw/dredd/prebuilts/ndk/9/platforms/android-18/arch-arm//usr/include' 
+--extra-ldflags=' -Wl,-T,/home/xw/dredd/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6/arm-linux-androideabi/lib/ldscripts/armelf_linux_eabi.x -Wl,-rpath-link=/home/xw/dredd/out/target/product/dredd/system/lib/ -L/home/xw/dredd/out/target/product/dredd/system/lib/ -lc -lm -ldl -nostdlib /home/xw/dredd/out/target/product/dredd/obj/lib/crtbegin_dynamic.o /home/xw/dredd/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6/lib/gcc/arm-linux-androideabi/4.6.x-google/crtend.o'"
+
+
+-----------------------------------------------------------------
+#fix error: error while loading shared libraries: libpostproc.so
 export LD_LIBRARY_PATH=/usr/local/lib/
-
-3 ffplay如何播放外挂字幕
-http://m.blog.csdn.net/blog/deyangliu/44756305 
-./ffplay -vf subtitles=/home/user/source/mediafiles/sub/Homeland.S02E12.chs.srt /home/user/source/mediafiles/sub/Homeland.S02E12.mkv
-
 ---------------如何提交patch到ffmpeg develop org----------------
 git status
 git add libavcodec/parser.c
@@ -43,11 +166,10 @@ http://blog.csdn.net/c_guolin/article/details/38537687
 ./configure --disable-stripping --enable-gpl --enable-libx264 --enable-libx265 --enable-debug --disable-optimizations --enable-shared --enable-ffplay --enable-libass --enable-libfreetype --enable-libmp3lame --enable-version3 --enable-libvpx --enable-libfaac --enable-libvorbis --enable-libxvid --enable-postproc --enable-nonfree
 
 #支持fdk_aac
-#第一步，编译fad aac，这里制定的安装目录
 git clone --depth 1 git://github.com/mstorsjo/fdk-aac.git
 cd fdk-aac/
 autoreconf -fiv
-./configure --prefix="$HOME/ffmpeg_build" --disable-shared
+./configure 
 make
 make install
 
@@ -133,6 +255,12 @@ http://sinclairmediatech.com/encoding-hls-with-ffmpeg/
 #紧紧编码video。
 ./ffmpeg -i ~/source/mediafiles/ATMOS/747.m2ts  -map 0:0 -map 0:1 -map 0:2 -map 0:3 -c:v libx264 -b:v 5M -maxrate 5M -c:a:0 copy -c:a:1 copy -c:a:2 copy ~/source/mediafiles/ATMOS/mkv
 
+#convert mp4 file to ts file. 
+ffmpeg.exe -i /home/wanggang/stream/shaonv.mp4 -acodec copy  -vcodec copy  -y /home/wanggang/stream/hlxprod-169-cavlc-baseline.ts
+
+#ffplay如何播放外挂字幕
+http://m.blog.csdn.net/blog/deyangliu/44756305 
+./ffplay -vf subtitles=/home/user/source/mediafiles/sub/Homeland.S02E12.chs.srt /home/user/source/mediafiles/sub/Homeland.S02E12.mkv
 
 -----------------------nginx---------------------------
 http://www.helping-squad.com/nginx-rtmp-hls-or-dash-streaming/
