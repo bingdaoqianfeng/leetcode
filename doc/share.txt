@@ -1,4 +1,114 @@
 
+***********************************************vlc代码目录结构********************************************************************
+http://blog.csdn.net/cds9527/article/details/53503565
+ vlc源码目录树：
+目录名称					说明
+bindings					Java, CIL 和Python绑定
+doc							帮助文档 (不是更新的)
+extras						另叙。
+include						VLC 头文件
+libs						SRTP库和装载库
+lxdialog					制作 menuconfig的文件
+m4							Automake和autoconf的宏文件
+modules						除了src目录外最重要的目录。参考“功能模块目录树”一节
+po							i18n (语言翻译)文件
+projects					建立在 libvlc的项目,如Mozilla插件,ActiveX 插件和MacOS X Framework
+share						图标，脚本等等
+src							除了功能模块以外最重要的目录。
+test						一些脚本或测试代码
+
+extras 的内容				
+extras/analyser				一些代码风格编辑器 (vim,emacs)的宏和一些valgrindsuppressions
+extras/buildsystem			可选的编译系统
+extras/contrib				需要的库文件 (包括Makefiles自动下载和编译(或交叉编译)，补丁)。
+extras/deprecated			deprecated 文件
+extras/misc					未分类文件
+extras/package				用于软件发布的文件如ipkg,不同的 rpm 规范文件,win32和Mac OS X安装文件。
+  
+功能模块目录树
+
+目录名称					子目录							说明
+access														通过网络获取视频流的协议(http,ftp,fake,tcp,udp等),获取物理媒体介质的媒体内容如cd，dvd。
+							cdda							读取CD音频的输入模块
+							dshow							DirectShow获取插件，用于WINDOWS平台下的编码卡。
+							dvb								使用V4L2API的输入模块，用于DVB-S/C/T媒体流。
+							mms								基于TCP，UDP的MMS和HTTP获取模块
+							rtsp
+							screen							获取屏幕图像的输入模块。
+							vcd								获取VCD数据的输入模块。
+							vcdx							获取VCD输入模块，可以导航，静止
+access-filter												包含下面的滤波器:timeshift, record, dump
+access-output
+audio-filter												各种音频滤波器如解码，均衡，转换。
+							channel-mixer					各种混合器，解码器如 Dolby解码器
+							converter						定点或浮点音频格式转换如 AC/3，MPEGI-II 音频层1,2, 3 解码
+							resampler						各种音频重采样模块
+audio-mixer													混合器插件
+audio-output												音频输出插件如ALSA,OSS和 DirectX音频
+codec														各种编解码，特别是ffmpeg
+							cmml							持续媒体标记语言，脚本/超链接解释器
+							dmo								一个DirectMediaObject解码器，利用DirectMedia对WMV3视频解码
+							ffmpeg							ffmpeg 库的视频解码器
+							spudec							RLE DVD 小标题解码
+							xvmc							XVMC视频输出和解码
+control														控制播放器的各种接口:手势, 热键,lirc,远程控制和telnet
+							http							HTTP远程控制
+demux														不同的解复用程序
+							asf								ASF 解复器
+							avi								AVI文件流解复器
+							mp4								MP4文件输入模块
+							mpeg
+							playlist						播放清单导入模块
+gui															不同平台的用户界面和 ncurses接口
+							beos							用于BeOS的音频输出，视频输出和用户界面输出。
+							macosx							Mac OS X 视频输出和用户界面模块
+							pda								iPaq用户接口，使用Gtk2+widget集.
+							qnx								QNX RTOS 插件
+							qt4								使用Qt4库交叉编译的用户界面模块。该模块是默认的界面库
+							skins2							换夫模块。
+							wince							Pocket PC 接口
+							wxwidgets						使用wxWindows库跨平台的接口。作为默认的接口的VLC版本是0.86a.
+meta-engine
+misc
+							dummy	哑 (没有GUI)音频输出,视频输出，用户接口和输入模块。
+							memcpy	内存快拷贝模块
+							notify	通知，使用libnotify
+							playlist
+							probe
+							testsuite
+							xml		LibXML 和 xtagxml 解析
+mux															Various Muxers
+							mpeg
+							rtp
+packetizer													打包模块，用于H264/AVC和MPEG 4音视频流。
+services-discovery
+stream-out
+							transrate
+video-chroma												图像格式转换，如 YUV到 RGB
+video-filter												各种视频滤波模块如Deinterlace,Transform, Wall, Crop,Panoramix 等等。
+video-output
+							directx							WINDOWS视频输出模块，使用Direct3D和Direct X API，OpenGL
+							qte								QT嵌入式视频输出模块
+							x11								X11 API视频输出模块
+visualization												多种可视化模块，包括goom
+							galaktos						输出到 OpenGL的可视化模块
+							visual							可视化系统
+vlc核心的是libvlc,它提供界面,应用处理功能,所有的libvlc的源代码都放在src目录及其子目录
+ ./config/:  从命令行和配置文件中加载配置
+  ./control/:提供动作控制功能,如播放等操作
+ ./extras/:   大多是平台的特殊代码
+ ./modules/: 模块管理
+./network/:  提供网络接口(socket管理,网络接口)
+ ./osd/:        显示屏幕上的操作
+ ./test/:        libvlc测试模块
+ ./text/:        字符集
+ ./interface/: 提供代码中可以调用的接口,如按键后的硬件作出反应
+ ./playlist/:   管理播放功能
+ ./input/:     建立并读取一个输入流,并且分离其中的音频和视频,然后把分离好的音频和视频流发给解码器
+ ./audio_output/:初始化音频混合器,即设置正确的同步频率,并对从解码器传来的音频流重新取样
+ ./video_output/:初始化视频播放器,把从解码器得到视频画面转化格式从yuv到rgb,然后播放
+ ./stream_output/ 输出音频流和视频流到网络
+ ./misc/:            libvlc使用的其他部分功能,如线程系统,消息队列等.
 
 /*********************************MiPlayer中主要VLC全局对象**********************************************************************/
 libvlc_instance_t *mLibVlcInstance;
