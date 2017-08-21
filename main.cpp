@@ -53,7 +53,8 @@ using namespace std;
 //#include "55_jumpGame.h"
 
 /****************to be continue*****************/
-#include "56_mergeIntervals.h"
+//#include "56_mergeIntervals.h"
+#include "1_twoSum.hpp"
 
 struct ListNode {
     int val;

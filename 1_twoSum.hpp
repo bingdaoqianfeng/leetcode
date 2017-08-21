@@ -15,4 +15,7 @@ public:
         }
         return result;
     }
+	int testCase(){
+		return 0;
+	}
 };
