@@ -681,7 +681,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 											p_input->b_preparsing );
 					源文件：demux.c，负责调用具体的demux模块，完成demux功能。该模块实现了通过stream_t读取数据，调用decoder模块，并将数据送给p_es_out实现显示。
 					注意：有两个demux.c文件，src/input/demux.c属于framework层代码，是所有demux模块的抽象层，调用具体的demux模块。
-					　	　　 modules/demux/avformat/demux.c是具体的avfirnat demux模块实现。
+					　	　　 modules/demux/avformat/demux.c是具体的avformat demux模块实现。
 					struct demux_t
 					{
 						VLC_COMMON_MEMBERS
@@ -1247,6 +1247,9 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 	-->static int ThreadDisplayPreparePicture(vout_thread_t *vout, bool reuse, bool frame_by_frame)
 	-->decoded = picture_fifo_Pop(vout->p->decoder_fifo);
 
+4. static void *TsRun( void *p_data ) // in file es_out_timeshift.c
+	该线程的作用是什么？
+	
 /*************************VLC中模块的创建关系*******************************************/	
 1. 首先会创建p_input模块，该模块会创建Run线程，在该线程中创建了access, streamaccess, demux, decoder等模块。
 	access: 负责视频文件的具体读写操作；
@@ -1277,8 +1280,35 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 							 ->es_out_t
 				
 
-/*******************************************************************************************************/
+/***************************************vlc set pause*******************************************/
+libvlc_media_player_set_pause(mVlcPlayerInstance, true)-->   //
+input_Control( p_input_thread, INPUT_SET_STATE, PAUSE_S )-->
+input_vaControl( p_input, i_query, args )-->	// src/input/control.c
+es_out_SetPauseState( p_input->p->p_es_out,
+                            p_input->p->b_can_pause, true,
+                            mdate() );	-->
+es_out_Control( p_out, ES_OUT_SET_PAUSE_STATE, b_source_paused, b_paused, i_date ); -->
+......
+out->pf_control( out, i_query, args ); -->	//vlc_es_out.h, 此处pf_control指向的函数，在es_out_t *input_EsOutTimeshiftNew( input_thread_t *p_input, es_out_t *p_next_out, int i_rate )中初始化。
+ControlLockedSetPauseState( p_out, b_source_paused, b_paused, i_date ); -->
+......
+es_out_SetPauseState( p_sys->p_out, b_source_paused, b_paused, i_date ); -->//调用p_sys->p_out指向的pf_control， p_sys->p_out指向p_input->p->p_es_out_display，
+																		 //p_es_out_display由input_EsOutNew( p_input, p_input->p->i_rate )创建，此处初始化为out->pf_control = EsOutControl;
+......
+static int EsOutControl( es_out_t *out, int i_query, va_list args ) -->  // in file es_out.c.
+EsOutControlLocked( out, i_query, args ); -->
+EsOutChangePause( out, b_paused, i_date ); -->  //此处，会调用两个函数：EsOutDecodersChangePause( out, true, i_date ); 和EsOutProgramChangePause( out, true, i_date );
 
+1)EsOutDecodersChangePause( out, true, i_date ); //pause all decoder belong to the es_out.
+input_DecoderChangePause( es->p_dec, b_paused, i_date ); -->
+DecoderOutputChangePause( p_dec, b_paused, i_date ); -->
+vout_ChangePause( p_owner->p_vout, b_paused, i_date );-->
+vout_control_WaitEmpty(&vout->p->control);  //之前定位到该函数一直不返回，导致ANR，目前看，没有这么简单。
+ 
+2)EsOutProgramChangePause( out, true, i_date );  // pause all program(pause clock in the program)
+
+
+/*******************************************************************************************************/
 prepareAsync
 vlc_initial
 libvlc_media_player_play
