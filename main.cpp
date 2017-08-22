@@ -10,9 +10,6 @@
 using namespace std;
 
 /****************finished*******************/
-//#include "3_LongestSubstringWithoutRepeatingCharacters.hpp"
-//#include "4_medianOfTwoSortedArrays.hpp"
-//#include "5_longestPalindromicSubstring.hpp"
 //#include "6_zigZagConversion.hpp"
 //#include "7_reverseInteger.hpp"
 //#include "8_stringToIntegerAtoi.h"
@@ -51,10 +48,12 @@ using namespace std;
 //#include "53_maximumSubArray.h"
 //#include "54_spiralMatrix.h"
 //#include "55_jumpGame.h"
-
-/****************to be continue*****************/
 //#include "56_mergeIntervals.h"
-#include "./include/1_twoSum.hpp"
+/****************to be continue*****************/
+//#include "./include/1_twoSum.hpp"
+//#include "./include/3_LongestSubstringWithoutRepeatingCharacters.hpp"
+//#include "./include/4_medianOfTwoSortedArrays.hpp"
+#include "./include/5_longestPalindromicSubstring.hpp"
 
 struct ListNode {
     int val;
