@@ -1,0 +1,24 @@
+1.	vector<>
+	int a[] = {1, 2, 3}
+	vector<int> num(a, a + sizeof(a)/sizeof(int));
+	int len = num.size();
+	
+	vector<int> result;
+	result.push_back(1);
+
+2.	map<,>
+	map<int, int> mymap;
+	int i,j;
+	mymap[i] = j;
+
+	if(mymap.count(i) == 0 )
+		count <<"found i in mymap"
+
+3  new
+	ListNode *head = new ListNode(0);
+
+4	string
+	string str;
+	int len = str.length();
+	int index, length;
+	string substr = str.substr(index, length);
