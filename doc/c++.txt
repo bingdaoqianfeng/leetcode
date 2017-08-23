@@ -6,6 +6,11 @@
 	vector<int> result;
 	result.push_back(1);
 
+	int nrows = 3;
+	vector<string> r(nrows);
+	string s;
+	r[i] += s[i]; //r[i]表示vector中每个字符串string类型。
+
 2.	map<,>
 	map<int, int> mymap;
 	int i,j;
@@ -22,3 +27,6 @@
 	int len = str.length();
 	int index, length;
 	string substr = str.substr(index, length);
+
+5 INT_MAX, INT_MIN
+

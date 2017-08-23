@@ -10,9 +10,6 @@
 using namespace std;
 
 /****************finished*******************/
-//#include "6_zigZagConversion.hpp"
-//#include "7_reverseInteger.hpp"
-//#include "8_stringToIntegerAtoi.h"
 //#include "9_palindromeNumber.h"
 //#include "10_regularExpressionMatching.h"
 //#include "11_containerWithMostWater.h"
@@ -55,6 +52,9 @@ using namespace std;
 //#include "./include/4_medianOfTwoSortedArrays.hpp"
 //#include "./include/5_longestPalindromicSubstring.hpp"
 //#include "./include/2_AddTwoNumbers.hpp"
+//#include "./include/6_zigZagConversion.hpp"
+//#include "./include/7_reverseInteger.hpp"
+#include "./include/8_stringToIntegerAtoi.h"
 
 struct ListNode {
     int val;
