@@ -10,11 +10,7 @@
 using namespace std;
 
 /****************finished*******************/
-//#include "9_palindromeNumber.h"
-//#include "10_regularExpressionMatching.h"
-//#include "11_containerWithMostWater.h"
 //#include "14_longestCommonPrefix.h"
-//#include "3Sum.h"
 //#include "15_3SumClosest.h"
 //#include "16_letterCombinationsOfAPhoneNumber.h"
 //#include "18_removeNthNodeFromEndOfList.h"
@@ -39,7 +35,6 @@ using namespace std;
 //#include "47_permutations.II.h"
 //#include "48_rotateImage.h"
 //#include "49_groupAnagrams.h"
-//#include "50_pow.h"
 //#include "51_nQueuens.h"
 //#include "52_nQueuens_II.h"
 //#include "53_maximumSubArray.h"
@@ -54,7 +49,12 @@ using namespace std;
 //#include "./include/2_AddTwoNumbers.hpp"
 //#include "./include/6_zigZagConversion.hpp"
 //#include "./include/7_reverseInteger.hpp"
-#include "./include/8_stringToIntegerAtoi.h"
+//#include "./include/8_stringToIntegerAtoi.h"
+//#include "./include/9_palindromeNumber.h"
+//#include "./include/10_regularExpressionMatching.h"
+//#include "./include/11_containerWithMostWater.h"
+//#include "./include/3Sum.h"
+#include "./include/50_pow.h"
 
 struct ListNode {
     int val;

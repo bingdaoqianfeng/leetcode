@@ -27,6 +27,7 @@
 	int len = str.length();
 	int index, length;
 	string substr = str.substr(index, length);
+    string substr = str.substr(index); //不指定长度，则到字符串尾.
 
 5 INT_MAX, INT_MIN
 
