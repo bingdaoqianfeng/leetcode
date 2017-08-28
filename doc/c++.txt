@@ -1,7 +1,11 @@
 1.	vector<>
-	int a[] = {1, 2, 3}
+	int a[] = {-1, 2, 1, -4}
 	vector<int> num(a, a + sizeof(a)/sizeof(int));
 	int len = num.size();
+	sort(num.begin(), num.end());
+
+	const char* s[]={"bbab","aba","abc"};
+	vector<string> v(s, s+3);
 	
 	vector<int> result;
 	result.push_back(1);
@@ -31,3 +35,6 @@
 
 5 INT_MAX, INT_MIN
 
+6 常用函数 
+	sort();//vector<int> a; asort(a.begin(), a.end());
+	abs(); //int a; abs(a);

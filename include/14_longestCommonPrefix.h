@@ -27,10 +27,20 @@ public:
     }
 
     int testCase(){
-        //const char* s[]={"abab","aba","abc"};
-        //vector<string> v(s, s+3);
-        const char* s[]={"bbab","aba","abc"};
+        const char* s[]={"abab","aba","abc"};
         vector<string> v(s, s+3);
+        //const char* s[]={"bbab","aba","abc"};
+        //vector<string> v(s, s+3);
+		printVector(v);
         cout << longestCommonPrefix(v) <<endl;
+		return 0;
     }
+	void printVector( vector<string>&  pt)
+	{
+    	cout << "[ ";
+    	for(int j=0; j<pt.size(); j++){
+        	cout << pt[j] << "  ";
+    	}
+    	cout << "] " << endl;
+	}
 };

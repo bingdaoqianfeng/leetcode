@@ -18,7 +18,7 @@ public:
     //Methord two.这个方法有两个知识点：
     //1. isdigit的使用
     //2. vector可以直接赋值 result = r。
-     vector<string> letterCombinations(string digits) {
+     vector<string> letterCombinations_new(string digits) {
         char  phone[10][4]={ {' ',  '\0', '\0', '\0' }, //0
                          {'\0', '\0', '\0', '\0' }, //1
                          {'a',  'b',  'c',  '\0' }, //2
