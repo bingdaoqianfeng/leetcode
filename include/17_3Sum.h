@@ -60,8 +60,8 @@ public:
 		return result;
 	}
 	int testCase(){
-		//int a[] = {-1, 0, 1, 2, -1, 1, -4};
-        int a[] = {-1, 1, 1, 1, -1, -1, 0,0,0};
+		int a[] = {-1, 0, 1, 2, -1, 1, -4};
+        //int a[] = {-1, 1, 1, 1, -1, -1, 0,0,0};
 		vector<int> nums(a, a+sizeof(a)/sizeof(int));
 		vector< vector<int> > result = threeSum(nums);
 		printMatrix(result);
