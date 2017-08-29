@@ -38,3 +38,6 @@
 6 常用函数 
 	sort();//vector<int> a; asort(a.begin(), a.end());
 	abs(); //int a; abs(a);
+
+	string temp = str.substr(0,1);  //获取第一个 字符；
+    int num = atoi(temp.c_str());	//转换字符为数字
