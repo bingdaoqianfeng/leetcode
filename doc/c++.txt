@@ -35,7 +35,15 @@
 
 5 INT_MAX, INT_MIN
 
-6 常用函数 
+6 stack<>
+	stack<char> mystack;
+	string s;
+	mystack.empty();
+	mystack.size();
+	mystack.top();
+	mystack.pop();
+	mystack.push(s[i]);
+常用函数 
 	sort();//vector<int> a; asort(a.begin(), a.end());
 	abs(); //int a; abs(a);
 

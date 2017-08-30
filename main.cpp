@@ -10,9 +10,6 @@
 using namespace std;
 
 /****************finished*******************/
-//#include "20_validParentheses.h"
-//#include "22_generateParentheses.h"
-//#include "23_mergeKSortedLists.h"
 //#include "24_swapNodesInPairs.h"
 //#include "25_reverseNodesInKGroup.h"
 //#include "36_validSudoku.h"
@@ -55,7 +52,11 @@ using namespace std;
 //#include "./include/14_longestCommonPrefix.h"
 //#include "./include/15_3SumClosest.h"
 //#include "./include/16_letterCombinationsOfAPhoneNumber.h"
-#include "./include/17_3Sum.h"
+//#include "./include/17_3Sum.h"
+//#include "./include/19_removeNthNodeFromEndOfList.h"
+//#include "./include/20_validParentheses.h"
+//#include "./include/22_generateParentheses.h"
+#include "./include/23_mergeKSortedLists.h"
 
 struct ListNode {
     int val;
