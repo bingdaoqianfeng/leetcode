@@ -23,6 +23,14 @@
 	if(mymap.count(i) == 0 )
 		count <<"found i in mymap"
 
+	map<string, int> mymap;
+	mymap["foo"] = 1;
+	mymap["too"] = 2;
+	for(map<string, int>::iterator it= mymap.begin(); it != mymap.end(); it++){
+		cout<<it->first<<"==>"<<it->second<<endl;
+	}
+	mymap.clear();
+
 3  new
 	ListNode *head = new ListNode(0);
 
