@@ -15,6 +15,30 @@
 	string s;
 	r[i] += s[i]; //r[i]表示vector中每个字符串string类型。
 
+	vector< vector<char> > board[9];
+	vector<string> s(9);
+	s[0] = "53..7....";
+        s[1] = "6..195...";
+        s[2] = ".98....6.";
+        s[3] = "8...6...3";
+        s[4] = "4..8.3..1";
+        s[5] = "7...2...6";
+        s[6] = ".6....28.";
+        s[7] = "...419..5";
+        s[8] = "....8..79";
+	for(int i=0; i<9; i++){
+		string str = s[i];
+		board[i].resize(9);  //***
+		for(int j=0; j<9; j++){
+			board[i][j] = str[j;]
+		}
+	}
+
+	const int n = 9;
+        bool rows[n][n] = {false};   //each row record each row of board.       
+        bool cols[n][n]= {false};    //each row record each col of board.
+        bool subbox[n][n] = {false}; //each row record each subbox of board.
+
 2.	map<,>
 	map<int, int> mymap;
 	int i,j;

@@ -10,11 +10,7 @@
 using namespace std;
 
 /****************finished*******************/
-//#include "36_validSudoku.h"
-//#include "37_sudokuSolver.h"
 //#include "39_combinationSum.h"
-//#include "33_searchInRotatedSortedArray.h"
-//#include "34_searchForRange.h"
 //#include "40_combinationSum.II.h"
 //#include "42_trappingRainWater.h"
 //#include "41_firstMissingPositive.h"
@@ -56,7 +52,11 @@ using namespace std;
 //#include "./include/24_swapNodesInPairs.h"
 //#include "./include/25_reverseNodesInKGroup.h"
 //#include "./include/29_divideTwoInt.h"
-#include "./include/30_substringWithConcatenationOfAllWords.h"
+//#include "./include/30_substringWithConcatenationOfAllWords.h"
+//#include "./include/33_searchInRotatedSortedArray.h"
+//#include "./include/34_searchForRange.h"
+//#include "./include/36_validSudoku.h"
+#include "./include/37_sudokuSolver.h"
 
 struct ListNode {
     int val;
