@@ -28,6 +28,7 @@ public:
 */
     int firstMissingPositive(vector<int>& nums) {
 		if(nums.size() <= 0) return 1;
+		printf("-------------------------------\n");
 		for(int i = 0; i<nums.size(); i++){
 			while(nums[i] != i+1 && nums[i] > 0){
 				int x = nums[i];
@@ -35,19 +36,21 @@ public:
 					break;
 				}
 				swap(nums[i], nums[x-1]);
+				printVector(nums);
 			}
 		}
-		//printVector(nums);
+		printf("-------------------------------\n");
+		printVector(nums);
 		for(int i = 0; i<nums.size(); i++)
 			if(nums[i] != i+1)
 				return i+1;
 		return nums.size()+1;
     }
 	int testCase(){
-		//int a[] = {3,4,-1,1};
+		int a[] = {3,4,-1,1};
 		//int a[] = {1, 2, 0};
 		//int a[] = {1,1};
-		int a[] = {0,3};
+		//int a[] = {0,3};
 		vector<int> nums(a, a+sizeof(a)/sizeof(int));
 		printVector(nums);
 		printf("first missing positive: %d\n", firstMissingPositive(nums));
