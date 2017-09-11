@@ -10,9 +10,6 @@
 using namespace std;
 
 /****************finished*******************/
-//#include "44_wildcardMatching.h"
-//#include "45_jumpGame.II.h"
-//#include "46_permutations.h"
 //#include "47_permutations.II.h"
 //#include "48_rotateImage.h"
 //#include "49_groupAnagrams.h"
@@ -56,7 +53,10 @@ using namespace std;
 //#include "./include/39_combinationSum.h"
 //#include "./include/40_combinationSum.II.h"
 //#include "./include/41_firstMissingPositive.h"
-#include "./include/42_trappingRainWater.h"
+//#include "./include/42_trappingRainWater.h"
+//#include "./include/44_wildcardMatching.h"
+//#include "./include/45_jumpGame.II.h"
+//#include "./include/46_permutations.h"
 
 struct ListNode {
     int val;
