@@ -39,6 +39,9 @@
         bool cols[n][n]= {false};    //each row record each col of board.
         bool subbox[n][n] = {false}; //each row record each subbox of board.
 
+	// 初始化 2维数组 
+	vector< vector<int> > queue(n, vector<int>(n,0))
+
 2.	map<,>
 	map<int, int> mymap;
 	int i,j;
@@ -64,6 +67,8 @@
 	int index, length;
 	string substr = str.substr(index, length);
     string substr = str.substr(index); //不指定长度，则到字符串尾.
+
+	string s(n, '.')
 
 5 INT_MAX, INT_MIN
 
