@@ -42,6 +42,18 @@
 	// 初始化 2维数组 
 	vector< vector<int> > queue(n, vector<int>(n,0))
 
+	//对结构体排序
+	struct Interval {
+        int start;
+        int end;
+        Interval() : start(0), end(0) {}
+        Interval(int s, int e) : start(s), end(e) {}
+    };
+	static bool myfunction(Interval i, Interval j){
+        return i.start<=j.start;
+    }
+	sort(intervals.begin(), intervals.end(), myfunction);
+
 2.	map<,>
 	map<int, int> mymap;
 	int i,j;
