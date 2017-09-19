@@ -101,3 +101,6 @@
 
 	int a, b;
 	swap(a,b);
+
+	const char *s;
+	!isalpha(*s);
