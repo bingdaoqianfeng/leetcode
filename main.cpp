@@ -58,7 +58,8 @@ using namespace std;
 //#include "./include/55_jumpGame.h"
 //#include "./include/56_mergeIntervals.h"
 //#include "./include/57_insertInterval.h"
-#include "include/58_lengthOfLastWord.h"
+//#include "include/58_lengthOfLastWord.h"
+#include "include/wordBreak.h"
 
 struct ListNode {
     int val;
