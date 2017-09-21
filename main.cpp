@@ -59,7 +59,10 @@ using namespace std;
 //#include "./include/56_mergeIntervals.h"
 //#include "./include/57_insertInterval.h"
 //#include "include/58_lengthOfLastWord.h"
-#include "include/wordBreak.h"
+//#include "include/wordBreak.h"
+//#include "include/wordBreak_II.h"
+//#include "include/59_spiralMatrix_II.h"
+//#include "include/60_permutationSequence.h"
 
 struct ListNode {
     int val;
