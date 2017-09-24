@@ -58,6 +58,10 @@
     }
 	sort(intervals.begin(), intervals.end(), myfunction);
 
+	int x = digits.back();
+	digits.pop_back();
+	result.insert(result.begin(), '0' + ((abit+bbit+cbit) & 1) );
+
 2.	map<,>
 	map<int, int> mymap;
 	int i,j;
