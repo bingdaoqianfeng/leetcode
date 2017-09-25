@@ -62,6 +62,10 @@
 	digits.pop_back();
 	result.insert(result.begin(), '0' + ((abit+bbit+cbit) & 1) );
 
+	vector<vector<int> > result;
+    vector<vector<int> > r = combine(S, i);
+    result.insert(result.end(), r.begin(), r.end());
+
 2.	map<,>
 	map<int, int> mymap;
 	int i,j;
