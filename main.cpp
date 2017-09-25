@@ -63,6 +63,17 @@ using namespace std;
 //#include "include/wordBreak_II.h"
 //#include "include/59_spiralMatrix_II.h"
 //#include "include/60_permutationSequence.h"
+//#include "include/61_rotateList.h"
+//#include "include/62_uniquePaths.h"
+//#include "include/63_uniquePaths_II.h"
+//#include "include/64_minimumPathSum.h"
+//#include "include/65_validNumber.h"
+//#include "include/66_plusOne.h"
+//#include "include/67_addBinary.h"
+//#include "include/68_textJustification.h"
+//#include "include/69_sqrt.h"
+//#include "include/70_climbStairs.h"
+#include "include/71_simplifyPath.h"
 
 struct ListNode {
     int val;
