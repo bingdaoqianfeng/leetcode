@@ -74,14 +74,16 @@ using namespace std;
 //#include "include/69_sqrt.h"
 //#include "include/70_climbStairs.h"
 //#include "include/71_simplifyPath.h"
-#include "include/72_editDistance.cpp"  //hard
-#include "include/73_setMatrixZeroes.h"
-#include "include/74_search2DMatrix.h"
-#include "include/75_sortColors.h"
-#include "include/76_minimumWindowSubstring.h" //to be continue
-#include "include/77_combinations.h"
-#include "include/78_subsets.h"
-#include "include/79_wordSearch.h"
+//#include "include/72_editDistance.cpp"  //hard
+//#include "include/73_setMatrixZeroes.h"
+//#include "include/74_search2DMatrix.h"
+//#include "include/75_sortColors.h"
+//#include "include/76_minimumWindowSubstring.h" //hard
+//#include "include/77_combinations.h"
+//#include "include/78_subsets.h"
+//#include "include/79_wordSearch.h"
+//#include "include/80_removeDuplicatesFromSortedArray.h"
+//#include "include/80_removeDuplicatesFromSortedArray.II.h"
 
 struct ListNode {
     int val;
