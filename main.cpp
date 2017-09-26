@@ -74,7 +74,7 @@ using namespace std;
 //#include "include/69_sqrt.h"
 //#include "include/70_climbStairs.h"
 //#include "include/71_simplifyPath.h"
-#include "include/72_editDistance.cpp"  //to be continue
+#include "include/72_editDistance.cpp"  //hard
 #include "include/73_setMatrixZeroes.h"
 #include "include/74_search2DMatrix.h"
 #include "include/75_sortColors.h"
