@@ -18,6 +18,20 @@ struct ListNode {
 };
 
 public:
+
+ListNode *deleteDuplicates(ListNode *head) {
+
+    for(ListNode *p=head; p && p->next; ){
+        if (p->val == p->next->val){
+            p->next = p->next->next;
+            continue;
+        }
+        p=p->next;
+    }
+    return head;
+}
+
+
     int testCase(){
         int n=3;
         vector< vector<int> > matrix = generateMatrix(n, n);
