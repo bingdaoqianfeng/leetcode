@@ -439,7 +439,8 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 				struct es_out_t
 				{
 					es_out_id_t *(*pf_add)    ( es_out_t *, const es_format_t * );          //point to function Add() in es_out_timeshift.c
-					int          (*pf_send)   ( es_out_t *, es_out_id_t *, block_t * );     //point to function Send() in es_out_timeshift.c
+					int          (*pf_send)   ( es_out_t *, es_out_id_t *, block_t * );     //function Send() ,该函数有demux中调用。
+																							//in es_out_timeshift.c, es_out_Send( p_demux->out, p_sys->tk[idx], pframe )-->out->pf_send( out, id, p_block )//modules/demux/avformat/demux.c调用。
 					void         (*pf_del)    ( es_out_t *, es_out_id_t * );				//point to function Del() in es_out_timeshift.c
 					int          (*pf_control)( es_out_t *, int i_query, va_list );			//point to function Control() in es_out_timeshift.c
 					void         (*pf_destroy)( es_out_t * );								//point to function Destroy() in es_out_timeshift.c
@@ -699,7 +700,7 @@ mVlcPlayerInstance->p_md = mVlcMedia;
 						stream_t    *s;     /* NULL in case of a access+demux in one */  //指向p_stream created by stream_AccessNew() in InputSourceInit().
 
 						/* es output */
-						es_out_t    *out;   /* our p_es_out */    //指向p_input->p->p_es_out。
+						es_out_t    *out;   /* our p_es_out */    //指向p_input->p->p_es_out, 既es_out_timeshift.c. 该指针通过demux_New()实现对out指向p_input->p->p_es_out的赋值。
 
 						/* set by demuxer */
 						int (*pf_demux)  ( demux_t * );   /* demux one frame only */		//在demux模块中进行初始化，如 modules/demux/avformat/demux.c中的OpenDemux
@@ -1307,7 +1308,50 @@ vout_control_WaitEmpty(&vout->p->control);  //之前定位到该函数一直不�
  
 2)EsOutProgramChangePause( out, true, i_date );  // pause all program(pause clock in the program)
 
+/***************************************vlc seek*******************************************/
+libvlc_media_player_set_time(mVlcPlayerInstance, msec / 1E3);->
+static int TimeCallback( vlc_object_t *p_this, char const *psz_cmd,
+                         vlc_value_t oldval, vlc_value_t newval, void *p_data )->
+//搜索关键字INPUT_CONTROL_SET_TIME
+static bool Control( input_thread_t *p_input,
+                     int i_type, vlc_value_t val )  //src/input/input.c
+1. /* Reset the decoders states and clock sync (before calling the demuxer */
+   ///< reset clock, flush data in dec&output. make es_out and dec into buffering state.
+   es_out_SetTime( p_input->p->p_es_out, -1 );->
+   static void EsOutChangePosition( es_out_t *out ) -> //es_out.c, 此处会让decoder开始buffering.
 
+   
+2. "video-decoding-time" and "audio-decoding-time"
+这两个变量存储当前播放的时刻，用于跟新进度条，不会影响声音。
+
+3. DEMUX_SET_TIME
+static int Control( demux_t *p_demux, int i_query, va_list args )-> // demux.c
+av_seek_frame( p_sys->ic, -1, i64, AVSEEK_FLAG_BACKWARD ) //seek到文件指定的位置
+ResetTime( p_demux, -1);
+FlushFifos(p_demux);
+
+#引起sync造作的调用关系
+static void DecoderPlayAudio( decoder_t *p_dec, block_t *p_audio,
+                              int *pi_played_sum, int *pi_lost_sum )->   // in file src/input/decoder.c
+int aout_DecPlay (audio_output_t *aout, block_t *block, int input_rate)->  // in file src/audio_output/dec.c
+static void aout_DecSynchronize (audio_output_t *aout, mtime_t dec_pts,
+                                 int input_rate)  //将已经播发的时间与刚刚接收到的数据的时间进行比较，如果超过一定阀值，就作flush或者silence处理。
+								 
+
+/**************************DecoderFixTs()详细解释******************************************/
+								 
+/******************************audiotrack.c***************************************/
+1 open函数中初始化的接口函数
+    p_aout->sys = p_sys;
+    p_aout->start = Start;
+    p_aout->stop = Stop;
+    p_aout->play = Play;
+    p_aout->pause = Pause;
+    p_aout->flush = Flush;
+    p_aout->time_get = TimeGet;
+    p_aout->device_select = DeviceSelect;
+	p_aout->volume_set = aout_SoftVolumeSet;
+    p_aout->mute_set = aout_SoftMuteSet;
 /*******************************************************************************************************/
 prepareAsync
 vlc_initial

@@ -1,0 +1,59 @@
+1. c++
+#include <iostream>
+using namespace std;
+
+class taikoo
+{
+    public:
+    int base;
+
+    public:
+    taikoo(int base)
+    {
+        this->base = base;
+    }
+    virtual void getSomeSugar(int * val)
+    {
+        cout<<typeid(this).name()<<"::"<<__func__<<endl;
+        *val = *val * this->base;
+        cout<<*val<<endl;
+    }
+};
+
+void funcCall(const void * ptr, const int val)
+{
+    ((taikoo * )ptr)->getSomeSugar(&val);
+}
+
+int main()
+{
+
+    int val = 100;
+
+    const int * p1 = &val;
+    int * const p2 = &val;
+    int const * p3 = &val;
+
+
+    cout<<*p1<<","<<*p2<<","<<*p3<<","<<endl;
+
+    int val2 = 200;
+
+    p1 = &val2;
+    p2 = &val2;
+    p3 = &val2;
+
+    cout<<*p1<<","<<*p2<<","<<*p3<<","<<endl;
+
+    taikoo * pt = new taikoo(*p1);
+
+    pt->getSomeSugar(p1);
+    pt->getSomeSugar(p2);
+    pt->getSomeSugar(p3);
+    pt->getSomeSugar(&val);
+
+    funcCall(pt, *p1);
+    funcCall(pt, *p2);
+    funcCall(pt, *p3);
+    funcCall(pt, &val);
+}
