@@ -90,6 +90,11 @@ using namespace std;
 //#include "include/83_removeDuplicatesFromSortedList.h"
 //#include "include/84_largestRectangleInHistogram.h"
 //#include "include/85_maximalRectangle.h"
+#include "include/86_partitionList.h"
+#include "include/87_scrambleString.h"
+#include "include/88_mergeTwoSortedArray.h"
+#include "include/89_grayCode.h"
+#include "include/90_subsets.II.h"
 
 struct ListNode {
     int val;
