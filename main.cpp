@@ -85,6 +85,13 @@ using namespace std;
 //#include "include/80_removeDuplicatesFromSortedArray.h"
 //#include "include/80_removeDuplicatesFromSortedArray.II.h"
 
+include/81_searchInRotatedSortedArray.h
+include/81_searchInRotatedSortedArray_II.h
+include/82_removeDuplicatesFromSortedList_II.h
+include/83_removeDuplicatesFromSortedList.h
+include/84_largestRectangleInHistogram.h
+include/85_maximalRectangle.h
+
 struct ListNode {
     int val;
     ListNode *next;
