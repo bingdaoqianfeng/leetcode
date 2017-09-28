@@ -25,27 +25,27 @@ public:
 //#define INT_MAX     2147483647
 //#define INT_MIN     (-INT_MAX - 1)
     int reverse(int x) {
-		int retval = 0;
-		int temp;
-		
-		while(x !=0){
-			temp = x%10;
-			//printf("temp=%d, retval=%d \n", temp, retval);
-			if(retval > INT_MAX/10 || retval < INT_MIN/10){
-				return 0;
-			}
-			retval = retval*10 + temp;
-			x = x/10;
-			//printf("x=%d, retval=%d \n", x, retval);
-		}
-		return retval;        
+        int retval = 0;
+        int temp;
+        
+        while(x !=0){
+            temp = x%10;
+            //printf("temp=%d, retval=%d \n", temp, retval);
+            if(retval > INT_MAX/10 || retval < INT_MIN/10){
+                return 0;
+            }
+            retval = retval*10 + temp;
+            x = x/10;
+            //printf("x=%d, retval=%d \n", x, retval);
+        }
+        return retval;
     }
-	int testCase(){
-		printf("-219 mod 10 -> %d, 219 mod 10 -> %d \n", -219%10, 219%10);
-		printf("219 --> %d \n", reverse(219));
-		printf("-219 --> %d \n", reverse(-219));
-		printf("10 --> %d \n", reverse(10));
-		printf("1534236469 --> %d \n", reverse(1534236469));
-		return 0;
-	}
+    int testCase(){
+        printf("-219 mod 10 -> %d, 219 mod 10 -> %d \n", -219%10, 219%10);
+        printf("219 --> %d \n", reverse(219));
+        printf("-219 --> %d \n", reverse(-219));
+        printf("10 --> %d \n", reverse(10));
+        printf("1534236469 --> %d \n", reverse(1534236469));
+        return 0;
+    }
 };

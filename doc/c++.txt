@@ -106,17 +106,17 @@
 	mystack.push(s[i]);
 
 7 set<>
-	set<string> dict;
-	string a = {"dog", "s", "gs"}
-	dict.insert(a, a+3);
-	
-	string s = "dogs"
-	set<string>::iterator it;
-	for(it=dict.begin(); it!=dict.end(); it++){
-		string str = *it;
-		if(s.compare(0,str.length(), str) == 0)
-			break;
-	}	
+    set<string> dict;
+    string a = {"dog", "s", "gs"}
+    dict.insert(a, a+3);
+
+    string s = "dogs"
+    set<string>::iterator it;
+    for(it=dict.begin(); it!=dict.end(); it++){
+        string str = *it;
+        if(s.compare(0,str.length(), str) == 0)
+        break;
+    }
 
 常用函数 
 	sort();//vector<int> a; asort(a.begin(), a.end());

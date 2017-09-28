@@ -27,24 +27,24 @@ public:
         }
         return result;
     }
-	
-	int testCase(){
-		int a[] = {2, 7, 11, 15};
-		int target = 9;
-		vector<int> nums(a, a + sizeof(a)/sizeof(int));
-		vector<int> result;
-		printf("target: %d\n", target);
-		printVector(nums);
 
-		result = twoSum(nums, target);
-		printVector(result);
-		return 0;
-	}
-	void printVector( vector<int>&  pt)
-	{
-    	cout << "[ ";
-    	for(int i=0; i<pt.size(); i++)
-			cout << pt[i] <<" ";
-		cout << "] " << endl;
-	}		
+    int testCase(){
+        int a[] = {2, 7, 11, 15};
+        int target = 9;
+        vector<int> nums(a, a + sizeof(a)/sizeof(int));
+        vector<int> result;
+        printf("target: %d\n", target);
+        printVector(nums);
+
+        result = twoSum(nums, target);
+        printVector(result);
+        return 0;
+    }
+    void printVector( vector<int>&  pt)
+    {
+        cout << "[ ";
+        for(int i=0; i<pt.size(); i++)
+            cout << pt[i] <<" ";
+        cout << "] " << endl;
+    }
 };

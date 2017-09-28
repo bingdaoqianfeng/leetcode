@@ -37,7 +37,7 @@ public:
 					longest = str;
 			}
 		}
-		return longest;	    
+		return longest;
     }
 	int testCase(){
 		string s = "abacdfgdcaba";

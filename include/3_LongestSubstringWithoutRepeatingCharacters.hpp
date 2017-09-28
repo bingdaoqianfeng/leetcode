@@ -28,10 +28,10 @@ public:
             if(i-repeatpos>maxsublen)
                 maxsublen = i - repeatpos;
             mymap[s[i]] = i;
-        }      
+        }
         return maxsublen;
     }
-    
+
     int testCase(){
         string s = "abcabcbb";
         cout << s << " : " << lengthOfLongestSubstring(s) << endl;

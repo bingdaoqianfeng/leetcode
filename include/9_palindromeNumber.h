@@ -19,35 +19,35 @@
 class Solution {
 public:
     bool isPalindrome(int x) {
-		
-		if(x<0) //for leetcode,it think negatie intergers is not palindrome. so add this.
-			return false;		
 
-		vector<int> myvector;
-		int val = x;
-		while(val){
-			myvector.push_back(val%10);
-			val = val/10;
-		}
-		int i=0, j=myvector.size()-1;
-		while(i<=j){
-			if(myvector[i] != myvector[j]){
-				return false;
-			}
-			i++;
-			j--;
-		} 
-		return true;
+        if(x<0) //for leetcode,it think negatie intergers is not palindrome. so add this.
+            return false;
+
+        vector<int> myvector;
+        int val = x;
+        while(val){
+            myvector.push_back(val%10);
+            val = val/10;
+        }
+        int i=0, j=myvector.size()-1;
+        while(i<=j){
+            if(myvector[i] != myvector[j]){
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
     }
 
-	int testCase(){
-		printf("1 is %d \n", isPalindrome(1));
-		printf("11 is %d \n", isPalindrome(11));
-		printf("12 is %d \n", isPalindrome(12));
-		printf("67899876 is %d \n", isPalindrome(67899876));
-		printf("6789876 is %d \n", isPalindrome(6789876));
-		printf("%d is %d\n", 2147447412, isPalindrome(2147447412) );
-		printf("%d is %d\n", -2147447412, isPalindrome(-2147447412) );
-		return 0;
-	}
+    int testCase(){
+        printf("1 is %d \n", isPalindrome(1));
+        printf("11 is %d \n", isPalindrome(11));
+        printf("12 is %d \n", isPalindrome(12));
+        printf("67899876 is %d \n", isPalindrome(67899876));
+        printf("6789876 is %d \n", isPalindrome(6789876));
+        printf("%d is %d\n", 2147447412, isPalindrome(2147447412) );
+        printf("%d is %d\n", -2147447412, isPalindrome(-2147447412) );
+        return 0;
+    }
 };
