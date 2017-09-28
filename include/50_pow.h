@@ -49,6 +49,7 @@ public:
 
         return sign ? 1/result : result;
     }
+
     int testCase(){
         double x;
         int n;
