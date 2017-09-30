@@ -46,7 +46,7 @@ vector<string> fullJustify(vector<string> &words, int L) {
     int end = 0;
     double space =0;
     bool lastLine = false;
-	for (int i=0; i<words.size(); i++){
+    for (int i=0; i<words.size(); i++){
         len += words[i].size();
         if (len + i - start > L || i == words.size()-1) {
             //remove the last one
@@ -58,7 +58,7 @@ vector<string> fullJustify(vector<string> &words, int L) {
                 end = i;
                 lastLine = true;
             }
-			//calculate the space number
+            //calculate the space number
             space = L - len;
             int mspace;
             int extra;
@@ -69,7 +69,7 @@ vector<string> fullJustify(vector<string> &words, int L) {
                 mspace = floor(space/(end-start));
                 extra = space - mspace * (end-start);
             }
-			            string line = words[start];
+            string line = words[start];
             for (int j=start+1; j<=end; j++) {
                 for(int k=0; k<mspace && space>0; k++, space--) {
                     line += " ";
@@ -80,7 +80,7 @@ vector<string> fullJustify(vector<string> &words, int L) {
                 }
                 line += words[j];
             }
-			//add the rest space
+            //add the rest space
             if (space>0){
                 for(; space>0; space--) {
                     line += " ";

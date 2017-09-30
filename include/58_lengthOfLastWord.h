@@ -17,7 +17,7 @@ class Solution {
 
 public:
 
-	int lengthOfLastWord(const char *s) {
+    int lengthOfLastWord(const char *s) {
 
     if ( !s ||!*s ) return 0;
 
@@ -37,14 +37,14 @@ public:
     }
 
     return cnt>0 ? cnt : wordLen;
-}	
+}   
 
-	int testCase(){
-		const char* p;
+    int testCase(){
+        const char* p;
     p = "hello world";
     printf("%s, %d\n", p, lengthOfLastWord(p));
     p = "a";
     printf("%s, %d\n", p, lengthOfLastWord(p));
-		return 0;
-	}
+        return 0;
+    }
 };

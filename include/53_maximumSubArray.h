@@ -15,44 +15,44 @@
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
-		int maxval = nums[0];
-		int left = 0;
-		int right = 0;
- 		for(int i=0; i<nums.size(); i++){
-			if(nums[i]>maxval){
-				maxval = nums[i];
-				left = right = i;
-			}	
-			int len = nums.size() - i;
-			int tempval = 0;
-			for(int j=i; j<(i+len); j++){
-				tempval += nums[j];	
-				//printf("i: %d, len: %d, tempval: %d\n", i, len, tempval);
-				if(tempval>maxval){
-					maxval = tempval;
-					left = i;
-					right = i+len;
-				}	
-			}
-		}
-		//printf("result left: %d, right: %d\n", left, right);
-		return maxval; 
+        int maxval = nums[0];
+        int left = 0;
+        int right = 0;
+        for(int i=0; i<nums.size(); i++){
+            if(nums[i]>maxval){
+                maxval = nums[i];
+                left = right = i;
+            }   
+            int len = nums.size() - i;
+            int tempval = 0;
+            for(int j=i; j<(i+len); j++){
+                tempval += nums[j]; 
+                //printf("i: %d, len: %d, tempval: %d\n", i, len, tempval);
+                if(tempval>maxval){
+                    maxval = tempval;
+                    left = i;
+                    right = i+len;
+                }   
+            }
+        }
+        //printf("result left: %d, right: %d\n", left, right);
+        return maxval; 
     }
-	int testCase(){
-		int a[] = {-2,1,-3,4,-1,2,1,-5,4};
-		vector<int> nums(a, a+sizeof(a)/sizeof(int));
-		printVector(nums);
-		int ret = 0;
-		ret = maxSubArray(nums);
-		printf("ret: %d\n",ret);	
-		return 0;
-	}
-	void printVector( vector<int>&  pt)
-	{
-		cout << "[ ";
-		for(int i=0; i<pt.size(); i++){
-			cout << pt[i] << "  ";
-		}
-		cout << "] " << endl;
-	}
+    int testCase(){
+        int a[] = {-2,1,-3,4,-1,2,1,-5,4};
+        vector<int> nums(a, a+sizeof(a)/sizeof(int));
+        printVector(nums);
+        int ret = 0;
+        ret = maxSubArray(nums);
+        printf("ret: %d\n",ret);    
+        return 0;
+    }
+    void printVector( vector<int>&  pt)
+    {
+        cout << "[ ";
+        for(int i=0; i<pt.size(); i++){
+            cout << pt[i] << "  ";
+        }
+        cout << "] " << endl;
+    }
 };
