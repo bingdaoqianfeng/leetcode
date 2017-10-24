@@ -32,31 +32,36 @@ public:
     }
 
     int maxArea(vector<int>& height) {
-        int maxval = 0;
-        int tempval = 0;
-        int left = 0, right = height.size()-1;
-        int leftmaxval = 0, rightmaxval = 0;
-        leftmaxval=height[left];
-        rightmaxval=height[right];
-        while(left<right){
-            if(height[left]<height[right]){
-                tempval = height[left]*(right-left);
-                while(left<right && height[left]<=leftmaxval){
+        int maxArea = 0;
+        // two pointers scan from two sides to middle
+        int left = 0;
+        int right = height.size()-1;
+
+        int area;
+        while ( left < right ){
+            // calculate the area
+            area = (right - left) * ( height[left] < height[right] ? height[left] : height[right]);
+            // tracking the maxium area
+            maxArea = area > maxArea ? area : maxArea;
+            // because the area is decided by the shorter edge
+            // so we increase the area is to increase the shorter edge
+            //
+            //     height[left] < height[right] ? left++ : right-- ;
+            //
+            // However, the above code could cause the unnecessary `area` cacluation
+            // We can do some improvement as below:
+            if (height[left] < height[right]) {
+                do {
                     left++;
-                }
-                leftmaxval = height[left];
-            }
-            else{
-                tempval = height[right]*(right-left);
-                while(left<right && height[right]<=rightmaxval){
+                } while (left < right && height[left-1] >= height[left]);
+            } else {
+                do {
                     right--;
-                }
-                rightmaxval = height[right];
+                } while (right > left && height[right+1] >= height[right]);
             }
-            if(maxval<tempval)
-                maxval = tempval;
         }
-        return maxval;
+
+        return maxArea;
     }
     int testCase(){
         //int myints[] = {1,1};
