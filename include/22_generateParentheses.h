@@ -10,34 +10,34 @@
 class Solution {
 public:
     void generateParenthesis(vector<string> &result, string s, int left, int right) {
-		if(left == 0 && right == 0){
-			result.push_back(s);
-			return;
-		}
-		if(left > 0){
-			generateParenthesis(result, s+"(", left-1, right);
-		}
-		if(right > 0 && left<right){
-			generateParenthesis(result, s+")", left, right-1);
-		}
+        if(left == 0 && right == 0){
+            result.push_back(s);
+            return;
+        }
+        if(left > 0){
+            generateParenthesis(result, s+"(", left-1, right);
+        }
+        if(right > 0 && left<right){
+            generateParenthesis(result, s+")", left, right-1);
+        }
 
-		return;
+        return;
     }
-	vector<string> generateParenthesis(int n) {
-    	vector<string> result;
-		string s;
-		generateParenthesis(result, s, n, n);	
-		return result;
-	}
+    vector<string> generateParenthesis(int n) {
+        vector<string> result;
+        string s;
+        generateParenthesis(result, s, n, n);
+        return result;
+    }
 
     int testCase(){
-		vector<string> result;
-		int n;
-		n=3;
-		result = generateParenthesis(n);
-		for(int i=0; i<result.size(); i++){
-			cout<<result[i]<<endl;
-		}
+        vector<string> result;
+        int n;
+        n=3;
+        result = generateParenthesis(n);
+        for(int i=0; i<result.size(); i++){
+            cout<<result[i]<<endl;
+        }
         return 0;
     }
 };

@@ -101,47 +101,47 @@ public:
             cout<<it->first<<"==>"<<it->second<<endl;
         }
 #endif
-		/*将字符串看成一个单词处理*/
-		for(int i=0; i<len; i++){
-        	map<string, int> wordsfound;
-			int leftwindow = 0;
-			int count = 0;
-			leftwindow = i;
-			for(int j=i; j<s.length(); j+=len){
-				string substr = s.substr(j,len);	
-        		if(!wordsmap.count(substr)){
-					wordsfound.clear();
-					count = 0;
-					leftwindow = j+len;
-					continue;
-				}
-				
-				count++;
-				if(!wordsfound.count(substr)){
-                	wordsfound[substr] = 1;
-				}
-            	else {
-                	wordsfound[substr] += 1;
-            	}
-				// If there is more appearance of "word" than expected,此时应该移动左侧窗口到满足substr要求的地方，这里是优化的关键点
-				if(wordsfound[substr]>wordsmap[substr]){
-					string tmp;
-					do{
-						tmp = s.substr(leftwindow,len);
-						leftwindow += len;
-						count--;
-						wordsfound[tmp]--;
-					}while(tmp!=substr);
-				}
-				if(count == words.size()){
-					result.push_back(leftwindow);
-					count = 0;
-					wordsfound.clear();
-					j = leftwindow; //找到了匹配字符串后，左侧窗口应该移动一个len的长度，而不是真个匹配字符串的长度。
-					leftwindow += len;
-				}
-			}
-		}
+        /*将字符串看成一个单词处理*/
+        for(int i=0; i<len; i++){
+            map<string, int> wordsfound;
+            int leftwindow = 0;
+            int count = 0;
+            leftwindow = i;
+            for(int j=i; j<s.length(); j+=len){
+                string substr = s.substr(j,len);    
+                if(!wordsmap.count(substr)){
+                    wordsfound.clear();
+                    count = 0;
+                    leftwindow = j+len;
+                    continue;
+                }
+                
+                count++;
+                if(!wordsfound.count(substr)){
+                    wordsfound[substr] = 1;
+                }
+                else {
+                    wordsfound[substr] += 1;
+                }
+                // If there is more appearance of "word" than expected,此时应该移动左侧窗口到满足substr要求的地方，这里是优化的关键点
+                if(wordsfound[substr]>wordsmap[substr]){
+                    string tmp;
+                    do{
+                        tmp = s.substr(leftwindow,len);
+                        leftwindow += len;
+                        count--;
+                        wordsfound[tmp]--;
+                    }while(tmp!=substr);
+                }
+                if(count == words.size()){
+                    result.push_back(leftwindow);
+                    count = 0;
+                    wordsfound.clear();
+                    j = leftwindow; //找到了匹配字符串后，左侧窗口应该移动一个len的长度，而不是真个匹配字符串的长度。
+                    leftwindow += len;
+                }
+            }
+        }
         return result;
     }
     int testCase(){
