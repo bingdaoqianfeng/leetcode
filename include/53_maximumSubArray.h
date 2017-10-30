@@ -22,21 +22,21 @@ public:
             if(nums[i]>maxval){
                 maxval = nums[i];
                 left = right = i;
-            }   
+            }
             int len = nums.size() - i;
             int tempval = 0;
             for(int j=i; j<(i+len); j++){
-                tempval += nums[j]; 
+                tempval += nums[j];
                 //printf("i: %d, len: %d, tempval: %d\n", i, len, tempval);
                 if(tempval>maxval){
                     maxval = tempval;
                     left = i;
                     right = i+len;
-                }   
+                }
             }
         }
         //printf("result left: %d, right: %d\n", left, right);
-        return maxval; 
+        return maxval;
     }
     int testCase(){
         int a[] = {-2,1,-3,4,-1,2,1,-5,4};

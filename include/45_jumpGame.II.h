@@ -70,32 +70,32 @@ public:
 　　　　3.证明做出贪心选择后，剩余的子问题满足性质：其最优解与贪心选择的组合即可得到原问题的最优解，这样就得到了最优子结构。
 */
     int Greedyalgorithm(vector<int> nums){
-		if(nums.size()<=1)
-			return 0;
-		int coverPos = 0;
-		int step = 0;
-		for(int i = 0; i<=coverPos && i<nums.size();){
-			if(nums[i] == 0)
-				return 0;
-			if(coverPos < nums[i] + i){
-				step++;
-				coverPos = nums[i] + i;
-			}
-			if(coverPos >= nums.size() - 1){
-				return step;
-			}
-			int maxDistance = 0;
-			int maxPos = i + 1;
-			for(int j=i+1; j<=coverPos; j++){
-				if(nums[j] + j > maxDistance){
-					maxDistance = nums[j] + j;
-					maxPos = j;
-				}
-			}
-			i = maxPos;
-		}
-		printf("should on here");
-		return step;
+        if(nums.size()<=1)
+            return 0;
+        int coverPos = 0;
+        int step = 0;
+        for(int i = 0; i<=coverPos && i<nums.size();){
+            if(nums[i] == 0)
+                return 0;
+            if(coverPos < nums[i] + i){
+                step++;
+                coverPos = nums[i] + i;
+            }
+            if(coverPos >= nums.size() - 1){
+                return step;
+            }
+            int maxDistance = 0;
+            int maxPos = i + 1;
+            for(int j=i+1; j<=coverPos; j++){
+                if(nums[j] + j > maxDistance){
+                    maxDistance = nums[j] + j;
+                    maxPos = j;
+                }
+            }
+            i = maxPos;
+        }
+        printf("should on here");
+        return step;
     }
 
     int jump(vector<int>& nums) {

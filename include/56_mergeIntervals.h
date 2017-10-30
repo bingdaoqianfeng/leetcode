@@ -36,7 +36,7 @@ public:
             return result;
 
         sort(intervals.begin(), intervals.end(), myfunction);
-        
+
         int index = 0;
         result.push_back(intervals[0]);
         for(int i = 1; i < intervals.size(); i++){
