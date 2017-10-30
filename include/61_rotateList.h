@@ -1,15 +1,15 @@
-/********************************************************************************** 
-* 
+/**********************************************************************************
+*
 * Given a list, rotate the list to the right by k places, where k is non-negative.
-* 
+*
 * For example:
 * Given 1->2->3->4->5->NULL and k = 2,
 * return 4->5->1->2->3->NULL.
-*               
+*
 **********************************************************************************/
 class Solution {
 public:
-	ListNode *rotateRight(ListNode *head, int k) {
+    ListNode *rotateRight(ListNode *head, int k) {
         if (!head || k<=0){
             return head;
         }
@@ -36,9 +36,9 @@ public:
         p->next = NULL;
 
         return head;
-    }   
- 
-	int testCase(){
+    }
+
+    int testCase(){
         int n=3;
         vector< vector<int> > matrix = generateMatrix(n, n);
         printVV(matrix);

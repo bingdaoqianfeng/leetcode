@@ -1,10 +1,10 @@
-/********************************************************************************** 
-* 
-* Given a m x n grid filled with non-negative numbers, find a path from top left to 
+/**********************************************************************************
+*
+* Given a m x n grid filled with non-negative numbers, find a path from top left to
 * bottom right which minimizes the sum of all numbers along its path.
-* 
+*
 * Note: You can only move either down or right at any point in time.
-*               
+*
 **********************************************************************************/
 
 class Solution {
@@ -29,10 +29,18 @@ int minPathSum(vector<vector<int> > &grid) {
 }
 
 public:
-	int testCase(){
-        int n=3;
-        vector< vector<int> > matrix = generateMatrix(n, n);
-        printVV(matrix);
+    int testCase(){
+        int a[6][2]={{7,2},{6,6},{8,6},{8,7},{5,0},{6,0}};
+        vector< vector<int> > grid;
+        for(int i=0; i<6; i++){
+            vector<int> v;
+            for(int j=0; j<2; j++){
+                v.push_back(a[i][j]);
+            }
+            grid.push_back(v);
+        }
+
+        cout << "minPathSum=" << minPathSum(grid) << endl;
         return 0;
     }
-};	
+};

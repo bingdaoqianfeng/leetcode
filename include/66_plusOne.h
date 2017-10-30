@@ -1,9 +1,9 @@
-/********************************************************************************** 
-* 
+/**********************************************************************************
+*
 * Given a non-negative number represented as an array of digits, plus one to the number.
-* 
+*
 * The digits are stored such that the most significant digit is at the head of the list.
-*               
+*
 **********************************************************************************/
 vector<int> plusOne(vector<int> &digits) {
     int carry=1;
@@ -24,10 +24,10 @@ vector<int> plusOne(vector<int> &digits) {
 
 class Solution {
 public:
-	int testCase(){
+    int testCase(){
         int n=3;
         vector< vector<int> > matrix = generateMatrix(n, n);
         printVV(matrix);
         return 0;
     }
-};	
+};

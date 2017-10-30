@@ -1,40 +1,41 @@
-/********************************************************************************** 
-* 
-* Given an array of words and a length L, format the text such that each line has 
+/**********************************************************************************
+*
+* Given an array of words and a length L, format the text such that each line has
 * exactly L characters and is fully (left and right) justified.
-*  
-* 
-* You should pack your words in a greedy approach; that is, pack as many words as you can in each line. 
+*
+*
+* You should pack your words in a greedy approach; that is, pack as many words as you can in each line.
 * Pad extra spaces ' ' when necessary so that each line has exactly L characters.
-* 
-* Extra spaces between words should be distributed as evenly as possible. 
-* If the number of spaces on a line do not divide evenly between words, 
+*
+* Extra spaces between words should be distributed as evenly as possible.
+* If the number of spaces on a line do not divide evenly between words,
 * the empty slots on the left will be assigned more spaces than the slots on the right.
-* 
+*
 * For the last line of text, it should be left justified and no extra space is inserted between words.
-* 
+*
 * For example,
 * words: ["This", "is", "an", "example", "of", "text", "justification."]
 * L: 16.
-* 
+*
 * Return the formatted lines as:
-* 
+*
 * [
 *    "This    is    an",
 *    "example  of text",
 *    "justification.  "
 * ]
-* 
+*
 * Note: Each word is guaranteed not to exceed L in length.
-* 
-* 
+*
+*
 * Corner Cases:
-* 
+*
 * A line other than the last line might contain only one word. What should you do in this case?
 * In this case, that line should be left-justified.
-* 
-*               
+*
+*
 **********************************************************************************/
+#include <math.h>
 
 class Solution {
 public:
@@ -48,6 +49,8 @@ vector<string> fullJustify(vector<string> &words, int L) {
     bool lastLine = false;
     for (int i=0; i<words.size(); i++){
         len += words[i].size();
+        printf("len: %d, i: %d, start: %d\n", len, i, start);
+        //i-start相当于需要的最少space的个数
         if (len + i - start > L || i == words.size()-1) {
             //remove the last one
             if (len + i - start > L) {
@@ -95,12 +98,30 @@ vector<string> fullJustify(vector<string> &words, int L) {
 
     return result;
 }
-	
-	
-	int testCase(){
-        int n=3;
-        vector< vector<int> > matrix = generateMatrix(n, n);
-        printVV(matrix);
+
+void printVector(vector<string> &words, bool newline=false) {
+    for(int i=0; i<words.size(); i++) {
+        cout << "\"" << words[i] << "\", ";
+        if (newline) cout << endl;
+    }
+    cout << endl;
+}
+
+void test(const char* A[], int len, int L) {
+    vector<string> words(A, A+len);
+
+    printVector(words);
+
+    vector<string> result = fullJustify(words, L);
+    cout << endl;
+    printVector(result, true);
+
+}
+
+#define TEST(a, L) test(a, sizeof(a)/sizeof(const char*), L)
+    int testCase(){
+        const char* w1[]={"This", "is", "an", "example", "of", "text", "justification."};
+        TEST(w1, 16);
         return 0;
     }
-};	
+};

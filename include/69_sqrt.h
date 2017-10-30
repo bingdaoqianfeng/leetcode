@@ -29,7 +29,7 @@ public:
         return end;
     }
     int testCase(){
-        int n = 7;
+        int n = 9;
         cout << "sqrt(" << n << ") = " << sqrt(n) << endl;
         return 0;
     }

@@ -1,19 +1,22 @@
-/********************************************************************************** 
-* 
+/**********************************************************************************
+*
 * Validate if a given string is numeric.
-* 
+*
 * Some examples:
 * "0" => true
 * "   0.1  " => true
 * "abc" => false
 * "1 a" => false
 * "2e10" => true
-* 
-* Note: It is intended for the problem statement to be ambiguous. 
+*
+* Note: It is intended for the problem statement to be ambiguous.
 *       You should gather all requirements up front before implementing one.
-* 
-*               
+*
+*
 **********************************************************************************/
+
+#define TEST(s) cout << "\"" << s << "\"" << " : " << isNumber(s) << endl
+
 class Solution {
 public:
 bool isdigit(const char c){
@@ -29,12 +32,12 @@ bool isNumber(const char *s) {
 
     //trim the space
     while(isspace(*s)) s++;
-    //check empty 
+    //check empty
     if (*s == '\0' ) return false;
     //check sign
     if (*s=='+' || *s=='-') s++;
-	
-	const char *head  = s;
+
+    const char *head  = s;
     for(; *s!='\0'; s++){
         // if meet point
         if ( *s == '.' ){
@@ -47,7 +50,7 @@ bool isNumber(const char *s) {
             point = true;
             continue;
         }
-		//if meet "e"
+        //if meet "e"
         if ( *s == 'e' ){
             if ( hasE == true || s == head) {
                 return false;
@@ -59,7 +62,7 @@ bool isNumber(const char *s) {
             hasE = true;
             continue;
         }
-		//if meet space, check the rest chars are space or not
+        //if meet space, check the rest chars are space or not
         if (isspace(*s)){
             for (; *s != '\0'; s++){
                 if (!isspace(*s)) return false;
@@ -69,14 +72,24 @@ bool isNumber(const char *s) {
         if ( !isdigit(*s) ) {
             return false;
         }
-	}
-	return true;
+    }
+    return true;
 }
 
-	int testCase(){
-        int n=3;
-        vector< vector<int> > matrix = generateMatrix(n, n);
-        printVV(matrix);
+    int testCase(){
+        TEST("1.044");
+    TEST(" 1.044 ");
+    TEST("1.a");
+    TEST("abc");
+    TEST("e");
+    TEST("1e");
+    TEST("1e2");
+    TEST("");
+    TEST(" ");
+    TEST("1.");
+    TEST(".2");
+    TEST(" . ");
+    TEST(".");
         return 0;
     }
-};	
+};

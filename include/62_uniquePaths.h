@@ -58,10 +58,20 @@ int uniquePaths(int m, int n) {
     return u;
 }
 
+void printMatrix(int*a, int m, int n)
+{
+    for (int i=0; i<m; i++){
+        for (int j=0; j<n; j++){
+            printf("%4d ", a[i*n+j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
     int testCase(){
-        int n=3;
-        vector< vector<int> > matrix = generateMatrix(n, n);
-        printVV(matrix);
-        return 0;
+        int m = 3, n=7;
+        int num = uniquePaths(m, n);
+        return num;
     }
 };  

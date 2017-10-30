@@ -71,7 +71,7 @@ using namespace std;
 //#include "include/66_plusOne.h"
 //#include "include/67_addBinary.h"
 //#include "include/68_textJustification.h"
-//#include "include/69_sqrt.h"
+#include "include/69_sqrt.h"
 //#include "include/70_climbStairs.h"
 //#include "include/71_simplifyPath.h"
 //#include "include/72_editDistance.cpp"  //hard
@@ -95,7 +95,7 @@ using namespace std;
 //#include "include/88_mergeTwoSortedArray.h"
 //#include "include/89_grayCode.h"
 //#include "include/90_subsets.II.h"
-#include "include/91_decodeWays.cpp"
+//#include "include/91_decodeWays.cpp"
 
 struct ListNode {
     int val;

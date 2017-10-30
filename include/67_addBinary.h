@@ -1,13 +1,13 @@
-/********************************************************************************** 
-* 
+/**********************************************************************************
+*
 * Given two binary strings, return their sum (also a binary string).
-* 
+*
 * For example,
 * a = "11"
 * b = "1"
 * Return "100".
-* 
-*               
+*
+*
 **********************************************************************************/
 
 class Solution {
@@ -31,10 +31,10 @@ string addBinary(string a, string b) {
     return result;
 }
 
-	int testCase(){
-        int n=3;
-        vector< vector<int> > matrix = generateMatrix(n, n);
-        printVV(matrix);
+    int testCase(){
+        string a = "11";
+        string b = "1";
+        cout << a << "+" << b << "=" << addBinary(a, b) << endl;
         return 0;
     }
-};	
+};
