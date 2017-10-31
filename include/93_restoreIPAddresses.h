@@ -26,10 +26,11 @@ vector<string> restoreIpAddresses(string s) {
 void restoreIpAddressesHelper(string& s, int start, int partNum, string ip, vector<string>& result) {
 
     int len = s.size();
+	//不满足最小或最大长度关系
     if ( len - start < 4-partNum  || len - start > (4-partNum)*3 ) {
         return;
     }
-
+	//已经计算好了一个ip
     if (partNum == 4 && start == len){
         ip.erase(ip.end()-1, ip.end());
         result.push_back(ip);
@@ -51,10 +52,6 @@ void restoreIpAddressesHelper(string& s, int start, int partNum, string ip, vect
 }
     int testCase(){
         string s = "25525511135";
-        if (argc>1){
-            s = argv[1];
-        }
-
         vector<string> result = restoreIpAddresses(s);
 
         cout << s << endl;
