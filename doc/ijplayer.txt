@@ -1,50 +1,51 @@
 
-ffpipenode_create_video_decoder_from_ffplay()
+-------------音频接口文件--------------------
+Android platform:
+ijksdl_aout_android_audiotrack.c
 
-    pipeline->func_open_video_decoder = func_open_video_decoder;
-    pipeline->func_open_audio_output  = func_open_audio_output;
-	
-	
-seek相关的
-avformat_seek_file()
+IOS platform:
+ijksdl_aout_ios_audiounit.m
+IJKSDLAudioQueueController.m
 
-    if (ffp->seek_at_start > 0) {
-        ffp_seek_to_l(ffp, ffp->seek_at_start);
-    }
-	
-is->seek_req
 
-ffplay中没有的代码：
-            ffp_toggle_buffering(ffp, 1);
-            ffp_notify_msg3(ffp, FFP_MSG_BUFFERING_UPDATE, 0, 0);
-
-			if (ffp->enable_accurate_seek) {
-                is->drop_aframe_count = 0;
-                is->drop_vframe_count = 0;
-                SDL_LockMutex(is->accurate_seek_mutex);
-                if (is->video_stream >= 0) {
-                    is->video_accurate_seek_req = 1;
-                }
-                if (is->audio_stream >= 0) {
-                    is->audio_accurate_seek_req = 1;
-                }
-                SDL_CondSignal(is->audio_accurate_seek_cond);
-                SDL_CondSignal(is->video_accurate_seek_cond);
-                SDL_UnlockMutex(is->accurate_seek_mutex);
-            }
 --------------android 平台下jni层开发的doc--------------------------
 http://staratsky.iteye.com/blog/1908964
 http://blog.csdn.net/xinchen200/article/details/25333047
 
 -----------------android平台sample的文件----------------------
+ijkplayer.c 					//IjkMediaPlayer *ijkmp_create(int (*msg_loop)(void*))
+ijkplayer_android.c				//IjkMediaPlayer *ijkmp_android_create(int(*msg_loop)(void*))
 SampleMediaListFragment.java
 VideoActivity.java   //总入口， P80
 IjkVideoView.java
 surfaceRenderView.java
+
+音视频都使用软解。
+视频虽然提供了mediacodec接口，但是并没有使用。
+
+
+ijkMediaPlayer.java
+AbstractMediaPlayer.java
+IMediaPlayer.java
 	
 -----------------ios平台接口文件----------------------
-IJKMoviePlayerViewController.m
+ijkplayer.c 					//IjkMediaPlayer *ijkmp_create(int (*msg_loop)(void*))
+ijkplayer_ios.m                 //IjkMediaPlayer *ijkmp_ios_create(int (*msg_loop)(void*))
 IJKFFMoviePlayerController.m
+KSYMoviePlayerController.m
+KSYPlayerVC.m
+KSMediaPlayerPreVC.m
+
+#与sdl audio相关的文件
+//IJKSDLGLView.m
+ijksdl_aout_ios_audiounit.m     //SDL_Aout *SDL_AoutIos_CreateForAudioUnit()
+IJKSDLAudioQueueController.m
+
+#与sdl video相关的文件
+ffp->node_vdec = ffpipeline_open_video_decoder(ffp->pipeline, ffp);  //ff_ffplay.c 创建播放器解码器
+
+音视频都使用软解。
+视频虽然提供了videotoolbox接口，但是并没有使用。
 
 ---------------一些结构体初始化的位置-------------------------
 1. VideoState
@@ -96,7 +97,7 @@ frame_queue_peek_writable: 负责将解码后的音频帧送入is->sampq队列�
 1. read_thread线程从媒体文件中取出demux后的数据，并将视频数据送到is->videoq队列中。
 主要调用函数：
 av_read_frame(ic, pkt)：从媒体文件中取出demux后的数据
-packet_queue_put(&is->videoq, pkt, p_pkttime)；将音频数据送入音频队列。
+packet_queue_put(&is->videoq, pkt, p_pkttime)；将视频数据送入视频队列。
 
 2. ffplay_video_thread线程负责从队列中取出数据，送给解码器解码，然后送到sample队列中。
 主要调用函数：
