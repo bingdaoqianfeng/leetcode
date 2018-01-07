@@ -1,0 +1,110 @@
+
+------------pod----------------
+1. nstall或update速度通常很慢，因为每次执行的时候都需要同步一下CocoaPods Specs，这个有几百兆的大小，同步一次非常耗时。
+所以如果你使用的第三方库并不是经常更新，则不用经常更新那个Specs库。可以使用以下命令：
+pod install --verbose --no-repo-update
+pod update --verbose --no-repo-update
+
+2. 如果不知道CocoPods管理的库中是否有你想要的第三方类库，那么你可以通过pod search命令进行查找。在终端中输入：
+pod search AFNetworking
+
+---------gradle,cmake, c and c++--------
+https://developer.android.com/studio/projects/add-native-code.html
+https://developer.android.com/ndk/guides/cmake.html
+
+-------json------------
+https://www.json.org/json-zh.html
+
+----------build-------
+http://gcda.corp.kuaishou.com:8080/view/快手video/job/KwaiLiveSDK_Player/
+
+#enable cmake debug
+set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g2 -ggdb")
+set(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
+
+
+---------git merger and tag-------------
+#merge
+git  merge --no-ff develop
+git push reviewDevelop
+
+#tag
+1. create tag.
+git tag -a r2.6.7.0
+git push ssh://liuyuxin@gerrit.corp.kuaishou.com:29418/pruned-ijkplayer --tags
+
+2. check out tag.
+git checkout tag_name
+
+#cherry-pic
+git cherry-pick 57ec1fd0804dfcf9b1701fd302d8489678d5c9e8
+git push ssh://liuyuxin@gerrit.corp.kuaishou.com:29418/pruned-ijkplayer
+
+#create branch abd push
+http://www.cnblogs.com/springbarley/archive/2012/11/03/2752984.html
+git checkout -b audio_gain      //create branch
+git push origin audio_gain:audio_gain  // local_branch_name:remote_branch_name
+
+#delete remote branch, e.g build_compile
+git push origin --delete build_compile
+git fetch -p
+
+------------grep所有.mk文件,找出包含endif字符串的.mk文件
+find . -name "*.mk" -type f |xargs grep endif
+
+---------------build ios app-----------
+1. 在git/gitTests中指定team.
+2. 在capabilities中将不支持的权限关闭。
+3. 删除KSNotificationService.
+
+--------------git push-------------
+git push origin HEAD:refs/for/refactor_ijkplayer
+
+git push
+
+-----------------jni4android----------------
+http://git.corp.kuaishou.com/video/jni4android     //增加了对函数重栽的支持
+https://travis-ci.org/Bilibili/jni4android         //开源代码的下载地址
+
+#how to build
+./get-deps.sh
+./configure
+make
+
+#how to run
+j4a -c  ijkmedia/ijkj4a/java/java/nio/ByteBuffer.java
+
+-------android study keyboard shortcuts-------
+command+l  快速跳转到行
+
+-------------git push command--------
+http://blog.csdn.net/hudashi/article/details/7664631/  //git rebase
+git add ijkmedia/ijkplayer/ff_ffplay.c
+git commit 
+git push reviewDevelop
+//此次review后，需要重新修改，再次提交. 可以按照下面的步骤，提交到相同的commit上。
+git add ijkmedia/ijkplayer/ff_ffplay.c
+git commit --amend
+git push reviewDevelop
+
+---------------git push 的配置 ---------------
+https://wiki.corp.kuaishou.com/pages/viewpage.action?pageId=12069743
+pip install gitpython
+
+git config --global user.name liuyuxin
+git config --global user.email "liuyuxin@kuaishou.com"
+
+---------------vim command----------------
+:set number
+control ]
+control t
+
+----------------start http server-----------
+Python起一个静态server
+默认8000端口
+python -m SimpleHTTPServer
+可以指定端口：
+python -m SimpleHTTPServer 8080
+python会以当前目录作为根目录起一个本地server, 根据终端的反馈比如访问localhost:8000就可以看到效果了。
+
