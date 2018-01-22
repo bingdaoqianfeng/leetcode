@@ -1,0 +1,629 @@
+
+
+
+--------------------MediaPlayerService/MediaPlayerService::Client-----------------------
+1. MediaPlayerService::Client::Client
+Breakpoint 2, android::MediaPlayerService::Client::Client (this=this@entry=0xb3894380, service=..., pid=pid@entry=7463, connId=3, client=..., audioSessionId=audioSessionId@entry=126, uid=1000, 
+    __in_chrg=<optimized out>, __vtt_parm=<optimized out>) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:585
+585	    mPid = pid;
+(gdb) bt
+#0  android::MediaPlayerService::Client::Client (this=this@entry=0xb3894380, service=..., pid=pid@entry=7463, connId=3, client=..., audioSessionId=audioSessionId@entry=126, uid=1000, 
+    __in_chrg=<optimized out>, __vtt_parm=<optimized out>) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:585
+#1  0xb6cfdd60 in android::MediaPlayerService::create (this=0xb386d2a0, client=..., audioSessionId=126) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:345
+#2  0xb6db22f2 in android::BnMediaPlayerService::onTransact (this=0xb386d2a0, code=1, data=..., reply=0xb2b01ca4, flags=flags@entry=16) at frameworks/av/media/libmedia/IMediaPlayerService.cpp:218
+#3  0xb6cfd450 in android::MediaPlayerService::onTransact (this=0xb386d2a0, code=<optimized out>, data=..., reply=0xb2b01ca4, flags=16)
+    at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:2926
+#4  0xb6f4a6ce in android::BBinder::transact (this=0xb386d2a4, code=1, data=..., reply=0xb2b01ca4, flags=16) at frameworks/native/libs/binder/Binder.cpp:108
+#5  0xb6f4f790 in android::IPCThreadState::executeCommand (this=this@entry=0xb2c283c0, cmd=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:1095
+#6  0xb6f4f8e6 in android::IPCThreadState::getAndExecuteCommand (this=this@entry=0xb2c283c0) at frameworks/native/libs/binder/IPCThreadState.cpp:435
+#7  0xb6f4f928 in android::IPCThreadState::joinThreadPool (this=0xb2c283c0, isMain=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:489
+#8  0xb6f53aa2 in android::PoolThread::threadLoop (this=0xb386f640) at frameworks/native/libs/binder/ProcessState.cpp:62
+#9  0xb6c954e2 in android::Thread::_threadLoop (user=0xb386f640) at system/core/libutils/Threads.cpp:776
+#10 0xb6c95052 in thread_data_t::trampoline (t=<optimized out>) at system/core/libutils/Threads.cpp:101
+#11 0xb6ed1178 in __pthread_start (arg=0xb38a3100, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#12 0xb6ecef84 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#13 0x00000000 in ?? ()
+
+2. MediaPlayerService::Client::setDataSource
+Breakpoint 5, android::MediaPlayerService::Client::setDataSource (this=0xb3894380, httpService=..., url=0xb42e707c "http://127.0.0.1:13499/iqiyi/stream_-101.m3u8?id=-101&tag_num=0&offset=0", 
+    headers=0xbeca569c) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:713
+713	    if (url == NULL)
+(gdb) bt
+#0  android::MediaPlayerService::Client::setDataSource (this=0xb3894380, httpService=..., url=0xb42e707c "http://127.0.0.1:13499/iqiyi/stream_-101.m3u8?id=-101&tag_num=0&offset=0", headers=0xbeca569c)
+    at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:713
+#1  0xb6db491c in android::BnMediaPlayer::onTransact (this=0xb3894380, code=<optimized out>, data=..., reply=0xbeca5774, flags=16) at frameworks/av/media/libmedia/IMediaPlayer.cpp:709
+#2  0xb6f4a6ce in android::BBinder::transact (this=0xb3894384, code=2, data=..., reply=0xbeca5774, flags=16) at frameworks/native/libs/binder/Binder.cpp:108
+#3  0xb6f4f790 in android::IPCThreadState::executeCommand (this=this@entry=0xb38930c0, cmd=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:1095
+#4  0xb6f4f8e6 in android::IPCThreadState::getAndExecuteCommand (this=this@entry=0xb38930c0) at frameworks/native/libs/binder/IPCThreadState.cpp:435
+#5  0xb6f4f928 in android::IPCThreadState::joinThreadPool (this=0xb38930c0, isMain=isMain@entry=true) at frameworks/native/libs/binder/IPCThreadState.cpp:489
+#6  0xb6fd6040 in main (argc=<optimized out>, argv=0xbeca5a14) at frameworks/av/media/mediaserver/main_mediaserver.cpp:141
+
+3. MediaPlayerService::Client::~Client
+Breakpoint 3, android::MediaPlayerService::Client::~Client (this=this@entry=0xb3894380, __in_chrg=<optimized out>, __vtt_parm=<optimized out>)
+    at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:604
+604	    mAudioOutput.clear();
+(gdb) ny
+Undefined command: "ny".  Try "help".
+(gdb) bt
+#0  android::MediaPlayerService::Client::~Client (this=this@entry=0xb3894380, __in_chrg=<optimized out>, __vtt_parm=<optimized out>) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:604
+#1  0xb6cfe13c in android::MediaPlayerService::Client::~Client (this=0xb3894380, __in_chrg=<optimized out>, __vtt_parm=<optimized out>)
+    at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:611
+#2  0xb6c93c5e in android::RefBase::decStrong (this=0xb3894420, id=0xb3873b80) at system/core/libutils/RefBase.cpp:353
+#3  0xb6f4efdc in android::IPCThreadState::processPendingDerefs (this=0xb2c28180) at frameworks/native/libs/binder/IPCThreadState.cpp:467
+#4  0xb6f4f922 in android::IPCThreadState::joinThreadPool (this=0xb2c28180, isMain=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:487
+#5  0xb6f53aa2 in android::PoolThread::threadLoop (this=0xb386f580) at frameworks/native/libs/binder/ProcessState.cpp:62
+#6  0xb6c954e2 in android::Thread::_threadLoop (user=0xb386f580) at system/core/libutils/Threads.cpp:776
+#7  0xb6c95052 in thread_data_t::trampoline (t=<optimized out>) at system/core/libutils/Threads.cpp:101
+#8  0xb6ed1178 in __pthread_start (arg=0xb38a5180, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#9  0xb6ecef84 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#10 0x00000000 in ?? ()
+
+
+4. MediaPlayerService::Client::disconnect
+Breakpoint 4, android::MediaPlayerService::Client::disconnect (this=this@entry=0xb3894380) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:620
+620	        Mutex::Autolock l(mLock);
+(gdb) bt
+#0  android::MediaPlayerService::Client::disconnect (this=this@entry=0xb3894380) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:620
+#1  0xb6cfe082 in android::MediaPlayerService::Client::~Client (this=this@entry=0xb3894380, __in_chrg=<optimized out>, __vtt_parm=<optimized out>)
+    at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:606
+#2  0xb6cfe13c in android::MediaPlayerService::Client::~Client (this=0xb3894380, __in_chrg=<optimized out>, __vtt_parm=<optimized out>)
+    at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:611
+#3  0xb6c93c5e in android::RefBase::decStrong (this=0xb3894420, id=0xb3873b80) at system/core/libutils/RefBase.cpp:353
+#4  0xb6f4efdc in android::IPCThreadState::processPendingDerefs (this=0xb2c28180) at frameworks/native/libs/binder/IPCThreadState.cpp:467
+#5  0xb6f4f922 in android::IPCThreadState::joinThreadPool (this=0xb2c28180, isMain=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:487
+#6  0xb6f53aa2 in android::PoolThread::threadLoop (this=0xb386f580) at frameworks/native/libs/binder/ProcessState.cpp:62
+#7  0xb6c954e2 in android::Thread::_threadLoop (user=0xb386f580) at system/core/libutils/Threads.cpp:776
+#8  0xb6c95052 in thread_data_t::trampoline (t=<optimized out>) at system/core/libutils/Threads.cpp:101
+#9  0xb6ed1178 in __pthread_start (arg=0xb38a5180, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#10 0xb6ecef84 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#11 0x00000000 in ?? ()
+
+
+5 MediaPlayer
+03-23 19:13:26.244   121   121 I DEBUG   : signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0
+03-23 19:13:26.260   121   121 I DEBUG   :     r0 00000000  r1 00000060  r2 0000000c  r3 00000000
+03-23 19:13:26.261   121   121 I DEBUG   :     r4 9763e820  r5 9763e81c  r6 9763e850  r7 9763e8a0
+03-23 19:13:26.261   121   121 I DEBUG   :     r8 9d747220  r9 9763e8a4  sl 0000000e  fp b6747e75
+03-23 19:13:26.261   121   121 I DEBUG   :     ip b6e7fe48  sp 9763e810  lr b6747ec3  pc b6747ec6  cpsr 200f0030
+03-23 19:13:26.261   121   121 I DEBUG   : 
+03-23 19:13:26.261   121   121 I DEBUG   : backtrace:
+03-23 19:13:26.264   121   121 I DEBUG   :     #00 pc 00062ec6  /system/lib/libmedia.so
+03-23 19:13:26.264   121   121 I DEBUG   :     #01 pc 00061159  /system/lib/libmedia.so (android::MediaPlayer::setDataSource(android::sp<android::IMediaHTTPService> const&, char const*, android::KeyedVector<android::String8, android::String8> const*)+76)
+03-23 19:13:26.265   121   121 I DEBUG   :     #02 pc 0001ef35  /system/lib/libmedia_jni.so
+03-23 19:13:26.265   121   121 I DEBUG   :     #03 pc 00a55def  /data/dalvik-cache/arm/system@framework@boot.oat
+
+user@user-OptiPlex-9020:~/source/devdata/inception_3_14/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmedia.so 00062ec6
+android::BpMediaPlayerService::create(android::sp<android::IMediaPlayerClient> const&, int)
+/home/user/source/devdata/inception_3_14/android/frameworks/av/media/libmedia/IMediaPlayerService.cpp:80
+user@user-OptiPlex-9020:~/source/devdata/inception_3_14/android$ 
+user@user-OptiPlex-9020:~/source/devdata/inception_3_14/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmedia.so 00061159
+android::MediaPlayer::setDataSource(android::sp<android::IMediaHTTPService> const&, char const*, android::KeyedVector<android::String8, android::String8> const*)
+/home/user/source/devdata/inception_3_14/android/frameworks/av/media/libmedia/mediaplayer.cpp:165
+user@user-OptiPlex-9020:~/source/devdata/inception_3_14/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmedia_jni.so  0001ef35
+android_media_MediaPlayer_setDataSourceAndHeaders
+/home/user/source/devdata/inception_3_14/android/frameworks/base/media/jni/android_media_MediaPlayer.cpp:229
+
+
+
+-------------------------MiPlayer------------------------------------------------------------------------------------------------------
+1. MiPlayer::prepareAsync
+(gdb) bt
+#0  MiPlayer::prepareAsync (this=0xb2e09500) at external/miplayer/libmiplayer/miplayer/MiPlayer.cpp:794
+#1  0xb5ef6cb6 in android::MediaPlayerService::Client::prepareAsync (this=<optimized out>) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:1083
+#2  0xb6c55c54 in android::BnMediaPlayer::onTransact (this=0xb373a180, code=6, data=..., reply=0xafaffca4, flags=16) at frameworks/av/media/libmedia/IMediaPlayer.cpp:929
+#3  0xb6dd76da in android::BBinder::transact (this=0xb373a184, code=6, data=..., reply=0xafaffca4, flags=16) at frameworks/native/libs/binder/Binder.cpp:108
+#4  0xb6ddc79c in android::IPCThreadState::executeCommand (this=this@entry=0xb34290c0, cmd=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:1095
+#5  0xb6ddc8f2 in android::IPCThreadState::getAndExecuteCommand (this=this@entry=0xb34290c0) at frameworks/native/libs/binder/IPCThreadState.cpp:435
+#6  0xb6ddc934 in android::IPCThreadState::joinThreadPool (this=0xb34290c0, isMain=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:489
+#7  0xb6de0a9e in android::PoolThread::threadLoop (this=0xb2c12250) at frameworks/native/libs/binder/ProcessState.cpp:62
+#8  0xb6da74e2 in android::Thread::_threadLoop (user=0xb2c12250) at system/core/libutils/Threads.cpp:776
+#9  0xb6da7052 in thread_data_t::trampoline (t=<optimized out>) at system/core/libutils/Threads.cpp:101
+#10 0xb6e898c0 in __pthread_start (arg=0xb2c21300, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#11 0xb6e877a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#12 0x00000000 in ?? ()
+
+
+2. MiPlayer::pause
+(gdb) bt
+#0  MiPlayer::pause (this=0xb3009300) at external/miplayer/libmiplayer/miplayer/MiPlayer.cpp:899
+#1  0xb5f2de7e in android::MediaPlayerService::Client::pause (this=0xb41739c0) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:1164
+#2  0xb6c8cc54 in android::BnMediaPlayer::onTransact (this=0xb41739c0, code=10, data=..., reply=0x9ec01ca4, flags=16) at frameworks/av/media/libmedia/IMediaPlayer.cpp:929
+#3  0xb6e0e6da in android::BBinder::transact (this=0xb41739c4, code=10, data=..., reply=0x9ec01ca4, flags=16) at frameworks/native/libs/binder/Binder.cpp:108
+#4  0xb6e1379c in android::IPCThreadState::executeCommand (this=this@entry=0xae8060c0, cmd=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:1095
+#5  0xb6e138f2 in android::IPCThreadState::getAndExecuteCommand (this=this@entry=0xae8060c0) at frameworks/native/libs/binder/IPCThreadState.cpp:435
+#6  0xb6e13934 in android::IPCThreadState::joinThreadPool (this=0xae8060c0, isMain=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:489
+#7  0xb6e17a9e in android::PoolThread::threadLoop (this=0xb414f9d0) at frameworks/native/libs/binder/ProcessState.cpp:62
+#8  0xb6dde4e2 in android::Thread::_threadLoop (user=0xb414f9d0) at system/core/libutils/Threads.cpp:776
+#9  0xb6dde052 in thread_data_t::trampoline (t=<optimized out>) at system/core/libutils/Threads.cpp:101
+#10 0xb6ec08c0 in __pthread_start (arg=0xb4183380, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#11 0xb6ebe7a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#12 0x00000000 in ?? ()
+
+3. EsOutChangePause 
+(gdb) bt
+#0  EsOutChangePause (out=out@entry=0xa2ce2a90, b_paused=true, i_date=172540145323) at external/miplayer/vlc/src/input/es_out.c:668
+#1  0xb2ab4844 in EsOutControlLocked (args=..., i_query=<optimized out>, out=0xa2ce2a90) at external/miplayer/vlc/src/input/es_out.c:3004
+#2  EsOutControl (out=0xa2ce2a90, i_query=<optimized out>, args=...) at external/miplayer/vlc/src/input/es_out.c:3160
+#3  0xb2a060c4 in es_out_vaControl (args=..., i_query=1, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+#4  es_out_Control (out=<optimized out>, i_query=65546) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:135
+#5  0xb2ab779c in es_out_SetPauseState (i_date=172540145323, b_paused=true, b_source_paused=true, p_out=<optimized out>) at external/miplayer/vlc/src/input/es_out.h:141
+#6  ControlLockedSetPauseState (p_out=<optimized out>, i_date=172540145323, b_paused=true, b_source_paused=true) at external/miplayer/vlc/src/input/es_out_timeshift.c:502
+#7  ControlLocked (p_out=<optimized out>, args=..., i_query=<optimized out>) at external/miplayer/vlc/src/input/es_out_timeshift.c:672
+#8  Control (p_out=<optimized out>, i_query=<optimized out>, args=...) at external/miplayer/vlc/src/input/es_out_timeshift.c:732
+#9  0xb2a060c4 in es_out_vaControl (args=..., i_query=-1290604544, out=0xa141d988) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+#10 es_out_Control (out=out@entry=0xa141d988, i_query=65546) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:135
+#11 0xb2a586a4 in es_out_SetPauseState (i_date=<optimized out>, b_paused=true, b_source_paused=true, p_out=0xa141d988) at external/miplayer/vlc/src/input/es_out.h:141
+#12 input_vaControl (p_input=p_input@entry=0x97ba6314, i_query=i_query@entry=-1227736144, args=..., args@entry=...) at external/miplayer/vlc/src/input/control.c:123
+#13 0xb2a58794 in input_Control (p_input=p_input@entry=0x97ba6314, i_query=8) at external/miplayer/vlc/src/input/control.c:57
+#14 0xb2a4a5b0 in libvlc_media_player_set_pause (p_mi=0xb311fc84, paused=1) at external/miplayer/vlc/lib/media_player.c:869
+#15 0xb29e7a64 in MiPlayer::pause (this=0xa0b11400) at external/miplayer/libmiplayer/miplayer/MiPlayer.cpp:912
+#16 0xb5f85e7e in android::MediaPlayerService::Client::pause (this=0xb3616180) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:1164
+#17 0xb6ce4c54 in android::BnMediaPlayer::onTransact (this=0xb3616180, code=10, data=..., reply=0x9e3ffca4, flags=16) at frameworks/av/media/libmedia/IMediaPlayer.cpp:929
+#18 0xb6e666da in android::BBinder::transact (this=0xb3616184, code=10, data=..., reply=0x9e3ffca4, flags=16) at frameworks/native/libs/binder/Binder.cpp:108
+#19 0xb6e6b79c in android::IPCThreadState::executeCommand (this=this@entry=0xb2bc30c0, cmd=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:1095
+#20 0xb6e6b8f2 in android::IPCThreadState::getAndExecuteCommand (this=this@entry=0xb2bc30c0) at frameworks/native/libs/binder/IPCThreadState.cpp:435
+#21 0xb6e6b934 in android::IPCThreadState::joinThreadPool (this=0xb2bc30c0, isMain=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:489
+#22 0xb6e6fa9e in android::PoolThread::threadLoop (this=0xa1011040) at frameworks/native/libs/binder/ProcessState.cpp:62
+#23 0xb6e364e2 in android::Thread::_threadLoop (user=0xa1011040) at system/core/libutils/Threads.cpp:776
+#24 0xb6e36052 in thread_data_t::trampoline (t=<optimized out>) at system/core/libutils/Threads.cpp:101
+#25 0xb6f188c0 in __pthread_start (arg=0xa1012080, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#26 0xb6f167a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#27 0x00000000 in ?? ()
+
+4 MiPlayer::setVideoSurfaceTexture
+#00 pc 0001fb70  /system/lib/libmiplayer.so (MiPlayer::setVideoSurfaceTexture(android::sp<android::IGraphicBufferProducer> const&)+72)
+#01 pc 00042a93  /system/lib/libmediaplayerservice.so (android::MediaPlayerService::Client::setVideoSurfaceTexture(android::sp<android::IGraphicBufferProducer> const&)+162)
+       ------android::MediaPlayerService::Client::setVideoSurfaceTexture(android::sp<android::IGraphicBufferProducer> const&)
+       ------/home/user/source/devdata/inception_3_22/android/frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:939
+#02 pc 00065a1d  /system/lib/libmedia.so (android::BnMediaPlayer::onTransact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+712)
+       ------android::BnMediaPlayer::onTransact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)
+       ------/home/user/source/devdata/inception_3_22/android/frameworks/av/media/libmedia/IMediaPlayer.cpp:739
+#03 pc 0001a6cd  /system/lib/libbinder.so (android::BBinder::transact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+60)
+       ------android::BBinder::transact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)
+       ------/home/user/source/devdata/inception_3_22/android/frameworks/native/libs/binder/Binder.cpp:108
+#04 pc 0001f78f  /system/lib/libbinder.so (android::IPCThreadState::executeCommand(int)+602)
+       ------android::IPCThreadState::executeCommand(int)
+       ------/home/user/source/devdata/inception_3_22/android/frameworks/native/libs/binder/IPCThreadState.cpp:1095
+#05 pc 0001f8e3  /system/lib/libbinder.so (android::IPCThreadState::getAndExecuteCommand()+38)
+       ------android::IPCThreadState::getAndExecuteCommand()
+       ------/home/user/source/devdata/inception_3_22/android/frameworks/native/libs/binder/IPCThreadState.cpp:435
+#06 pc 0001f925  /system/lib/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+48)
+       ------android::IPCThreadState::joinThreadPool(bool)
+       ------/home/user/source/devdata/inception_3_22/android/frameworks/native/libs/binder/IPCThreadState.cpp:489
+#07 pc 00023a9f  /system/lib/libbinder.so
+#08 pc 000104e1  /system/lib/libutils.so (android::Thread::_threadLoop(void*)+112)
+#09 pc 00010051  /system/lib/libutils.so
+#10 pc 00017177  /system/lib/libc.so (__pthread_start(void*)+30)
+#11 pc 00014f83  /system/lib/libc.so (__start_thread+6)
+
+5 OMXCodec层的调用堆栈
+OpenDecoder
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/modules/codec/omxil/micodec.c:193
+generic_start
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/modules/modules.c:351
+module_load
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/modules/modules.c:185
+vlc_module_load
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/modules/modules.c:277
+module_need
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/modules/modules.c:366
+LoadDecoderModule
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/decoder.c:844
+CreateDecoder
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/decoder.c:971
+decoder_New
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/decoder.c:285 (discriminator 3)
+input_DecoderNew
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/decoder.c:357
+EsCreateDecoder
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.c:1926
+EsSelect
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.c:2021
+EsOutSelect
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.c:2286
+EsOutControlLocked
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.c:2574
+es_out_vaControl
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+ControlLocked
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out_timeshift.c:629
+es_out_vaControl
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+es_out_SetMode
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.h:95
+Run
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/input.c:553
+joinable_thread
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/android/thread.c:366
+
+
+6 open of androidnativewindow
+04-15 10:54:24.921   121   121 I DEBUG   : backtrace:
+04-15 10:54:24.921   121   121 I DEBUG   :     #00 pc 00031a6c  /system/lib/libmiplayer.so
+04-15 10:54:24.921   121   121 I DEBUG   :     #01 pc 000baf1c  /system/lib/libmiplayer.so
+04-15 10:54:24.921   121   121 I DEBUG   :     #02 pc 000baf70  /system/lib/libmiplayer.so
+04-15 10:54:24.921   121   121 I DEBUG   :     #03 pc 000bb430  /system/lib/libmiplayer.so (vlc_module_load+1000)
+04-15 10:54:24.921   121   121 I DEBUG   :     #04 pc 000bb950  /system/lib/libmiplayer.so (module_need+24)
+04-15 10:54:24.921   121   121 I DEBUG   :     #05 pc 000ea9f0  /system/lib/libmiplayer.so
+04-15 10:54:24.921   121   121 I DEBUG   :     #06 pc 000ec2f0  /system/lib/libmiplayer.so (vout_NewDisplay+40)
+04-15 10:54:24.921   121   121 I DEBUG   :     #07 pc 000a8c3c  /system/lib/libmiplayer.so
+04-15 10:54:24.921   121   121 I DEBUG   :     #08 pc 000a071c  /system/lib/libmiplayer.so
+04-15 10:54:24.921   121   121 I DEBUG   :     #09 pc 000a221c  /system/lib/libmiplayer.so
+04-15 10:54:24.921   121   121 I DEBUG   :     #10 pc 000ccf38  /system/lib/libmiplayer.so
+04-15 10:54:24.921   121   121 I DEBUG   :     #11 pc 00017177  /system/lib/libc.so (__pthread_start(void*)+30)
+04-15 10:54:24.921   121   121 I DEBUG   :     #12 pc 00014f83  /system/lib/libc.so (__start_thread+6)
+
+generic_start
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/modules/modules.c:351
+module_load
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/modules/modules.c:185
+vlc_module_load
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/modules/modules.c:277
+module_need
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/modules/modules.c:366
+vout_display_New
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/video_output/display.c:131
+vout_NewDisplay
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/video_output/display.c:1380
+vout_OpenWrapper
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/video_output/vout_wrapper.c:67
+ThreadStart
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/video_output/video_output.c:1383
+ThreadControl
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/video_output/video_output.c:1499
+joinable_thread
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/android/thread.c:366
+
+
+7 没有设置display的width和height。 
+decoder_NewPicture
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/decoder.c:193
+DecodeVideo
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/modules/codec/omxil/micodec.c:308
+DecoderDecodeVideo
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/decoder.c:1725
+DecoderProcessVideo
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/decoder.c:2151
+joinable_thread
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/android/thread.c:366
+
+
+----------------------------------------------------------------------------------------------------------
+1 IGraphicBufferProducer介绍
+http://www.bkjia.com/Androidjc/862070.html
+IGraphicBufferProducer就是app和BufferQueue重要桥梁，GraphicBufferProducer承担着单个应用进程中的UI显示需求，与BufferQueue打交道的就是它。
+
+2 class Surface
+/*
+ * An implementation of ANativeWindow that feeds graphics buffers into a
+ * BufferQueue.
+ *
+ * This is typically used by programs that want to render frames through
+ * some means (maybe OpenGL, a software renderer, or a hardware decoder)
+ * and have the frames they create forwarded to SurfaceFlinger for
+ * compositing.  For example, a video decoder could render a frame and call
+ * eglSwapBuffers(), which invokes ANativeWindow callbacks defined by
+ * Surface.  Surface then forwards the buffers through Binder IPC
+ * to the BufferQueue's producer interface, providing the new frame to a
+ * consumer such as GLConsumer.
+ */ 
+
+3 Miplayer主要参考awesomeplayer.cpp.
+
+4 Mstplayer的代码
+路径：\android\device\mstar\common\libraries\media\mmplayer\mmp\platform\mstplayer
+
+5 Android系统下框架结构
+http://www.cnblogs.com/haiming/archive/2013/03/09/2948730.html
+源代码架构，从左往右是应用层，JNI层，FrameWork层。
+MediaPlayer.java->android_media_MediaPlayer.cpp->MediaPlayer.cpp->IMediaDeathNotifier.cpp->MediaPlayerService.cpp
+
+5.1 Java层接口文件 MediaPlayer.java 
+	1. handleMessage
+	2. postEventFromNative
+5.2 JNI层接口文件 android_media_MediaPlayer.cpp:  
+    JNIMediaPlayerListener::notify
+5.3 Mediaserver层文件
+    1. MediaPlayerService.cpp  : MediaPlayerService::Client::notify
+	2. IMediaDeathNotifier.cpp
+5.4 MediaPlayer.cpp
+
+6 字幕文件通过sendEvent回传内容给应用层的堆栈调用
+(gdb) bt
+#0  android::Parcel::write (this=this@entry=0x9951a120, data=data@entry=0x87209aa4, len=len@entry=40) at frameworks/native/libs/binder/Parcel.cpp:574
+#1  0xb6e054e4 in android::IPCThreadState::writeTransactionData (this=this@entry=0x9951a0c0, cmd=cmd@entry=1076388608, binderFlags=binderFlags@entry=17, handle=handle@entry=12, code=code@entry=1, 
+    data=..., statusBuffer=statusBuffer@entry=0x0) at frameworks/native/libs/binder/IPCThreadState.cpp:932
+#2  0xb6e05b00 in android::IPCThreadState::transact (this=0x9951a0c0, handle=12, code=code@entry=1, data=..., reply=reply@entry=0x87209ba8, flags=17, flags@entry=1)
+    at frameworks/native/libs/binder/IPCThreadState.cpp:563
+#3  0xb6e00d32 in android::BpBinder::transact (this=0x99626040, code=1, data=..., reply=0x87209ba8, flags=1) at frameworks/native/libs/binder/BpBinder.cpp:165
+#4  0xb6c8247c in android::BpMediaPlayerClient::notify (this=<optimized out>, msg=99, ext1=0, ext2=0, obj=0x99512080) at frameworks/av/media/libmedia/IMediaPlayerClient.cpp:48
+#5  0xb5f30b5e in android::MediaPlayerService::Client::notify (cookie=<optimized out>, msg=99, ext1=0, ext2=0, obj=0x99512080) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:1412
+#6  0x9a24d790 in sendEvent (obj=0x99512080, ext2=0, ext1=0, msg=99, this=0x99f0a900) at frameworks/av/include/media/MediaPlayerInterface.h:228
+#7  android::TimedTextPlayer::notifyListener (this=this@entry=0x99fca610, parcel=parcel@entry=0x99512080) at external/mitimedtextplayer/TimedTextPlayer/TimedTextPlayer.cpp:781
+#8  0x9a24dea4 in android::TimedTextPlayer::onMessageReceived (this=0x99fca610, msg=...) at external/mitimedtextplayer/TimedTextPlayer/TimedTextPlayer.cpp:520
+#9  0xb63ae3f0 in android::ALooperRoster::deliverMessage (this=0xb63b7020 <android::gLooperRoster>, msg=...) at frameworks/av/media/libstagefright/foundation/ALooperRoster.cpp:138
+#10 0xb63add70 in android::ALooper::loop (this=<optimized out>) at frameworks/av/media/libstagefright/foundation/ALooper.cpp:213
+#11 0xb6dd04e2 in android::Thread::_threadLoop (user=0x99df30e8) at system/core/libutils/Threads.cpp:776
+#12 0xb6dd0052 in thread_data_t::trampoline (t=<optimized out>) at system/core/libutils/Threads.cpp:101
+#13 0xb6ead714 in __pthread_start (arg=0x99d22a80, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#14 0xb6eab704 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#15 0x00000000 in ?? ()
+
+7 mstar参考代码
+/home/user/source/devdata/gladiator_5.0_1/android/device/mstar/common/libraries/media/mmplayer/mmp/platform/mmpSource
+
+8 Android多媒体架构
+MediaCodec.java -> android_media_MediaCodec.cpp -> MediaCodec.cpp ->ACodec.cpp
+
+android::ACodec::getPortFormat(unsigned int, android::sp<android::AMessage>&)
+/home/jenkins/workspace/gladiator_L/android/frameworks/av/media/libstagefright/ACodec.cpp:3323 (discriminator 1)
+android::ACodec::configureCodec(char const*, android::sp<android::AMessage> const&)
+/home/jenkins/workspace/gladiator_L/android/frameworks/av/media/libstagefright/ACodec.cpp:1625
+android::ACodec::LoadedState::onConfigureComponent(android::sp<android::AMessage> const&)
+/home/jenkins/workspace/gladiator_L/android/frameworks/av/media/libstagefright/ACodec.cpp:5067
+android::ACodec::LoadedState::onMessageReceived(android::sp<android::AMessage> const&)
+/home/jenkins/workspace/gladiator_L/android/frameworks/av/media/libstagefright/ACodec.cpp:5009
+android::AHierarchicalStateMachine::handleMessage(android::sp<android::AMessage> const&)
+/home/jenkins/workspace/Inception/android/frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp:58
+android::ACodec::onMessageReceived(android::sp<android::AMessage> const&)
+/home/jenkins/workspace/gladiator_L/android/frameworks/av/include/media/stagefright/ACodec.h:64
+android::ALooperRoster::deliverMessage(android::sp<android::AMessage> const&)
+/home/jenkins/workspace/Inception/android/frameworks/av/media/libstagefright/foundation/ALooperRoster.cpp:138
+android::ALooper::loop()
+/home/jenkins/workspace/Inception/android/frameworks/av/media/libstagefright/foundation/ALooper.cpp:213
+	
+9 Invoke的堆栈调用顺序
+(gdb) bt
+#0  MiPlayer::invoke (this=0xb4176800, request=..., reply=reply@entry=0x884ffca4) at external/miplayer/libmiplayer/miplayer/MiPlayer.cpp:1452
+#1  0xb5f76c4c in android::MediaPlayerService::Client::invoke (this=<optimized out>, request=..., reply=0x884ffca4) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:992
+#2  0xb6ccc8ae in android::BnMediaPlayer::onTransact (this=0xb2d06180, code=18, data=..., reply=0x884ffca4, flags=16) at frameworks/av/media/libmedia/IMediaPlayer.cpp:815
+#3  0xb6e486da in android::BBinder::transact (this=0xb2d06184, code=18, data=..., reply=0x884ffca4, flags=16) at frameworks/native/libs/binder/Binder.cpp:108
+#4  0xb6e4d796 in android::IPCThreadState::executeCommand (this=this@entry=0xb35fc0c0, cmd=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:1089
+#5  0xb6e4d8ba in android::IPCThreadState::getAndExecuteCommand (this=this@entry=0xb35fc0c0) at frameworks/native/libs/binder/IPCThreadState.cpp:435
+#6  0xb6e4d8fc in android::IPCThreadState::joinThreadPool (this=0xb35fc0c0, isMain=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:489
+#7  0xb6e51a66 in android::PoolThread::threadLoop (this=0x8850f040) at frameworks/native/libs/binder/ProcessState.cpp:62
+#8  0xb6e184e2 in android::Thread::_threadLoop (user=0x8850f040) at system/core/libutils/Threads.cpp:776
+#9  0xb6e18052 in thread_data_t::trampoline (t=<optimized out>) at system/core/libutils/Threads.cpp:101
+#10 0xb6ef5714 in __pthread_start (arg=0x88511080, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#11 0xb6ef3704 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#12 0x00000000 in ?? ()
+
+
+---------------------------------------------------------------------------------------
+只需对特效字幕ASS/SSA做这个改进，其它的普通字幕不需改动。
+ 
+另最好就改成特效字幕一个Dialog行送一个TimedText，因为
+如果放在一个里面，上面会把它当成一行里的文字来处理。
+
+遇到特效字幕的一个问题，如附件Dialog1“Start”和Dialog2“Stop”，其开始时间是一样的，但是结束时间不一样，
+下面往上送的时候是封在一个TimedText里面，其duration是第二个Dialog的10.5s，这样会
+导致第一个Dialog的显示时间缩短。
+ 
+能不能在处理这种Start时间一样的情况时，如果结束时间也一样才封在一起并上报，如果结束时间
+不一样则上报两条上来，谢谢！
+
+---------------MetadataRetriever--------------------------------------
+
+public Bitmap retrievePreviewImage(final String url, int height, int width){
+                  MILog.d(TAG, "retrievePreviewImage>> url=" + url + " ,h: " + height + " w: " + width);
+                 
+                  MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                  Bitmap bitmap = null;
+ 
+                  try {
+                          if(url.startsWith("http://")){
+                                   retriever.setDataSource(url, new HashMap<String, String>());   
+                          }else{
+                                   retriever.setDataSource(url);
+                          }
+                          long start = System.currentTimeMillis();
+                          bitmap = retriever.getFrameAtTime();
+                          MILog.d(TAG, "getFrameAtTime duration: " + (System.currentTimeMillis() - start));
+                          if (bitmap != null && bitmap.getWidth() > 0 && bitmap.getHeight() > 0) {
+                                   MILog.d(TAG, "getFrameAtTime url: " + url + " w," + bitmap.getWidth() + " h: " + bitmap.getHeight());
+                                   if(bitmap.getHeight() > height || bitmap.getWidth() > width){
+                                           
+                                            int newH = bitmap.getHeight();
+                                            int newW = bitmap.getWidth();
+                                           
+                                            if(bitmap.getHeight() > bitmap.getWidth()){
+                                                     newH = height;
+                                                     newW = (int)(((float)newH)*((float)bitmap.getWidth())/(float)bitmap.getHeight());
+                                            }else{
+                                                     newW = width;
+                                                     newH = (int)(((float)newW)*((float)bitmap.getHeight())/(float)bitmap.getWidth());
+                                            }
+                                           
+                                            MILog.d(TAG, "getFrameAtTime url: " + url + " newW," + newW + " newH: " + newH);
+                                           
+                                            Bitmap smallBitmap = Bitmap.createScaledBitmap(bitmap, newW , newH, false);
+                                            MILog.d(TAG, "after scale w : " + smallBitmap.getWidth() + " h: " + smallBitmap.getHeight());
+                                            if(bitmap != smallBitmap){
+                                                     bitmap.recycle();
+                                            }
+                                            return smallBitmap;
+                                   }
+                          }else{
+                                   MILog.d(TAG, "getFrameAtTime url: " + url + " is null");
+                          }
+                  } catch (Exception e) {
+                          MILog.e(TAG, e.getMessage(), e);
+                  } finally {
+                          retriever.release();
+                  }
+                  return null;
+         }
+
+
+--------------miplayer的入口程序---------------------------------
+/home/user/source/entrapment/android/external/miplayer/vlc-android/jni/miplayer
+MiPlayer.cpp/MiPlayer.h主要是针对android做了接口封装，里面调用libvlc的sdk实现视频的播放。
+libvlc的sdk可以学习http://blog.csdn.net/voipmaker/article/details/8627840
+--------------vlc/modules/demux/avformat/-----------------------------------
+avformat.c/h:针对ffmpeg的包装,主要是接口的定义，主要实现在mux.c和demux.c中
+--------------vlc/modules/codec/avcodec-----------------------------------
+软件解码源代码,入口文件avcodec.c
+set_capability("decoder", 180)：设置优先级
+
+--------------vlc/modules/codec/omxil/----------------------------------
+硬件解码源代码，入口程序micodec.c
+set_capability( "decoder", 80 ) 
+
+硬件厂商名字/
+e.g vlc/modules/codec/omxil/entrapment/OMXCodec.cpp
+
+--------------vlc/modules/video_output/----------------------------------
+androidnativewindow.cpp： android的显示
+mstarnativewindow.cpp： 配合硬件的显示
+androidsoftrenderer.cpp： 针对软件解码的显示
+--------------vlc/modules/audio_output/----------------------------------
+android_audiosink.cpp： android的音频接口
+--------------vlc/modules/access/----------------------------------
+访问文件的接口
+
+---------------get duration---------------------
+1       breakpoint     keep y   0x00007ffff755d2e0 in update_initial_timestamps at libavformat/utils.c:882
+	breakpoint already hit 17 times
+2       breakpoint     keep y   0x00007ffff755d420 in update_initial_timestamps at libavformat/utils.c:901
+	breakpoint already hit 1 time
+3       breakpoint     keep y   0x00007ffff755ef16 in parse_packet at libavformat/utils.c:1276
+	breakpoint already hit 28 times
+4       breakpoint     keep y   0x00007ffff75657d4 in avformat_find_stream_info at libavformat/utils.c:3172
+	breakpoint already hit 17 times
+5       breakpoint     keep y   0x00007ffff7562f37 in estimate_timings at libavformat/utils.c:2506
+
+5       breakpoint     keep y   0x00007ffff7562f37 in estimate_timings at libavformat/utils.c:2506
+	breakpoint already hit 1 time
+6       breakpoint     keep y   0x00007ffff7562846 in estimate_timings_from_pts at libavformat/utils.c:2377
+7       breakpoint     keep y   0x00007ffff7562ac3 in estimate_timings_from_pts at libavformat/utils.c:2428
+8       breakpoint     keep y   0x00007ffff7562d20 in estimate_timings_from_pts at libavformat/utils.c:2470
+demux.c:138
+demux.c:OpenDemux
+-------------------seek-------------------------------------
+
+(gdb) bt
+#0  es_out_Control (out=0xb8ff3f38, i_query=2) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:130
+#1  0x9016f280 in OpenDemux (p_this=0xb8c69a34, p_this@entry=<error reading variable: value has been optimized out>) at external/miplayer/vlc/modules/demux/avformat/demux.c:708
+#2  0x901f68dc in generic_start (func=<optimized out>, ap=...) at external/miplayer/vlc/src/modules/modules.c:351
+#3  0x901f690c in module_load (obj=<optimized out>, m=0xb8b83a58, init=0x901f68d5 <generic_start>, args=...) at external/miplayer/vlc/src/modules/modules.c:185
+#4  0x901f6c5c in vlc_module_load (obj=0xb8c69a34, capability=0x9026e6f0 "demux", name=0xb9378ab1 "any", strict=<optimized out>, probe=0x901f68d5 <generic_start>)
+    at external/miplayer/vlc/src/modules/modules.c:277
+#5  0x901f6fb6 in module_need (obj=<optimized out>, cap=<optimized out>, name=<optimized out>, strict=<optimized out>) at external/miplayer/vlc/src/modules/modules.c:366
+#6  0x901d1c66 in demux_New (p_obj=<optimized out>, p_parent_input=<optimized out>, psz_access=<optimized out>, psz_demux=<optimized out>, psz_location=0xb8c53b38 "25", s=0xb920639c, out=0xb8ff3f38, 
+    b_quick=false) at external/miplayer/vlc/src/input/demux.c:188
+#7  0x901d49e2 in InputSourceInit (p_input=<optimized out>, in=<optimized out>, psz_mrl=<optimized out>, psz_forced_demux=<optimized out>, b_in_can_fail=false)
+    at external/miplayer/vlc/src/input/input.c:2510
+#8  0x901d5564 in Init (p_input=0xb8ff2754) at external/miplayer/vlc/src/input/input.c:1273
+#9  0x901d8238 in Run (obj=0xb8ff2754) at external/miplayer/vlc/src/input/input.c:547
+#10 0x902058e8 in joinable_thread (data=0xb90a0f28) at external/miplayer/vlc/src/android/thread.c:359
+#11 0xb6ea720c in __thread_entry (func=0x902058ad <joinable_thread>, arg=0xb90a0f28, tls=0x8e4dadd0) at bionic/libc/bionic/pthread_create.cpp:105
+#12 0xb6ea73a8 in pthread_create (thread_out=0xb90a0f28, attr=<optimized out>, start_routine=0x902058ad <joinable_thread>, arg=0x78) at bionic/libc/bionic/pthread_create.cpp:224
+#13 0x00000000 in ?? ()
+
+
+#0  Control (p_out=0xb8bbd408, i_query=65548, args=...) at external/miplayer/vlc/src/input/es_out_timeshift.c:728
+#1  0x901d2e8c in es_out_vaControl (args=..., i_query=-1877135731, out=<optimized out>) at external/miplayer/vlc/src/../include/vlc_es_out.h:126
+#2  es_out_Control (out=<optimized out>, i_query=65548) at external/miplayer/vlc/src/../include/vlc_es_out.h:135
+#3  0x901d6a7e in es_out_SetTime (p_out=<optimized out>, i_date=<optimized out>) at external/miplayer/vlc/src/input/es_out.h:149
+#4  Control (p_input=0xb8b0d34c, i_type=4, val=...) at external/miplayer/vlc/src/input/input.c:1797
+#5  0x901d781c in MainLoop (p_input=0xb8b0d34c, b_interactive=<optimized out>) at external/miplayer/vlc/src/input/input.c:841
+#6  0x901d82d2 in Run (obj=0xb8b0d34c) at external/miplayer/vlc/src/input/input.c:555
+#7  0x902058e8 in joinable_thread (data=0xb8bbd3d0) at external/miplayer/vlc/src/android/thread.c:359
+#8  0xb6ea720c in __thread_entry (func=0x902058ad <joinable_thread>, arg=0xb8bbd3d0, tls=0x8e4dadd0) at bionic/libc/bionic/pthread_create.cpp:105
+#9  0xb6ea73a8 in pthread_create (thread_out=0xb8bbd3d0, attr=<optimized out>, start_routine=0x902058ad <joinable_thread>, arg=0x78) at bionic/libc/bionic/pthread_create.cpp:224
+#10 0x00000000 in ?? ()
+
+
+#0  Control (p_demux=0xb8c31ef4, i_query=0, args=...) at external/miplayer/vlc/modules/demux/avformat/demux.c:1182
+#1  0x901d2da0 in demux_vaControl (args=..., i_query=-1877135967, p_demux=<optimized out>) at external/miplayer/vlc/src/input/demux.h:48
+#2  demux_Control (p_demux=<optimized out>, i_query=0) at external/miplayer/vlc/src/input/demux.h:56
+#3  0x901d2ed0 in MainLoopInterface (p_input=0xb8b0d34c) at external/miplayer/vlc/src/input/input.c:701
+#4  0x901d3468 in interfaceupdate (data=0xb8b0d34c) at external/miplayer/vlc/src/input/input.c:534
+#5  interfaceupdate (data=0xb8b0d34c) at external/miplayer/vlc/src/input/input.c:527
+#6  0x90206592 in vlc_timer_thread (data=0xb93b52d8) at external/miplayer/vlc/src/posix/timer.c:73
+#7  0x902058e8 in joinable_thread (data=0xb8c31040) at external/miplayer/vlc/src/android/thread.c:359
+#8  0xb6ea720c in __thread_entry (func=0x902058ad <joinable_thread>, arg=0xb8c31040, tls=0x8c004dd0) at bionic/libc/bionic/pthread_create.cpp:105
+#9  0xb6ea73a8 in pthread_create (thread_out=0xb8c31040, attr=<optimized out>, start_routine=0x902058ad <joinable_thread>, arg=0x78) at bionic/libc/bionic/pthread_create.cpp:224
+#10 0x00000000 in ?? ()
+
+
+#0  av_seek_frame (s=0xb8c4c990, stream_index=-1, timestamp=1319533000, flags=1) at external/ffmpeg2-2/./libavformat/utils.c:2231
+#1  0x9016d9fc in Control (p_demux=0xb8c321fc, i_query=<optimized out>, args=...) at external/miplayer/vlc/modules/demux/avformat/demux.c:1273
+#2  0x901d2da0 in demux_vaControl (args=..., i_query=-1877135967, p_demux=<optimized out>) at external/miplayer/vlc/src/input/demux.h:48
+#3  demux_Control (p_demux=<optimized out>, i_query=4) at external/miplayer/vlc/src/input/demux.h:56
+#4  0x901d6aa0 in Control (p_input=0xb8b4028c, i_type=4, val=...) at external/miplayer/vlc/src/input/input.c:1800
+#5  0x901d781c in MainLoop (p_input=0xb8b4028c, b_interactive=<optimized out>) at external/miplayer/vlc/src/input/input.c:841
+#6  0x901d82d2 in Run (obj=0xb8b4028c) at external/miplayer/vlc/src/input/input.c:555
+#7  0x902058e8 in joinable_thread (data=0xb8c38eb0) at external/miplayer/vlc/src/android/thread.c:359
+#8  0xb6ea720c in __thread_entry (func=0x902058ad <joinable_thread>, arg=0xb8c38eb0, tls=0x8e0e2dd0) at bionic/libc/bionic/pthread_create.cpp:105
+#9  0xb6ea73a8 in pthread_create (thread_out=0xb8c38eb0, attr=<optimized out>, start_routine=0x902058ad <joinable_thread>, arg=0x78) at bionic/libc/bionic/pthread_create.cpp:224
+#10 0x00000000 in ?? ()
+
+------------------------------------------------------------------------------------
+(gdb) bt
+#0  cook_decode_init (avctx=0xb8082020) at external/ffmpeg2-2/./libavcodec/cook.c:1062
+#1  0x8f08f18e in avcodec_open2 (avctx=0xb8082020, codec=<optimized out>, options=0x8dea1780) at external/ffmpeg2-2/./libavcodec/utils.c:1440
+#2  0x8f184cea in avformat_find_stream_info (ic=0xb80eb350, options=0x8dea1780) at external/ffmpeg2-2/./libavformat/utils.c:3159
+#3  0x9034175e in OpenDemux (p_this=0xb80e9a04, p_this@entry=<error reading variable: value has been optimized out>) at external/miplayer/vlc/modules/demux/avformat/demux.c:345
+#4  0x903c98dc in generic_start (func=<optimized out>, ap=...) at external/miplayer/vlc/src/modules/modules.c:351
+#5  0x903c990c in module_load (obj=<optimized out>, m=0xb809a390, init=0x903c98d5 <generic_start>, args=...) at external/miplayer/vlc/src/modules/modules.c:185
+#6  0x903c9c5c in vlc_module_load (obj=0xb80e9a04, capability=0x904416f0 "demux", name=0xb80e9a81 "any", strict=<optimized out>, probe=0x903c98d5 <generic_start>)
+    at external/miplayer/vlc/src/modules/modules.c:277
+#7  0x903c9fb6 in module_need (obj=<optimized out>, cap=<optimized out>, name=<optimized out>, strict=<optimized out>) at external/miplayer/vlc/src/modules/modules.c:366
+#8  0x903a4c66 in demux_New (p_obj=<optimized out>, p_parent_input=<optimized out>, psz_access=<optimized out>, psz_demux=<optimized out>, psz_location=0xb80e9918 "24", s=0xb80e98ac, out=0xb80d5090, 
+    b_quick=false) at external/miplayer/vlc/src/input/demux.c:188
+#9  0x903a79e2 in InputSourceInit (p_input=<optimized out>, in=<optimized out>, psz_mrl=<optimized out>, psz_forced_demux=<optimized out>, b_in_can_fail=false)
+    at external/miplayer/vlc/src/input/input.c:2510
+#10 0x903a8564 in Init (p_input=0xb80ace34) at external/miplayer/vlc/src/input/input.c:1273
+#11 0x903ab238 in Run (obj=0xb80ace34) at external/miplayer/vlc/src/input/input.c:547
+#12 0x903d88e8 in joinable_thread (data=0xb80e9098) at external/miplayer/vlc/src/android/thread.c:359
+#13 0xb6e4d20c in __thread_entry (func=0x903d88ad <joinable_thread>, arg=0xb80e9098, tls=0x8dea1dd0) at bionic/libc/bionic/pthread_create.cpp:105
+#14 0xb6e4d3a8 in pthread_create (thread_out=0xb80e9098, attr=<optimized out>, start_routine=0x903d88ad <joinable_thread>, arg=0x78) at bionic/libc/bionic/pthread_create.cpp:224
+#15 0x00000000 in ?? ()
+
+-----------------------ts file seek-------------------------------------------
+(gdb) bt
+#0  mpegts_read_packet (s=0x6580e0, pkt=0x7fffffffd000) at libavformat/mpegts.c:2597
+#1  0x00007ffff755ff49 in ff_read_packet (s=0x6580e0, pkt=0x7fffffffd000) at libavformat/utils.c:665
+#2  0x00007ffff75627ce in read_frame_internal (s=0x6580e0, pkt=0x7fffffffd250) at libavformat/utils.c:1306
+#3  0x00007ffff7563525 in av_read_frame (s=0x6580e0, pkt=0x7fffffffd250) at libavformat/utils.c:1465
+#4  0x00007ffff74c6462 in mpegts_get_dts (s=0x6580e0, stream_index=0, ppos=0x7fffffffd370, pos_limit=9223372036854775807) at libavformat/mpegts.c:2690
+#5  0x00007ffff756426e in ff_read_timestamp (s=0x6580e0, stream_index=0, ppos=0x7fffffffd370, pos_limit=9223372036854775807, read_timestamp=0x7ffff74c6338 <mpegts_get_dts>) at libavformat/utils.c:1765
+#6  0x00007ffff7564898 in ff_gen_search (s=0x6580e0, stream_index=0, target_ts=5496005, pos_min=0, pos_max=90000, pos_limit=-1, ts_min=-9223372036854775808, ts_max=-9223372036854775808, flags=1, 
+    ts_ret=0x7fffffffd538, read_timestamp=0x7ffff74c6338 <mpegts_get_dts>) at libavformat/utils.c:1893
+#7  0x00007ffff756459e in ff_seek_frame_binary (s=0x6580e0, stream_index=0, target_ts=5496005, flags=1) at libavformat/utils.c:1824
+#8  0x00007ffff75651e0 in seek_frame_internal (s=0x6580e0, stream_index=0, timestamp=5496005, flags=1) at libavformat/utils.c:2106
+#9  0x00007ffff75652e1 in av_seek_frame (s=0x6580e0, stream_index=-1, timestamp=61066722, flags=1) at libavformat/utils.c:2129
+#10 0x00007ffff75654de in avformat_seek_file (s=0x6580e0, stream_index=-1, min_ts=-9223372036854775808, ts=61066722, max_ts=61066722, flags=0) at libavformat/utils.c:2180
+#11 0x00000000004113ea in open_input_file (o=0x7fffffffd860, filename=0x7fffffffe21b "/home/user/source/mediafiles/tsfiles/DUHD 三星-50Bps.ts") at ffmpeg_opt.c:909
+#12 0x0000000000419564 in open_files (l=0x63a0d8, inout=0x430b1f "input", open_file=0x410ad5 <open_input_file>) at ffmpeg_opt.c:2699
+#13 0x00000000004196f0 in ffmpeg_parse_options (argc=10, argv=0x7fffffffde08) at ffmpeg_opt.c:2736
+#14 0x000000000042d463 in main (argc=10, argv=0x7fffffffde08) at ffmpeg.c:3919
+
+
+
+--------- libavformat/utils.c:estimate_timings_from_pts
+--------- -ss 00:10:00.000  -i ~/source/mediafiles/tsfiles/woof_3DTV.HSBS.1080P.TS -c:v libx264 -c:a copy ~/source/mediafiles/test.mp4
+filesize = 6,421,741,756
+
+
+offset=6,411,741,756
+{buf = 0x651320, pts = 475851175, dts = 475833157, data = 0x670240 "", size = 29866, stream_index = 0, flags = 0, side_data = 0x0, side_data_elems = 0, duration = 0, destruct = 0x0, 
+  priv = 0x10000f78904a8, pos = 6411744512, convergence_duration = 0}
+{buf = 0x651360, pts = 475842166, dts = 475836160, data = 0x6a2260 "", size = 21009, stream_index = 0, flags = 0, side_data = 0x0, side_data_elems = 0, duration = 0, destruct = 0x0, 
+  priv = 0x10000f78904a8, pos = 6411777600, convergence_duration = 0}
+
+
+offset=6,420,741,756  //error
+ {buf = 0x654fe0, pts = 476748761, dts = 476748761, 
+  data = 0x654be0 "\vwl\223\024@C\177\360\a\002\363b\335\006\006\006\006\240\300\300\300\337U\207SPK\213\206\222*\037~]\312j\262O\362\065k\212\263\326S\245q\301\373\324\352\237,\337^\023aSN\262\225N_\277\204\351\064BH\211<\210&o\a\t\351U\206M+\235\313\031\337ܯ\207XT\323\370\365\372\a\365\341OK\020\222bOU\215\235q", size = 768, stream_index = 1, flags = 0, side_data = 0x0, side_data_elems = 0, 
+  duration = 0, destruct = 0x0, priv = 0x10000f78904a8, pos = 6420796336, convergence_duration = 0}
+{buf = 0x655f00, pts = 476750872, dts = 224023, data = 0x670240 "", size = 10038, stream_index = 0, flags = 0, side_data = 0x0, side_data_elems = 0, duration = 0, destruct = 0x0, 
+  priv = 0x10000f78904a8, pos = 6420785996, convergence_duration = 0}
+
+--------------------------libstagefright------------------------
+/home/user/source/forrestgump/frameworks/av/media/libstagefright
+AwesomePlayer.cpp 是入口
+OMXCodec.cpp负责解码
+
+

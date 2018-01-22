@@ -1,0 +1,1338 @@
+r --demux=avformat ~/source/mediafiles/HD.Club-4K-Chimei-inn-20mbps.mp4
+
+使用vst播放pptv的"卑鄙的我番外篇"，视频出现花瓶，无法观看。
+--demux=avformat "http://10.235.173.12:9006/record.mp4?playlink=ppvod://6b1df5f959fd0c502792ac3f5e197839.mp4%3ftype=fpp%26k=194b38c001f567993b6dc7e36b071d1a-98d1-1442560053%26key=719c8c46d2dfc92cf846168662dae70f"
+
+
+
+r  --demux=avformat http://hot.vrs.ptsh.gitv.tv/ipad1710329_4652306955052_4921640.m3u8?plat=15&pt=6&prod=ott&pg=1&ch=v&qd=18340800&uid=8b7c4c8b97205431541e17e801d3169e 
+
+ http://101.227.173.61/ipad?file=/195/173/hCiBiBHDRDiM93IgErVevG.mp4&start=6.199&end=36.2&ch=tv&cateCode=100106;100108;100118&uid=8b7c4c8b97205431541e17e801d3169e&plat=15&pt=6&cv=null&qd=18340800&prod=ott&pg=1&vid=1710329&eye=0&sig=oJqTWZF9AkKdUvv48p8_bf0qi3etLi0w 
+
+r  --demux=avformat /home/user/source/mediafiles/1.rmvb
+r  --demux=avformat ~/source/mediafiles/灰度图/灰阶图\ \ 30.avi
+---------------安装 卸载 vlc-------------------
+sudo apt-get update
+sudo apt-get install vlc browser-plugin-vlc
+
+sudo apt-get remove vlc
+sudo apt-get remove browser-plugin-vlc
+sudo apt-get purge vlc
+
+----------------------多媒体知识文档---------------------
+1 http://bbs.baofengcloud.com/blog-30-3.html
+2 useragent 
+----------------------------------------------breakpoint-----------------------------------------------
+gdb ./vlc
+
+var_GetChecked  
+OpenDemux
+Demux
+decoder_New
+ffmpeg_OpenCodec
+DecodeVideo
+DecodeAudio
+VoutCreate
+
+block_FifoGet
+block_FifoPut
+picture_fifo_Push
+picture_fifo_Peek
+picture_fifo_Pop
+aout_DecPlay
+aout_OutputPlay
+vout_display_Display
+input_EsOutNew
+----------------------------------------------thread-----------------------------------------------
+1 main playlist thread
+main()->libvlc_new()->libvlc_InternalInit()->GetFilenames()->pl_Get()->playlist_Create()->playlist_Activate()->vlc_clone( &p_sys->thread, Thread, p_playlist,VLC_THREAD_PRIORITY_LOW ) // src/playlist/thread.c
+这个线程会检查playlist中是否有需要播放的item，有的话，就调用PlayItem来播放。PlayItem会调用input_start()来播放。
+
+2 This thread does the preparsing and issues the art fetching requests
+main()->libvlc_new()->libvlc_InternalInit()->GetFilenames()->playlist_AddExt()->playlist_AddInput()->GoAndPreparse()->playlist_PreparseEnqueue()->playlist_preparser_Push()
+
+3  Start a input_thread_t created by input_Create. The thread function is Run of src/input/input.c.
+   Run: main thread loop This is the "normal" thread that spawns the input processing chain, reads the stream, cleans up and waits
+   MainLoop:  The main input loop.
+Thread()/*就是main playlist thread, src/playlist/thread.c*/->LoopRequest()->PlayItem()->input_Start()->vlc_clone( &p_input->p->thread,Run, p_input, VLC_THREAD_PRIORITY_INPUT )->Run()->MainLoop() 
+
+4 创建decoder线程DecoderThread in src/input/decoder.c,该线程负责把数据送入解码器，让解码器不停的解码数据。
+Run()->Init()->InitPrograms()->es_out_SetMode()...->EsOutSelect()->EsSelect()->EsCreateDecoder()->input_DecoderNew()->decoder_New()->DecoderThread()
+  DecoderThread线程负责从fifo中取出数据包，并送给decoder来解码。目前看vidoe和audio都有独立的线程负责从fifo中拿数据，进行解码。
+
+------------------------------------------demux,decode模块调用关系-----------------------------------------
+1 demux模块的open函数
+Thread()->Preparse()->input_Preparse()->Init()->InputSourceInit()->demux_New()->module_need()->vlc_module_load()->module_load()->generic_start()->OpenDemux();
+
+2 demux模块的demux函数，这个函数会被线程Run循环调用，不断取出音视频数据。
+Run()->MainLoop()->MainLoopDemux()->demux_Demux()->Demux()
+
+3 demux模块demux出来的数据，要送到decode中，最终是通过input/es_out.c:1905中的EsOutSend实现的。
+Run()->MainLoop()->MainLoopDemux()->demux_Demux()->Demux()->es_out_Send()->Send()->CmdExecuteSend()->es_out_Send()->EsOutSend()
+
+
+4 decoder模块是如何被加载并打开的,以ffmpeg_OpenCodec解码器为例
+4.1 打开decoder模块,最终调用OpenDecoder() //avcodec/avcodec.c:264
+    OpenDecoder()会打开具体的decoder，对于不同的stream,在这里会给音视频的函数指针初始化具体的函数接口：p_dec->pf_decode_video = DecodeVideo, p_dec->pf_decode_audio = DecodeAudio 和 p_dec->pf_decode_sub = DecodeSubtitle。
+Run()->Init()->InitPrograms()->...input_DecoderNew()->decoder_New()->CreateDecoder()->module_need()->vlc_module_load()->module_load()->generic_start->OpenDecoder() //avcodec/avcodec.c:264
+4.2 初始化decoder模块
+OpenDecoder()->InitVideoDec()->ffmpeg_OpenCodec()  //avcodec/avcodec.c:386
+#0  ffmpeg_OpenCodec (p_dec=0x7fffd624bab8) at avcodec/avcodec.c:386
+#1  0x00007fffcea69795 in InitVideoDec (p_dec=0x7fffd624bab8, p_context=0x7fffd4c16e80, p_codec=0x7fffe7381de0 <ff_h264_decoder>, i_codec_id=28, 
+    psz_namecodec=0x7ffff7987428 <p_list_video+10504> "H264 - MPEG-4 AVC (part 10)") at avcodec/video.c:436
+#2  0x00007fffcea710b2 in OpenDecoder (p_this=0x7fffd624bab8) at avcodec/avcodec.c:319
+4.3 视频解码,DecoderDecodeVideo中，根利用函数指针pf_decode_video，调用具体的decoder。对于android，就会调用omx层的解码器，对于软解，就会调用相应的软件解码器。
+    对于DecodeVideo()，解码后的数据会存放在picture_t *p_pic;中，返回给DecoderDecodeVideo。
+DecoderThread()->DecoderProcess()->DecoderProcessVideo()->DecoderDecodeVideo()->DecodeVideo()  //video.c
+4.4音频解码，同上。 
+DecoderThread()->DecoderProcess()->DecoderProcessAudio()->DecoderDecodeAudio()->DecodeAudio()
+
+5 access模块,file操作的access模块是file.c。
+main()->libvlc_new()->libvlc_InternalInit()->GetFilenames()->pl_Get()->playlist_Create()->playlist_MLLoad()->input_Read()->Init()->InputSourceInit()->access_Control()->access_vaControl()->FileControl() //file.c:371
+
+6 video output模块，负责把视频解码后的数据帧送到render中播放。
+6.1 创建的线程是Thread in video_output/video_output.c，该线程负责从picture_fifo_Pop中读出视频帧。
+(gdb) bt
+#0  VoutCreate (object=0x6d2808, cfg=0x7fffe573a840) at video_output/video_output.c:116
+#1  0x00007ffff7919664 in vout_Request (object=0x6d2808, cfg=0x7fffe573a840) at video_output/video_output.c:231
+#2  0x00007ffff7906703 in RequestVout (p_resource=0x6bcc20, p_vout=0x0, p_fmt=0x7fffe573a900, dpb_size=31, b_recycle=true) at input/resource.c:238
+#3  0x00007ffff79070d7 in input_resource_RequestVout (p_resource=0x6bcc20, p_vout=0x0, p_fmt=0x7fffe573a900, dpb_size=31, b_recycle=true) at input/resource.c:467
+#4  0x00007ffff78eb02c in vout_new_buffer (p_dec=0x7fffd624ddc8) at input/decoder.c:2375
+#5  0x00007ffff78e5eec in decoder_NewPicture (p_decoder=0x7fffd624ddc8) at input/decoder.c:191
+#6  0x00007fffcea68ed4 in ffmpeg_NewPictBuf (p_dec=0x7fffd624ddc8, p_context=0x7fffd4c169c0) at avcodec/video.c:177
+#7  0x00007fffcea6a97a in ffmpeg_dr_GetFrameBuf (p_context=0x7fffd4c169c0) at avcodec/video.c:960
+#8  0x00007fffcea6ab8b in ffmpeg_GetFrameBuf (p_context=0x7fffd4c169c0, p_ff_pic=0x7fffe01a40e0) at avcodec/video.c:1037
+#9  0x00007fffe6d02178 in get_buffer_internal (avctx=0x7fffd4c169c0, frame=0x7fffe01a40e0, flags=1) at libavcodec/utils.c:878
+#10 0x00007fffe6d026da in ff_get_buffer (avctx=0x7fffd4c169c0, frame=0x7fffe01a40e0, flags=1) at libavcodec/utils.c:990
+#11 0x00007fffe6c37194 in submit_packet (p=0x7fffd6247fc0, avpkt=0x7fffe573ac60) at libavcodec/pthread_frame.c:390
+#12 0x00007fffe6c372f4 in ff_thread_decode_frame (avctx=0x7fffd6246b40, picture=0x7fffd6246fa0, got_picture_ptr=0x7fffe573adc0, avpkt=0x7fffe573ac60) at libavcodec/pthread_frame.c:429
+#13 0x00007fffe6d0622e in avcodec_decode_video2 (avctx=0x7fffd6246b40, picture=0x7fffd6246fa0, got_picture_ptr=0x7fffe573adc0, avpkt=0x7fffe573ad20) at libavcodec/utils.c:2160
+#14 0x00007fffcea69ccd in DecodeVideo (p_dec=0x7fffd624ddc8, pp_block=0x7fffe573adf0) at avcodec/video.c:610
+#15 0x00007ffff78e8f9d in DecoderDecodeVideo (p_dec=0x7fffd624ddc8, p_block=0x7fffd621fc80) at input/decoder.c:1479
+#16 0x00007ffff78e9b35 in DecoderProcessVideo (p_dec=0x7fffd624ddc8, p_block=0x7fffd621fc80, b_flush=false) at input/decoder.c:1841
+#17 0x00007ffff78ea0bc in DecoderProcess (p_dec=0x7fffd624ddc8, p_block=0x7fffd621fc80) at input/decoder.c:2014
+#18 0x00007ffff78e7a7e in DecoderThread (p_data=0x7fffd624ddc8) at input/decoder.c:936
+#19 0x00007ffff6f3c182 in start_thread (arg=0x7fffe573b700) at pthread_create.c:312
+#20 0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+6.2 线程Thread把取出来的视频帧送到xvideo.c中Display中显示。
+(gdb) bt
+#0  Display (vd=0x7fffbc001248, pic=0x7fffbc011dd0, subpicture=0x0) at xcb/xvideo.c:704
+#1  0x00007ffff7918c11 in vout_display_Display (vd=0x7fffbc001248, picture=0x7fffbc011dd0, subpicture=0x0) at ../include/vlc_vout_wrapper.h:57
+#2  0x00007ffff791be8a in ThreadDisplayRenderPicture (vout=0x7fffe2250438, is_forced=true) at video_output/video_output.c:1052
+#3  0x00007ffff791c1d8 in ThreadDisplayPicture (vout=0x7fffe2250438, now=false, deadline=0x7fffe41ebef0) at video_output/video_output.c:1125
+#4  0x00007ffff791c227 in ThreadManage (vout=0x7fffe2250438, deadline=0x7fffe41ebef0, interlacing=0x7fffe41ebee0) at video_output/video_output.c:1136
+#5  0x00007ffff791d58e in Thread (object=0x7fffe2250438) at video_output/video_output.c:1569
+#6  0x00007ffff6f3c182 in start_thread (arg=0x7fffe41ec700) at pthread_create.c:312
+#7  0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+
+7 audio output模块,负责把音频解码的数据播放输出。audio output模块不像video output,没有独立的线程，每次解码输出的数据，就直接送到audio output模块播放。
+(gdb) bt
+#0  Play (aout=0x6d8968, block=0x7fffc40008c0) at pulse.c:514
+#1  0x00007ffff792c300 in aout_OutputPlay (aout=0x6d8968, block=0x7fffc40008c0) at audio_output/output.c:474
+#2  0x00007ffff79291ae in aout_DecPlay (aout=0x6d8968, block=0x7fffc40008c0, input_rate=1000) at audio_output/dec.c:407
+#3  0x00007ffff78e8462 in DecoderPlayAudio (p_dec=0x7fffd4c1b578, p_audio=0x7fffc40008c0, pi_played_sum=0x7ffff4070e24, pi_lost_sum=0x7ffff4070e28) at input/decoder.c:1232
+#4  0x00007ffff78e864b in DecoderDecodeAudio (p_dec=0x7fffd4c1b578, p_block=0x0) at input/decoder.c:1289
+#5  0x00007ffff78e9cb5 in DecoderProcessAudio (p_dec=0x7fffd4c1b578, p_block=0x7fffd6220470, b_flush=false) at input/decoder.c:1889
+#6  0x00007ffff78ea094 in DecoderProcess (p_dec=0x7fffd4c1b578, p_block=0x7fffd6220470) at input/decoder.c:2010
+#7  0x00007ffff78e7a7e in DecoderThread (p_data=0x7fffd4c1b578) at input/decoder.c:936
+#8  0x00007ffff6f3c182 in start_thread (arg=0x7ffff4071700) at pthread_create.c:312
+#9  0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+----------------------------数据流---------------------------------------
+1 demux取出压缩的数据包,送到对应的decoder的fifo中。
+(gdb) bt
+#0  block_FifoPut (p_fifo=0x7fffd0c0e0c0, p_block=0x7fffd2221c30) at misc/block.c:617
+#1  0x00007ffff78e65e0 in input_DecoderDecode (p_dec=0x7fffd224bab8, p_block=0x7fffd2221c30, b_do_pace=false) at input/decoder.c:409
+#2  0x00007ffff78f2626 in EsOutSend (out=0x7fffdc005930, es=0x7fffd0c16100, p_block=0x7fffd2221c30) at input/es_out.c:1976
+#3  0x00007ffff78f67c9 in es_out_Send (out=0x7fffdc005930, id=0x7fffd0c16100, p_block=0x7fffd2221c30) at ../include/vlc_es_out.h:121
+#4  0x00007ffff78f977f in CmdExecuteSend (p_out=0x7fffdc005930, p_cmd=0x7fffe583bc50) at input/es_out_timeshift.c:1276
+#5  0x00007ffff78f70a7 in Send (p_out=0x7fffd0000aa0, p_es=0x7fffd0c0a480, p_block=0x7fffd2221c30) at input/es_out_timeshift.c:422
+#6  0x00007fffe7df4fc8 in es_out_Send (out=0x7fffd0000aa0, id=0x7fffd0c0a480, p_block=0x7fffd2221c30) at ../../include/vlc_es_out.h:121
+#7  0x00007fffe7df7a83 in Demux (p_demux=0x7fffd0c01858) at avformat/demux.c:698
+#8  0x00007ffff78fc38d in demux_Demux (p_demux=0x7fffd0c01858) at input/demux.h:44
+#9  0x00007ffff78fd703 in MainLoopDemux (p_input=0x7fffdc0009b8, pb_changed=0x7fffe583bece, pb_demux_polled=0x7fffe583becc, i_start_mdate=81954327873) at input/input.c:562
+#10 0x00007ffff78fdd30 in MainLoop (p_input=0x7fffdc0009b8, b_interactive=true) at input/input.c:738
+#11 0x00007ffff78fd5cc in Run (obj=0x7fffdc0009b8) at input/input.c:524
+#12 0x00007ffff6f3c182 in start_thread (arg=0x7fffe583c700) at pthread_create.c:312
+#13 0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+2 每个stream都有一个独立的DecoderThread负责解码这一路的内容。这个thread会不停的从fifo中获得压缩数据，并送给解码器解码。
+(gdb) bt
+#0  block_FifoGet (p_fifo=0x7fffd4c1d9a0) at misc/block.c:661
+#1  0x00007ffff78e79f7 in DecoderThread (p_data=0x7fffd4c1b578) at input/decoder.c:915
+#2  0x00007ffff6f3c182 in start_thread (arg=0x7ffff4071700) at pthread_create.c:312
+#3  0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+3 视频解码后的数据桢，会被送到picture fifo中，等待显示模块处理。
+(gdb) bt
+#0  picture_fifo_Push (fifo=0x7fffbc0008c0, picture=0x7fffbc012610) at misc/picture_fifo.c:83
+#1  0x00007ffff7919d36 in vout_PutPicture (vout=0x7fffc80054a8, picture=0x7fffbc012610) at video_output/video_output.c:422
+#2  0x00007ffff78e8d02 in DecoderPlayVideo (p_dec=0x7fffd624bab8, p_picture=0x7fffbc012610, pi_played_sum=0x7fffe573ae24, pi_lost_sum=0x7fffe573ae2c) at input/decoder.c:1440
+#3  0x00007ffff78e8f82 in DecoderDecodeVideo (p_dec=0x7fffd624bab8, p_block=0x7fffd624a7e0) at input/decoder.c:1512
+#4  0x00007ffff78e9b35 in DecoderProcessVideo (p_dec=0x7fffd624bab8, p_block=0x7fffd624a7e0, b_flush=false) at input/decoder.c:1841
+#5  0x00007ffff78ea0bc in DecoderProcess (p_dec=0x7fffd624bab8, p_block=0x7fffd624a7e0) at input/decoder.c:2014
+#6  0x00007ffff78e7a7e in DecoderThread (p_data=0x7fffd624bab8) at input/decoder.c:936
+#7  0x00007ffff6f3c182 in start_thread (arg=0x7fffe573b700) at pthread_create.c:312
+#8  0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+4  视频帧会被ThreadDisplayPreparePicture不断从picture fifo中取出，并被送到render中显示。
+(gdb) bt
+#0  picture_fifo_Pop (fifo=0x7fffbc0008c0) at misc/picture_fifo.c:89
+#1  0x00007ffff791b121 in ThreadDisplayPreparePicture (vout=0x7fffe2250438, reuse=false, is_late_dropped=true) at video_output/video_output.c:831
+#2  0x00007ffff791bf92 in ThreadDisplayPicture (vout=0x7fffe2250438, now=false, deadline=0x7fffe41ebef0) at video_output/video_output.c:1072
+#3  0x00007ffff791c227 in ThreadManage (vout=0x7fffe2250438, deadline=0x7fffe41ebef0, interlacing=0x7fffe41ebee0) at video_output/video_output.c:1136
+#4  0x00007ffff791d58e in Thread (object=0x7fffe2250438) at video_output/video_output.c:1569
+#5  0x00007ffff6f3c182 in start_thread (arg=0x7fffe41ec700) at pthread_create.c:312
+#6  0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+
+----------------------------http module调用关系----------------------------------
+1 第一次connect目的服务器
+(gdb) bt
+#0  OpenWithCookies (p_this=0x7fffd00011e8, psz_access=0x7fffd0000d90 "http", i_redirect=5, cookies=0x0) at http.c:238
+#1  0x00007fffe76d840b in Open (p_this=0x7fffd00011e8) at http.c:223
+#2  0x00007ffff793d659 in generic_start (func=0x7fffe76d83d5 <Open>, ap=0x7fffe79dfb00) at modules/modules.c:351
+#3  0x00007ffff793ced2 in module_load (obj=0x7fffd00011e8, m=0x61ab20, init=0x7ffff793d5e6 <generic_start>, args=0x7fffe79dfb70) at modules/modules.c:185
+#4  0x00007ffff793d2ca in vlc_module_load (obj=0x7fffd00011e8, capability=0x7ffff797bc3a "access", name=0x7fffd0000db4 "", strict=true, probe=0x7ffff793d5e6 <generic_start>) at modules/modules.c:277
+#5  0x00007ffff793d718 in module_need (obj=0x7fffd00011e8, cap=0x7ffff797bc3a "access", name=0x7fffd0000db0 "http", strict=true) at modules/modules.c:366
+#6  0x00007ffff78e124f in access_New (p_obj=0x7fffdc0009b8, p_parent_input=0x7fffdc0009b8, psz_access=0x7fffd0000db0 "http", psz_demux=0x7ffff797df98 "", 
+    psz_location=0x7fffd0000db7 "192.168.31.237:8052/play?uagent=true&url=http%3A%2F%2F118.187.1.22%2Fw%2F6b1df5f959fd0c502792ac3f5e197839.mp4%3Ftype%3Dphone.ios%26key%3D813c86c9ab6ef5ffff7e0dc70b40876a%26k%3Dd394cd7ec73ab2ef220c1f7b"...) at input/access.c:87
+#7  0x00007ffff79029d8 in InputSourceInit (p_input=0x7fffdc0009b8, in=0x7fffdc000ab0, 
+    psz_mrl=0x6d8800 "http://192.168.31.237:8052/play?uagent=true&url=http%3A%2F%2F118.187.1.22%2Fw%2F6b1df5f959fd0c502792ac3f5e197839.mp4%3Ftype%3Dphone.ios%26key%3D813c86c9ab6ef5ffff7e0dc70b40876a%26k%3Dd394cd7ec73ab2ef2"..., psz_forced_demux=0x0, b_in_can_fail=false) at input/input.c:2419
+#8  0x00007ffff78ff4cb in Init (p_input=0x7fffdc0009b8) at input/input.c:1225
+#9  0x00007ffff78fd5b7 in Run (obj=0x7fffdc0009b8) at input/input.c:521
+#10 0x00007ffff6f3c182 in start_thread (arg=0x7fffe79e0700) at pthread_create.c:312
+#11 0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+2 第二次connect目的服务器
+(gdb) bt
+#0  Seek (p_access=0x7fffd00011e8, i_pos=9128564) at http.c:932
+#1  0x00007ffff790bfee in ASeek (s=0x7fffd0003ac8, i_pos=9128564) at input/stream.c:1829
+#2  0x00007ffff790a878 in AStreamSeekStream (s=0x7fffd0003ac8, i_pos=9128564) at input/stream.c:1243
+#3  0x00007ffff7909277 in AStreamControl (s=0x7fffd0003ac8, i_query=4, args=0x7fffe79df6f0) at input/stream.c:589
+#4  0x00007ffff790c08f in stream_vaControl (s=0x7fffd0003ac8, i_query=4, args=0x7fffe79df6f0) at input/stream.c:1871
+#5  0x00007ffff24f3045 in Control (s=0x7fffd0c03e68, i_query=4, args=0x7fffe79df6f0) at record.c:147
+#6  0x00007ffff790c198 in stream_Control (s=0x7fffd0c03e68, i_query=4) at input/stream.c:1891
+#7  0x00007fffe74ba978 in stream_Seek (s=0x7fffd0c03e68, i_pos=9128564) at ../../include/vlc_stream.h:160
+#8  0x00007fffe74baf5f in MP4_NextBox (p_stream=0x7fffd0c03e68, p_box=0x7fffd0c16250) at mp4/libmp4.c:178
+#9  0x00007fffe74bb063 in MP4_ReadBoxContainerChildren (p_stream=0x7fffd0c03e68, p_container=0x7fffd0c04cb0, i_last_child=0) at mp4/libmp4.c:223
+#10 0x00007fffe74bb09e in MP4_ReadBoxContainerRaw (p_stream=0x7fffd0c03e68, p_container=0x7fffd0c04cb0) at mp4/libmp4.c:230
+#11 0x00007fffe74cce8a in MP4_BoxGetRoot (s=0x7fffd0c03e68) at mp4/libmp4.c:3604
+#12 0x00007fffe74b08ff in LoadInitFrag (p_demux=0x7fffd0c04198, b_smooth=false) at mp4/mp4.c:235
+#13 0x00007fffe74b0db6 in Open (p_this=0x7fffd0c04198) at mp4/mp4.c:361
+#14 0x00007ffff793d659 in generic_start (func=0x7fffe74b0b3f <Open>, ap=0x7fffe79dfae0) at modules/modules.c:351
+#15 0x00007ffff793ced2 in module_load (obj=0x7fffd0c04198, m=0x674a20, init=0x7ffff793d5e6 <generic_start>, args=0x7fffe79dfb50) at modules/modules.c:185
+#16 0x00007ffff793d2ca in vlc_module_load (obj=0x7fffd0c04198, capability=0x7ffff797c7f2 "demux", name=0x7ffff79959bd "", strict=true, probe=0x7ffff793d5e6 <generic_start>) at modules/modules.c:277
+#17 0x00007ffff793d718 in module_need (obj=0x7fffd0c04198, cap=0x7ffff797c7f2 "demux", name=0x7fffd0c04250 "", strict=true) at modules/modules.c:366
+#18 0x00007ffff78ec8e4 in demux_New (p_obj=0x7fffdc0009b8, p_parent_input=0x7fffdc0009b8, psz_access=0x7fffd0000db0 "http", psz_demux=0x7ffff797df98 "", 
+    psz_location=0x7fffd0c03f20 "192.168.31.237:8052/play?uagent=true&url=http%3A%2F%2F118.187.1.22%2Fw%2F6b1df5f959fd0c502792ac3f5e197839.mp4%3Ftype%3Dphone.ios%26key%3D813c86c9ab6ef5ffff7e0dc70b40876a%26k%3Dd394cd7ec73ab2ef220c1f7b"..., s=0x7fffd0c03e68, out=0x7fffd0000aa0, b_quick=false) at input/demux.c:188
+#19 0x00007ffff79030a8 in InputSourceInit (p_input=0x7fffdc0009b8, in=0x7fffdc000ab0, 
+    psz_mrl=0x6d8800 "http://192.168.31.237:8052/play?uagent=true&url=http%3A%2F%2F118.187.1.22%2Fw%2F6b1df5f959fd0c502792ac3f5e197839.mp4%3Ftype%3Dphone.ios%26key%3D813c86c9ab6ef5ffff7e0dc70b40876a%26k%3Dd394cd7ec73ab2ef2"..., psz_forced_demux=0x0, b_in_can_fail=false) at input/input.c:2535
+#20 0x00007ffff78ff4cb in Init (p_input=0x7fffdc0009b8) at input/input.c:1225
+#21 0x00007ffff78fd5b7 in Run (obj=0x7fffdc0009b8) at input/input.c:521
+#22 0x00007ffff6f3c182 in start_thread (arg=0x7fffe79e0700) at pthread_create.c:312
+#23 0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+
+
+------------------gdb 调试---------------------------------------
+ps | grep media //获得/system/bin/mediaserver的pid
+gdbserver :5039 --attach 1237
+
+adb forward tcp:5039 tcp:5039
+arm-linux-androideabi-gdb out/target/product/gladiator/symbols/system/bin/mediaserver 
+set solib-absolute-prefix /home/user/source/devdata/gladiator_8_24/android/out/target/product/gladiator/symbols
+set solib-search-path /home/user/source/devdata/gladiator_8_24/android/out/target/product/gladiator/symbols/system/lib
+target remote :5039
+shared
+b MiPlayer::setVideoSurfaceTexture
+MiPlayer::getDuration
+demux.c:138
+demux.c:OpenDemux
+
+
+---------------------------------hls module-----------------------------
+hls模块总的处理流程: 根据m3u8,选择hls模块处理。hls模块调用mpegts模块处理ts源，真正开始读取数据包的时候，mpegts模块会回调hls中的open,read函数来下载和读取分片流的数据，
+再回传给mpegts，由mpegts完成ts数据的demux，然后再返回给hls模块，hls模块最终返回demux后的数据。
+
+1 hls_read_header
+(gdb) bt
+#0  hls_read_header (s=0xa3042400) at external/ffmpeg2-2/./libavformat/hls.c:1490
+#1  0xa003ea7a in avformat_open_input (ps=ps@entry=0xa301018c, filename=<optimized out>, fmt=<optimized out>, options=options@entry=0x8cd1e7fc) at external/ffmpeg2-2/./libavformat/utils.c:481
+#2  0xa4608d88 in OpenDemux (p_this=0xa30062d4, p_this@entry=<error reading variable: value has been optimized out>) at external/miplayer/vlc/modules/demux/avformat/demux.c:331
+#3  0xa4688dd8 in generic_start (func=<optimized out>, ap=..., ap@entry=...) at external/miplayer/vlc/src/modules/modules.c:351
+#4  0xa4688e2c in module_load (obj=obj@entry=0xa3010134, m=m@entry=0xa392dfa0, init=0xa4688dc8 <generic_start>, init@entry=0xb6f2fdf4 <__stack_chk_guard>, args=...)
+    at external/miplayer/vlc/src/modules/modules.c:185
+#5  0xa46892ec in vlc_module_load (obj=0xa3010134, obj@entry=0xa30062d4, capability=0x3 <Address 0x3 out of bounds>, name=0x1 <Address 0x1 out of bounds>, strict=<optimized out>, 
+    probe=0xa4688dc8 <generic_start>) at external/miplayer/vlc/src/modules/modules.c:277
+#6  0xa468980c in module_need (obj=obj@entry=0xa30062d4, cap=<optimized out>, name=<optimized out>, strict=<optimized out>) at external/miplayer/vlc/src/modules/modules.c:366
+#7  0xa465c888 in demux_New (p_obj=p_obj@entry=0x941a7974, p_parent_input=p_parent_input@entry=0x941a7974, psz_access=<optimized out>, psz_demux=<optimized out>, 
+    psz_location=0xa30171a0 "127.0.0.1:13499/iqiyi/stream_-101.m3u8?id=-101&tag_num=0&offset=0", s=s@entry=0xa3010134, out=0xa3009028, b_quick=b_quick@entry=false)
+    at external/miplayer/vlc/src/input/demux.c:188
+#8  0xa4660074 in InputSourceInit (p_input=p_input@entry=0x941a7974, in=in@entry=0x941a8888, psz_mrl=<optimized out>, psz_forced_demux=psz_forced_demux@entry=0x0, b_in_can_fail=b_in_can_fail@entry=false)
+    at external/miplayer/vlc/src/input/input.c:2554
+#9  0xa4660e14 in Init (p_input=p_input@entry=0x941a7974) at external/miplayer/vlc/src/input/input.c:1283
+#10 0xa46641f8 in Run (obj=0x941a7974) at external/miplayer/vlc/src/input/input.c:553
+#11 0xa469adf4 in joinable_thread (data=0xa39ec580) at external/miplayer/vlc/src/android/thread.c:366
+#12 0xb6ed8714 in __pthread_start (arg=0x9419f800, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#13 0xb6ed6704 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#14 0x00000000 in ?? ()
+
+2 hls_read_packet
+(gdb) bt
+#0  hls_read_packet (s=0xa3042400, pkt=0x8cd1e2d0) at external/ffmpeg2-2/./libavformat/hls.c:1792
+#1  0xa003a2f2 in ff_read_packet (s=s@entry=0xa3042400, pkt=pkt@entry=0x8cd1e2d0) at external/ffmpeg2-2/./libavformat/utils.c:680
+#2  0xa003abf0 in read_frame_internal (s=s@entry=0xa3042400, pkt=pkt@entry=0x8cd1e558) at external/ffmpeg2-2/./libavformat/utils.c:1336
+#3  0xa003c526 in avformat_find_stream_info (ic=0xa3042400, options=options@entry=0x8cd1e790) at external/ffmpeg2-2/./libavformat/utils.c:3308
+#4  0xa4608f34 in OpenDemux (p_this=0xa30062d4, p_this@entry=<error reading variable: value has been optimized out>) at external/miplayer/vlc/modules/demux/avformat/demux.c:382
+#5  0xa4688dd8 in generic_start (func=<optimized out>, ap=..., ap@entry=...) at external/miplayer/vlc/src/modules/modules.c:351
+#6  0xa4688e2c in module_load (obj=obj@entry=0xa3010134, m=m@entry=0xa392dfa0, init=0xa4688dc8 <generic_start>, init@entry=0xb6f2fdf4 <__stack_chk_guard>, args=...)
+    at external/miplayer/vlc/src/modules/modules.c:185
+#7  0xa46892ec in vlc_module_load (obj=0xa3010134, obj@entry=0xa30062d4, capability=0x3 <Address 0x3 out of bounds>, name=0x1 <Address 0x1 out of bounds>, strict=<optimized out>, 
+    probe=0xa4688dc8 <generic_start>) at external/miplayer/vlc/src/modules/modules.c:277
+#8  0xa468980c in module_need (obj=obj@entry=0xa30062d4, cap=<optimized out>, name=<optimized out>, strict=<optimized out>) at external/miplayer/vlc/src/modules/modules.c:366
+#9  0xa465c888 in demux_New (p_obj=p_obj@entry=0x941a7974, p_parent_input=p_parent_input@entry=0x941a7974, psz_access=<optimized out>, psz_demux=<optimized out>, 
+    psz_location=0xa30171a0 "127.0.0.1:13499/iqiyi/stream_-101.m3u8?id=-101&tag_num=0&offset=0", s=s@entry=0xa3010134, out=0xa3009028, b_quick=b_quick@entry=false)
+    at external/miplayer/vlc/src/input/demux.c:188
+#10 0xa4660074 in InputSourceInit (p_input=p_input@entry=0x941a7974, in=in@entry=0x941a8888, psz_mrl=<optimized out>, psz_forced_demux=psz_forced_demux@entry=0x0, b_in_can_fail=b_in_can_fail@entry=false)
+    at external/miplayer/vlc/src/input/input.c:2554
+#11 0xa4660e14 in Init (p_input=p_input@entry=0x941a7974) at external/miplayer/vlc/src/input/input.c:1283
+#12 0xa46641f8 in Run (obj=0x941a7974) at external/miplayer/vlc/src/input/input.c:553
+#13 0xa469adf4 in joinable_thread (data=0xa39ec580) at external/miplayer/vlc/src/android/thread.c:366
+#14 0xb6ed8714 in __pthread_start (arg=0x9419f800, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#15 0xb6ed6704 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#16 0x00000000 in ?? ()
+
+(gdb) bt
+#0  hls_read_packet (s=0xa3042400, pkt=0x8cd1e908) at external/ffmpeg2-2/./libavformat/hls.c:1792
+#1  0xa003a2f2 in ff_read_packet (s=s@entry=0xa3042400, pkt=pkt@entry=0x8cd1e908) at external/ffmpeg2-2/./libavformat/utils.c:680
+#2  0xa003abf0 in read_frame_internal (s=0xa3042400, pkt=0x8cd1eb30) at external/ffmpeg2-2/./libavformat/utils.c:1336
+#3  0xa003b5ca in av_read_frame (s=0xa3042400, pkt=pkt@entry=0x8cd1eb30) at external/ffmpeg2-2/./libavformat/utils.c:1524
+#4  0xa4606da4 in Demux (p_demux=0xa30062d4) at external/miplayer/vlc/modules/demux/avformat/demux.c:987
+#5  0xa4663a70 in demux_Demux (p_demux=0xa30062d4) at external/miplayer/vlc/src/input/demux.h:44
+#6  MainLoopDemux (i_start_mdate=2901697140, pb_demux_polled=<synthetic pointer>, pb_changed=<synthetic pointer>, p_input=<optimized out>) at external/miplayer/vlc/src/input/input.c:606
+#7  MainLoop (p_input=p_input@entry=0x941a7974, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:782
+#8  0xa466429c in Run (obj=0x941a7974) at external/miplayer/vlc/src/input/input.c:561
+#9  0xa469adf4 in joinable_thread (data=0xa39ec580) at external/miplayer/vlc/src/android/thread.c:366
+#10 0xb6ed8714 in __pthread_start (arg=0x9419f800, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#11 0xb6ed6704 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#12 0x00000000 in ?? ()
+
+3, hls_read_seek (s=0xa3042400, stream_index=0, timestamp=90664470, flags=1) at external/ffmpeg2-2/./libavformat/hls.c:1904
+1904	{
+(gdb) bt
+#0  hls_read_seek (s=0xa3042400, stream_index=0, timestamp=90664470, flags=1) at external/ffmpeg2-2/./libavformat/hls.c:1904
+#1  0xa003b6ec in seek_frame_internal (flags=1, timestamp=90664470, stream_index=0, s=0xa3042400) at external/ffmpeg2-2/./libavformat/utils.c:2160
+#2  av_seek_frame (s=0xa3042400, stream_index=stream_index@entry=-1, timestamp=<optimized out>, flags=flags@entry=1) at external/ffmpeg2-2/./libavformat/utils.c:2192
+#3  0xa4607fe4 in Control (p_demux=0xa30062d4, i_query=<optimized out>, args=...) at external/miplayer/vlc/modules/demux/avformat/demux.c:1419
+#4  0xa465df60 in demux_vaControl (args=..., i_query=0, p_demux=<optimized out>) at external/miplayer/vlc/src/input/demux.h:48
+#5  demux_Control (p_demux=<optimized out>, i_query=4) at external/miplayer/vlc/src/input/demux.h:56
+#6  0xa466289c in Control (p_input=p_input@entry=0x941a7974, i_type=i_type@entry=4, val=...) at external/miplayer/vlc/src/input/input.c:1831
+#7  0xa466361c in MainLoop (p_input=p_input@entry=0x941a7974, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:849
+#8  0xa466429c in Run (obj=0x941a7974) at external/miplayer/vlc/src/input/input.c:561
+#9  0xa469adf4 in joinable_thread (data=0xa39ec580) at external/miplayer/vlc/src/android/thread.c:366
+#10 0xb6ed8714 in __pthread_start (arg=0x9419f800, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#11 0xb6ed6704 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#12 0x00000000 in ?? ()
+(gdb) c
+
+4 hls_probe
+#0  hls_probe (p=0xaeaff710) at external/ffmpeg2-2/./libavformat/hls.c:2026
+#1  0xb126b0a8 in av_probe_input_format3 (pd=pd@entry=0xaeaff820, is_opened=is_opened@entry=1, score_ret=score_ret@entry=0xaeaff74c) at external/ffmpeg2-2/./libavformat/format.c:197
+#2  0xb126b1c0 in av_probe_input_format2 (pd=pd@entry=0xaeaff820, is_opened=is_opened@entry=1, score_max=score_max@entry=0xaeaff75c) at external/ffmpeg2-2/./libavformat/format.c:227
+#3  0xb126b1e0 in av_probe_input_format (pd=pd@entry=0xaeaff820, is_opened=is_opened@entry=1) at external/ffmpeg2-2/./libavformat/format.c:238
+#4  0xb2a09b2c in OpenDemux (p_this=0xb0406194, p_this@entry=<error reading variable: value has been optimized out>) at external/miplayer/vlc/modules/demux/avformat/demux.c:183
+#5  0xb2a88dd8 in generic_start (func=<optimized out>, ap=..., ap@entry=...) at external/miplayer/vlc/src/modules/modules.c:351
+#6  0xb2a88e2c in module_load (obj=obj@entry=0xb040e134, m=m@entry=0xb2db21c0, init=0xb2a88dc8 <generic_start>, init@entry=0xb6fc5df4 <__stack_chk_guard>, args=...)
+    at external/miplayer/vlc/src/modules/modules.c:185
+#7  0xb2a892ec in vlc_module_load (obj=0xb040e134, obj@entry=0xb0406194, capability=0x3 <Address 0x3 out of bounds>, name=0x1 <Address 0x1 out of bounds>, strict=<optimized out>, 
+    probe=0xb2a88dc8 <generic_start>) at external/miplayer/vlc/src/modules/modules.c:277
+#8  0xb2a8980c in module_need (obj=obj@entry=0xb0406194, cap=<optimized out>, name=<optimized out>, strict=<optimized out>) at external/miplayer/vlc/src/modules/modules.c:366
+#9  0xb2a5c888 in demux_New (p_obj=p_obj@entry=0xb35a70d4, p_parent_input=p_parent_input@entry=0xb35a70d4, psz_access=<optimized out>, psz_demux=<optimized out>, 
+    psz_location=0xaecff790 "127.0.0.1:13499/iqiyi/stream_-107.m3u8?id=-107&tag_num=0&offset=0", s=s@entry=0xb040e134, out=0xb0410028, b_quick=b_quick@entry=false)
+    at external/miplayer/vlc/src/input/demux.c:188
+#10 0xb2a60074 in InputSourceInit (p_input=p_input@entry=0xb35a70d4, in=in@entry=0xb0a01888, psz_mrl=<optimized out>, psz_forced_demux=psz_forced_demux@entry=0x0, b_in_can_fail=b_in_can_fail@entry=false)
+    at external/miplayer/vlc/src/input/input.c:2554
+#11 0xb2a60e14 in Init (p_input=p_input@entry=0xb35a70d4) at external/miplayer/vlc/src/input/input.c:1283
+#12 0xb2a641f8 in Run (obj=0xb35a70d4) at external/miplayer/vlc/src/input/input.c:553
+#13 0xb2a9adf4 in joinable_thread (data=0xb4272708) at external/miplayer/vlc/src/android/thread.c:366
+#14 0xb6f6e714 in __pthread_start (arg=0xb2df1300, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#15 0xb6f6c704 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#16 0x00000000 in ?? ()
+
+(gdb) bt
+#0  hls_probe (p=0xaeaff5d8) at external/ffmpeg2-2/./libavformat/hls.c:2026
+#1  0xb126b0a8 in av_probe_input_format3 (pd=pd@entry=0xaeaff650, is_opened=is_opened@entry=1, score_ret=score_ret@entry=0xaeaff614) at external/ffmpeg2-2/./libavformat/format.c:197
+#2  0xb126b1c0 in av_probe_input_format2 (pd=pd@entry=0xaeaff650, is_opened=is_opened@entry=1, score_max=score_max@entry=0xaeaff648) at external/ffmpeg2-2/./libavformat/format.c:227
+#3  0xb126b2e0 in av_probe_input_buffer2 (pb=pb@entry=0xaf1c1000, fmt=fmt@entry=0xaeaff6e8, filename=<optimized out>, logctx=logctx@entry=0x0, offset=offset@entry=0, max_probe_size=1048576, 
+    max_probe_size@entry=0) at external/ffmpeg2-2/./libavformat/format.c:302
+#4  0xb126b3d8 in av_probe_input_buffer (pb=pb@entry=0xaf1c1000, fmt=fmt@entry=0xaeaff6e8, filename=<optimized out>, logctx=logctx@entry=0x0, offset=offset@entry=0, max_probe_size=max_probe_size@entry=0)
+    at external/ffmpeg2-2/./libavformat/format.c:338
+#5  0xb127102e in hls_read_header (s=<optimized out>) at external/ffmpeg2-2/./libavformat/hls.c:1597
+#6  0xb12deb02 in avformat_open_input (ps=ps@entry=0xb040e18c, filename=<optimized out>, fmt=<optimized out>, options=options@entry=0xaeaff7fc) at external/ffmpeg2-2/./libavformat/utils.c:481
+#7  0xb2a08d88 in OpenDemux (p_this=0xb0406194, p_this@entry=<error reading variable: value has been optimized out>) at external/miplayer/vlc/modules/demux/avformat/demux.c:331
+#8  0xb2a88dd8 in generic_start (func=<optimized out>, ap=..., ap@entry=...) at external/miplayer/vlc/src/modules/modules.c:351
+#9  0xb2a88e2c in module_load (obj=obj@entry=0xb040e134, m=m@entry=0xb2db21c0, init=0xb2a88dc8 <generic_start>, init@entry=0xb6fc5df4 <__stack_chk_guard>, args=...)
+    at external/miplayer/vlc/src/modules/modules.c:185
+#10 0xb2a892ec in vlc_module_load (obj=0xb040e134, obj@entry=0xb0406194, capability=0x3 <Address 0x3 out of bounds>, name=0x1 <Address 0x1 out of bounds>, strict=<optimized out>, 
+    probe=0xb2a88dc8 <generic_start>) at external/miplayer/vlc/src/modules/modules.c:277
+#11 0xb2a8980c in module_need (obj=obj@entry=0xb0406194, cap=<optimized out>, name=<optimized out>, strict=<optimized out>) at external/miplayer/vlc/src/modules/modules.c:366
+#12 0xb2a5c888 in demux_New (p_obj=p_obj@entry=0xb35a70d4, p_parent_input=p_parent_input@entry=0xb35a70d4, psz_access=<optimized out>, psz_demux=<optimized out>, 
+    psz_location=0xaecff790 "127.0.0.1:13499/iqiyi/stream_-107.m3u8?id=-107&tag_num=0&offset=0", s=s@entry=0xb040e134, out=0xb0410028, b_quick=b_quick@entry=false)
+    at external/miplayer/vlc/src/input/demux.c:188
+#13 0xb2a60074 in InputSourceInit (p_input=p_input@entry=0xb35a70d4, in=in@entry=0xb0a01888, psz_mrl=<optimized out>, psz_forced_demux=psz_forced_demux@entry=0x0, b_in_can_fail=b_in_can_fail@entry=false)
+    at external/miplayer/vlc/src/input/input.c:2554
+#14 0xb2a60e14 in Init (p_input=p_input@entry=0xb35a70d4) at external/miplayer/vlc/src/input/input.c:1283
+#15 0xb2a641f8 in Run (obj=0xb35a70d4) at external/miplayer/vlc/src/input/input.c:553
+#16 0xb2a9adf4 in joinable_thread (data=0xb4272708) at external/miplayer/vlc/src/android/thread.c:366
+#17 0xb6f6e714 in __pthread_start (arg=0xb2df1300, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#18 0xb6f6c704 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#19 0x00000000 in ?? ()
+
+5  read_data
+(gdb) bt
+#0  read_data (opaque=0xaf1c0000, buf=0xaf1d1000 "", buf_size=32768) at external/ffmpeg2-2/./libavformat/hls.c:1080
+#1  0xb12581e8 in fill_buffer (s=0xaf1c1000) at external/ffmpeg2-2/./libavformat/aviobuf.c:496
+#2  avio_read (s=s@entry=0xaf1c1000, buf=0xaeba8000 "", size=size@entry=2048) at external/ffmpeg2-2/./libavformat/aviobuf.c:583
+#3  0xb126b2b6 in av_probe_input_buffer2 (pb=pb@entry=0xaf1c1000, fmt=fmt@entry=0xaeaff6e8, filename=<optimized out>, logctx=logctx@entry=0x0, offset=offset@entry=0, max_probe_size=1048576, 
+    max_probe_size@entry=0) at external/ffmpeg2-2/./libavformat/format.c:284
+#4  0xb126b3d8 in av_probe_input_buffer (pb=pb@entry=0xaf1c1000, fmt=fmt@entry=0xaeaff6e8, filename=<optimized out>, logctx=logctx@entry=0x0, offset=offset@entry=0, max_probe_size=max_probe_size@entry=0)
+    at external/ffmpeg2-2/./libavformat/format.c:338
+#5  0xb127102e in hls_read_header (s=<optimized out>) at external/ffmpeg2-2/./libavformat/hls.c:1597
+#6  0xb12deb02 in avformat_open_input (ps=ps@entry=0xb040e18c, filename=<optimized out>, fmt=<optimized out>, options=options@entry=0xaeaff7fc) at external/ffmpeg2-2/./libavformat/utils.c:481
+#7  0xb2a08d88 in OpenDemux (p_this=0xb0406194, p_this@entry=<error reading variable: value has been optimized out>) at external/miplayer/vlc/modules/demux/avformat/demux.c:331
+#8  0xb2a88dd8 in generic_start (func=<optimized out>, ap=..., ap@entry=...) at external/miplayer/vlc/src/modules/modules.c:351
+#9  0xb2a88e2c in module_load (obj=obj@entry=0xb040e134, m=m@entry=0xb2db21c0, init=0xb2a88dc8 <generic_start>, init@entry=0xb6fc5df4 <__stack_chk_guard>, args=...)
+    at external/miplayer/vlc/src/modules/modules.c:185
+#10 0xb2a892ec in vlc_module_load (obj=0xb040e134, obj@entry=0xb0406194, capability=0x3 <Address 0x3 out of bounds>, name=0x1 <Address 0x1 out of bounds>, strict=<optimized out>, 
+    probe=0xb2a88dc8 <generic_start>) at external/miplayer/vlc/src/modules/modules.c:277
+#11 0xb2a8980c in module_need (obj=obj@entry=0xb0406194, cap=<optimized out>, name=<optimized out>, strict=<optimized out>) at external/miplayer/vlc/src/modules/modules.c:366
+#12 0xb2a5c888 in demux_New (p_obj=p_obj@entry=0xb35a70d4, p_parent_input=p_parent_input@entry=0xb35a70d4, psz_access=<optimized out>, psz_demux=<optimized out>, 
+    psz_location=0xaecff790 "127.0.0.1:13499/iqiyi/stream_-107.m3u8?id=-107&tag_num=0&offset=0", s=s@entry=0xb040e134, out=0xb0410028, b_quick=b_quick@entry=false)
+    at external/miplayer/vlc/src/input/demux.c:188
+#13 0xb2a60074 in InputSourceInit (p_input=p_input@entry=0xb35a70d4, in=in@entry=0xb0a01888, psz_mrl=<optimized out>, psz_forced_demux=psz_forced_demux@entry=0x0, b_in_can_fail=b_in_can_fail@entry=false)
+    at external/miplayer/vlc/src/input/input.c:2554
+#14 0xb2a60e14 in Init (p_input=p_input@entry=0xb35a70d4) at external/miplayer/vlc/src/input/input.c:1283
+#15 0xb2a641f8 in Run (obj=0xb35a70d4) at external/miplayer/vlc/src/input/input.c:553
+#16 0xb2a9adf4 in joinable_thread (data=0xb4272708) at external/miplayer/vlc/src/android/thread.c:366
+#17 0xb6f6e714 in __pthread_start (arg=0xb2df1300, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#18 0xb6f6c704 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#19 0x00000000 in ?? ()
+
+#0  read_data (opaque=0xaf1c0000, buf=0xaf30ff90 "", buf_size=32768) at external/ffmpeg2-2/./libavformat/hls.c:1080
+#1  0xb12581e8 in fill_buffer (s=0xaf1c1000) at external/ffmpeg2-2/./libavformat/aviobuf.c:496
+#2  avio_read (s=0xaf1c1000, buf=buf@entry=0xaeaff3c0 "", size=188) at external/ffmpeg2-2/./libavformat/aviobuf.c:583
+#3  0xb125834e in ffio_read_indirect (s=s@entry=0xaf1c1000, buf=buf@entry=0xaeaff3c0 "", size=size@entry=188, data=data@entry=0xaeaff3bc) at external/ffmpeg2-2/./libavformat/aviobuf.c:618
+#4  0xb1296384 in read_packet (s=s@entry=0xb0438a00, buf=buf@entry=0xaeaff3c0 "", raw_packet_size=<optimized out>, data=data@entry=0xaeaff3bc) at external/ffmpeg2-2/./libavformat/mpegts.c:2404
+#5  0xb1296f68 in handle_packets (ts=0xb04f5000, nb_packets=0) at external/ffmpeg2-2/./libavformat/mpegts.c:2474
+#6  0xb1296ff6 in mpegts_read_packet (s=<optimized out>, pkt=0xaeaff5c8) at external/ffmpeg2-2/./libavformat/mpegts.c:2713
+#7  0xb12da37a in ff_read_packet (s=s@entry=0xb0438a00, pkt=pkt@entry=0xaeaff5c8) at external/ffmpeg2-2/./libavformat/utils.c:680
+#8  0xb12dac78 in read_frame_internal (s=0xb0438a00, pkt=0xaf1c10a0) at external/ffmpeg2-2/./libavformat/utils.c:1336
+#9  0xb12db652 in av_read_frame (s=0xb0438a00, pkt=pkt@entry=0xaf1c10a0) at external/ffmpeg2-2/./libavformat/utils.c:1524
+#10 0xb12704e8 in hls_read_packet (s=<optimized out>, pkt=0xaeaff908) at external/ffmpeg2-2/./libavformat/hls.c:1817
+#11 0xb12da37a in ff_read_packet (s=s@entry=0xb0438400, pkt=pkt@entry=0xaeaff908) at external/ffmpeg2-2/./libavformat/utils.c:680
+#12 0xb12dac78 in read_frame_internal (s=0xb0438400, pkt=0xaeaffb30) at external/ffmpeg2-2/./libavformat/utils.c:1336
+#13 0xb12db652 in av_read_frame (s=0xb0438400, pkt=pkt@entry=0xaeaffb30) at external/ffmpeg2-2/./libavformat/utils.c:1524
+#14 0xb2a06da4 in Demux (p_demux=0xb0406194) at external/miplayer/vlc/modules/demux/avformat/demux.c:987
+#15 0xb2a63a70 in demux_Demux (p_demux=0xb0406194) at external/miplayer/vlc/src/input/demux.h:44
+#16 MainLoopDemux (i_start_mdate=3850437539, pb_demux_polled=<synthetic pointer>, pb_changed=<synthetic pointer>, p_input=<optimized out>) at external/miplayer/vlc/src/input/input.c:606
+#17 MainLoop (p_input=p_input@entry=0xb35a70d4, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:782
+#18 0xb2a6429c in Run (obj=0xb35a70d4) at external/miplayer/vlc/src/input/input.c:561
+#19 0xb2a9adf4 in joinable_thread (data=0xb4272708) at external/miplayer/vlc/src/android/thread.c:366
+#20 0xb6f6e714 in __pthread_start (arg=0xb2df1300, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#21 0xb6f6c704 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#22 0x00000000 in ?? ()
+
+
+6 ff_check_interrupt调用的是谁的回调函数
+(gdb) bt
+#0  UrlInterruptCallback (p_demux=0xb0406194) at external/miplayer/vlc/modules/demux/avformat/demux.c:129
+#1  0xb1256078 in ff_check_interrupt (cb=<optimized out>) at external/ffmpeg2-2/./libavformat/avio.c:544
+#2  0xb126e9ae in read_data (opaque=0xb0448000, buf=0xb049f000 "", buf_size=32768) at external/ffmpeg2-2/./libavformat/hls.c:1120
+#3  0xb12571e8 in fill_buffer (s=0xb0449000) at external/ffmpeg2-2/./libavformat/aviobuf.c:496
+#4  avio_read (s=s@entry=0xb0449000, buf=0xb04a7800 "", size=size@entry=2048) at external/ffmpeg2-2/./libavformat/aviobuf.c:583
+#5  0xb126a2b6 in av_probe_input_buffer2 (pb=pb@entry=0xb0449000, fmt=fmt@entry=0xb07016e8, filename=<optimized out>, logctx=logctx@entry=0x0, offset=offset@entry=0, max_probe_size=1048576, 
+    max_probe_size@entry=0) at external/ffmpeg2-2/./libavformat/format.c:284
+#6  0xb126a3d8 in av_probe_input_buffer (pb=pb@entry=0xb0449000, fmt=fmt@entry=0xb07016e8, filename=<optimized out>, logctx=logctx@entry=0x0, offset=offset@entry=0, max_probe_size=max_probe_size@entry=0)
+    at external/ffmpeg2-2/./libavformat/format.c:338
+#7  0xb1270156 in hls_read_header (s=<optimized out>) at external/ffmpeg2-2/./libavformat/hls.c:1582
+#8  0xb12ddc2a in avformat_open_input (ps=ps@entry=0xb040e18c, filename=<optimized out>, fmt=<optimized out>, options=options@entry=0xb07017fc) at external/ffmpeg2-2/./libavformat/utils.c:481
+#9  0xb2a08d88 in OpenDemux (p_this=0xb0406194, p_this@entry=<error reading variable: value has been optimized out>) at external/miplayer/vlc/modules/demux/avformat/demux.c:331
+#10 0xb2a88dd8 in generic_start (func=<optimized out>, ap=..., ap@entry=...) at external/miplayer/vlc/src/modules/modules.c:351
+#11 0xb2a88e2c in module_load (obj=obj@entry=0xb040e134, m=m@entry=0xb2b0dfa0, init=0xb2a88dc8 <generic_start>, init@entry=0xb6fcbdf4 <__stack_chk_guard>, args=...)
+    at external/miplayer/vlc/src/modules/modules.c:185
+#12 0xb2a892ec in vlc_module_load (obj=0xb040e134, obj@entry=0xb0406194, capability=0x3 <Address 0x3 out of bounds>, name=0x1 <Address 0x1 out of bounds>, strict=<optimized out>, 
+    probe=0xb2a88dc8 <generic_start>) at external/miplayer/vlc/src/modules/modules.c:277
+#13 0xb2a8980c in module_need (obj=obj@entry=0xb0406194, cap=<optimized out>, name=<optimized out>, strict=<optimized out>) at external/miplayer/vlc/src/modules/modules.c:366
+#14 0xb2a5c888 in demux_New (p_obj=p_obj@entry=0xb2bf9974, p_parent_input=p_parent_input@entry=0xb2bf9974, psz_access=<optimized out>, psz_demux=<optimized out>, 
+    psz_location=0xb04121a0 "127.0.0.1:13499/iqiyi/stream_-102.m3u8?id=-102&tag_num=0&offset=0", s=s@entry=0xb040e134, out=0xb0409028, b_quick=b_quick@entry=false)
+    at external/miplayer/vlc/src/input/demux.c:188
+#15 0xb2a60074 in InputSourceInit (p_input=p_input@entry=0xb2bf9974, in=in@entry=0xb0a01888, psz_mrl=<optimized out>, psz_forced_demux=psz_forced_demux@entry=0x0, b_in_can_fail=b_in_can_fail@entry=false)
+    at external/miplayer/vlc/src/input/input.c:2554
+#16 0xb2a60e14 in Init (p_input=p_input@entry=0xb2bf9974) at external/miplayer/vlc/src/input/input.c:1283
+#17 0xb2a641f8 in Run (obj=0xb2bf9974) at external/miplayer/vlc/src/input/input.c:553
+#18 0xb2a9adf4 in joinable_thread (data=0xb2b925b8) at external/miplayer/vlc/src/android/thread.c:366
+#19 0xb6f74714 in __pthread_start (arg=0xb2bf1800, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#20 0xb6f72704 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#21 0x00000000 in ?? ()
+
+
+-----------------------------如何select/unselect track在vlc中是如何起作用的-------------------------------------------
+1 在miplayer中通过调用selectTrack选择音轨是生效的过程。
+在var.c文件中，数组p_input_callbacks中定义了"video-es"，"audio-es"属性变量更新后对应的回调函数ESCallback()。
+每次"video-es"，"audio-es"的数值更新，都会调用ESCallback()，该函数会发送INPUT_CONTROL_SET_ES消息给input的主循环函数MainLoop。
+MainLoop会定时调用ControlPop()来获得新消息，并传给Control()函数来处理INPUT_CONTROL_SET_ES消息，此时发送ES_OUT_SET_ES_BY_ID消息给es_out处理。
+es_out.c中的函数EsOutControlLocked负责接收并处理ES_OUT_SET_ES_BY_ID消息，此处读到的i_id值就是要设置的track值。
+
+06-08 17:17:30.752   124   124 I DEBUG   : backtrace:
+06-08 17:17:30.752   124   124 I DEBUG   :     #00 pc 000be480  /system/lib/libmiplayer.so
+06-08 17:17:30.752   124   124 I DEBUG   :     #01 pc 000e8784  /system/lib/libmiplayer.so
+06-08 17:17:30.752   124   124 I DEBUG   :     #02 pc 000e95a0  /system/lib/libmiplayer.so (var_SetChecked+156)
+06-08 17:17:30.752   124   124 I DEBUG   :     #03 pc 00096c60  /system/lib/libmiplayer.so (libvlc_audio_set_track+472)
+06-08 17:17:30.753   124   124 I DEBUG   :     #04 pc 0001f40c  /system/lib/libmiplayer.so (MiPlayer::selectAudioTrack_l(int)+88)
+06-08 17:17:30.753   124   124 I DEBUG   :     #05 pc 0001f570  /system/lib/libmiplayer.so (MiPlayer::selectTrack(int, bool)+120)
+06-08 17:17:30.753   124   124 I DEBUG   :     #06 pc 0001fa98  /system/lib/libmiplayer.so (MiPlayer::invoke(android::Parcel const&, android::Parcel*)+992)
+06-08 17:17:30.753   124   124 I DEBUG   :     #07 pc 000415b3  /system/lib/libmediaplayerservice.so (android::MediaPlayerService::Client::invoke(android::Parcel const&, android::Parcel*)+30)
+06-08 17:17:30.753   124   124 I DEBUG   :     #08 pc 00065b55  /system/lib/libmedia.so (android::BnMediaPlayer::onTransact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+1024)
+06-08 17:17:30.753   124   124 I DEBUG   :     #09 pc 0001a6cd  /system/lib/libbinder.so (android::BBinder::transact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+60)
+06-08 17:17:30.753   124   124 I DEBUG   :     #10 pc 0001f78f  /system/lib/libbinder.so (android::IPCThreadState::executeCommand(int)+602)
+06-08 17:17:30.753   124   124 I DEBUG   :     #11 pc 0001f8e3  /system/lib/libbinder.so (android::IPCThreadState::getAndExecuteCommand()+38)
+06-08 17:17:30.753   124   124 I DEBUG   :     #12 pc 0001f925  /system/lib/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+48)
+06-08 17:17:30.753   124   124 I DEBUG   :     #13 pc 0000203d  /system/bin/mediaserver
+
+ESCallback()       /home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/var.c:769
+TriggerCallback() /home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/misc/variables.c:1318
+var_SetChecked()  /home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/misc/variables.c:742
+var_SetInteger()  /home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/lib/../include/vlc_variables.h:207
+MiPlayer::selectAudioTrack_l(int)  /home/user/source/devdata/inception_3_22/android/external/miplayer/libmiplayer/miplayer/MiPlayer.cpp:1562
+
+#define CALLBACK(name,cb) { name, cb }
+static const vlc_input_callback_t p_input_callbacks[] =
+{
+    CALLBACK( "state", StateCallback ),
+    CALLBACK( "rate", RateCallback ),
+    CALLBACK( "position", PositionCallback ),
+    CALLBACK( "position-offset", PositionCallback ),
+    CALLBACK( "time", TimeCallback ),
+    CALLBACK( "time-offset", TimeCallback ),
+    CALLBACK( "bookmark", BookmarkCallback ),
+    CALLBACK( "program", ProgramCallback ),
+    CALLBACK( "title", TitleCallback ),
+    CALLBACK( "chapter", SeekpointCallback ),
+    CALLBACK( "audio-delay", EsDelayCallback ),
+    CALLBACK( "spu-delay", EsDelayCallback ),
+    CALLBACK( "video-es", ESCallback ),
+    CALLBACK( "audio-es", ESCallback ),
+    CALLBACK( "spu-es", ESCallback ),
+    CALLBACK( "record", RecordCallback ),
+    CALLBACK( "frame-next", FrameNextCallback ),
+
+    CALLBACK( NULL, NULL )
+};
+
+/* current main es */
+es_out_id_t *p_es_audio;   //指向当前选择的音频流
+es_out_id_t *p_es_video;   //指向当前选择的视频流 
+es_out_id_t *p_es_sub;     //指向当前选择的字幕
+
+
+2 EsSelect
+EsOutSelect()   		/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.c:2290
+                        //该函数中会完成如下操作
+						//1. EsUnselect( out, p_sys->p_es_audio, false ); 释放当前的element stream.
+						//2. p_sys->p_es_audio = es; 修改当前stream了为es指向的新的stream.
+						//3. EsSelect(out, es); 调用EsCreateDecoder为新选择的stream创建解码器。
+EsOutControlLocked()  	/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.c:2578
+es_out_vaControl()    	/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+ControlLocked           /home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out_timeshift.c:629
+es_out_vaControl        /home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+es_out_SetMode          /home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.h:95
+Run                     /home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/input.c:553
+
+
+
+---------------------------视频模块---------------------------------------
+1 视频显示模块
+vlc_module_begin ()
+    set_shortname (N_("XVideo"))
+    set_description (N_("XVideo output (XCB)"))
+    set_category (CAT_VIDEO)
+    set_subcategory (SUBCAT_VIDEO_VOUT)
+    set_capability ("vout display", 200)
+    set_callbacks (Open, Close)
+
+    add_integer ("xvideo-adaptor", -1,
+                 ADAPTOR_TEXT, ADAPTOR_LONGTEXT, true)
+        change_integer_cb (EnumAdaptors)
+    add_integer ("xvideo-format-id", 0,
+                 FORMAT_TEXT, FORMAT_LONGTEXT, true)
+    add_obsolete_bool ("xvideo-shm") /* removed in 2.0.0 */
+    add_shortcut ("xcb-xv", "xv", "xvideo", "xid")
+vlc_module_end ()
+
+
+--demux=avformat "http://10.235.173.12:9006/record.mp4?playlink=ppvod://6b1df5f959fd0c502792ac3f5e197839.mp4%3ftype=fpp%26k=194b38c001f567993b6dc7e36b071d1a-98d1-1442560053%26key=719c8c46d2dfc92cf846168662dae70f"
+
+
+1 从解码好的fifo中取出数据，送到现实端。
+(gdb) bt
+#0  ThreadDisplayPreparePicture (vout=0x9ec0a834, reuse=<optimized out>, frame_by_frame=<optimized out>) at external/miplayer/vlc/src/video_output/video_output.c:855
+#1  0xb286f8a4 in ThreadDisplayPicture (vout=vout@entry=0x9ec0a834, deadline=deadline@entry=0x8a240c60) at external/miplayer/vlc/src/video_output/video_output.c:1114
+#2  0xb28701ec in Thread (object=0x9ec0a834) at external/miplayer/vlc/src/video_output/video_output.c:1611
+#3  0xb289adf4 in joinable_thread (data=0x9ec06200) at external/miplayer/vlc/src/android/thread.c:366
+#4  0xb6f4d8c0 in __pthread_start (arg=0x9ec0aa80, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#5  0xb6f4b7a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#6  0x00000000 in ?? ()
+
+2 硬件视频解码函数调用关系
+(gdb) bt
+#0  DecodeVideo (p_dec=0xaf652634, pp_block=0xa1058c94) at external/miplayer/vlc/modules/codec/omxil/micodec.c:269
+#1  0xb2a59760 in DecoderDecodeVideo (p_dec=p_dec@entry=0xaf652634, p_block=0x6e69616d) at external/miplayer/vlc/src/input/decoder.c:1718
+#2  0xb2a5c184 in DecoderProcessVideo (b_flush=false, p_block=0xb2aff450 <emutls_mutex>, p_dec=0xaf652634) at external/miplayer/vlc/src/input/decoder.c:2144
+#3  DecoderProcess (p_block=<optimized out>, p_dec=0xaf652634) at external/miplayer/vlc/src/input/decoder.c:2357
+#4  DecoderThread (p_data=0xaf652634) at external/miplayer/vlc/src/input/decoder.c:1109
+#5  0xb2a9adf4 in joinable_thread (data=0xaf3fa120) at external/miplayer/vlc/src/android/thread.c:366
+#6  0xb6f018c0 in __pthread_start (arg=0xb0489a80, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#7  0xb6eff7a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#8  0x00000000 in ?? ()
+
+3 android端负责现实
+(gdb) bt
+#0  Display (vd=0xb372f174, picture=0xb3741900, subpicture=<optimized out>) at external/miplayer/vlc/modules/video_output/mstarnativewindow.cpp:715
+#1  0xb286fc28 in vout_display_Display (subpicture=<optimized out>, picture=<optimized out>, vd=<optimized out>) at external/miplayer/vlc/src/../include/vlc_vout_wrapper.h:57
+#2  ThreadDisplayRenderPicture (is_forced=false, vout=0x9140c0b4) at external/miplayer/vlc/src/video_output/video_output.c:1092
+#3  ThreadDisplayPicture (vout=vout@entry=0x9140c0b4, deadline=deadline@entry=0x91203c60) at external/miplayer/vlc/src/video_output/video_output.c:1166
+#4  0xb28701ec in Thread (object=0x9140c0b4) at external/miplayer/vlc/src/video_output/video_output.c:1611
+#5  0xb289adf4 in joinable_thread (data=0x91438078) at external/miplayer/vlc/src/android/thread.c:366
+#6  0xb6f2c8c0 in __pthread_start (arg=0x9140c300, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#7  0xb6f2a7a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#8  0x00000000 in ?? ()
+(gdb) c
+Continuing.
+
+4 创建clock时钟，方便监控数据包情况
+Breakpoint 1, input_clock_New (i_rate=1000) at external/miplayer/vlc/src/input/clock.c:195
+195	{
+(gdb) bt
+#0  input_clock_New (i_rate=1000) at external/miplayer/vlc/src/input/clock.c:195
+#1  0xb28b1bf0 in EsOutProgramAdd (out=0xaece2058, i_group=0) at external/miplayer/vlc/src/input/es_out.c:1408
+#2  0xb28b1ec0 in EsOutProgramFind (p_out=p_out@entry=0xaece2058, i_group=<optimized out>) at external/miplayer/vlc/src/input/es_out.c:1490
+#3  0xb28b1f0c in EsOutAdd (out=0xaece2058, fmt=0xa065a830) at external/miplayer/vlc/src/input/es_out.c:1786
+#4  0xb28b7590 in es_out_Add (fmt=<optimized out>, out=<optimized out>) at external/miplayer/vlc/src/../include/vlc_es_out.h:110
+#5  CmdExecuteAdd (p_cmd=0xa065a718, p_out=<optimized out>) at external/miplayer/vlc/src/input/es_out_timeshift.c:1266
+#6  Add (p_out=<optimized out>, p_fmt=<optimized out>) at external/miplayer/vlc/src/input/es_out_timeshift.c:402
+#7  0xb28096c4 in es_out_Add (fmt=0xa065a830, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:110
+#8  OpenDemux (p_this=<error reading variable: value has been optimized out>) at external/miplayer/vlc/modules/demux/avformat/demux.c:744
+#9  0xb2888dd8 in generic_start (func=<optimized out>, ap=..., ap@entry=...) at external/miplayer/vlc/src/modules/modules.c:351
+#10 0xb2888e2c in module_load (obj=obj@entry=0xb31c2134, m=m@entry=0xaec10fa0, init=0xb2888dc8 <generic_start>, init@entry=0xb6f83df4 <__stack_chk_guard>, args=...)
+    at external/miplayer/vlc/src/modules/modules.c:185
+#11 0xb28892ec in vlc_module_load (obj=0xb31c2134, obj@entry=0xb31bc194, capability=0x3 <Address 0x3 out of bounds>, name=0x1 <Address 0x1 out of bounds>, strict=<optimized out>, 
+    probe=0xb2888dc8 <generic_start>) at external/miplayer/vlc/src/modules/modules.c:277
+#12 0xb288980c in module_need (obj=obj@entry=0xb31bc194, cap=<optimized out>, name=<optimized out>, strict=<optimized out>) at external/miplayer/vlc/src/modules/modules.c:366
+c#13 0xb285c888 in demux_New (p_obj=p_obj@entry=0xaecf5974, p_parent_input=p_parent_input@entry=0xaecf5974, psz_access=<optimized out>, psz_demux=<optimized out>, 
+    psz_location=0xb31c6150 "127.0.0.1:13499/iqiyi/stream_-107.m3u8?id=-107&tag_num=0&offset=0", s=s@entry=0xb31c2134, out=0xb31170e8, b_quick=b_quick@entry=false)
+    at external/miplayer/vlc/src/input/demux.c:188
+#14 0xb2860074 in InputSourceInit (p_input=p_input@entry=0xaecf5974, in=in@entry=0xaf101888, psz_mrl=<optimized out>, psz_forced_demux=psz_forced_demux@entry=0x0, b_in_can_fail=b_in_can_fail@entry=false)
+    at external/miplayer/vlc/src/input/input.c:2554
+#15 0xb2860e14 in Init (p_input=p_input@entry=0xaecf5974) at external/miplayer/vlc/src/input/input.c:1283
+#16 0xb28641f8 in Run (obj=0xaecf5974) at external/miplayer/vlc/src/input/input.c:553
+#17 0xb289adf4 in joinable_thread (data=0xaec7b510) at external/miplayer/vlc/src/android/thread.c:366
+#18 0xb6f2c8c0 in __pthread_start (arg=0xaeced800, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#19 0xb6f2a7a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#20 0x00000000 in ?? ()
+(gdb) c
+
+5 定时更新时钟
+Breakpoint 2, input_clock_Update (cl=0xb31bc340, cl@entry=0xf, p_log=0xaecf5974, p_log@entry=0x8b24ee8, pb_late=0xa065a978, pb_late@entry=0xa065a970, b_can_pace_control=b_can_pace_control@entry=true, 
+    b_buffering_allowed=true, i_ck_stream=1, i_ck_stream@entry=3004231008, i_ck_system=64570412776, i_ck_system@entry=1) at external/miplayer/vlc/src/input/clock.c:246
+246	{
+(gdb) bt
+#0  input_clock_Update (cl=0xb31bc340, cl@entry=0xf, p_log=0xaecf5974, p_log@entry=0x8b24ee8, pb_late=0xa065a978, pb_late@entry=0xa065a970, b_can_pace_control=b_can_pace_control@entry=true, 
+    b_buffering_allowed=true, i_ck_stream=1, i_ck_stream@entry=3004231008, i_ck_system=64570412776, i_ck_system@entry=1) at external/miplayer/vlc/src/input/clock.c:246
+#1  0xb28b32cc in EsOutControlLocked (args=..., i_query=<optimized out>, out=0xaece2058) at external/miplayer/vlc/src/input/es_out.c:2721
+#2  EsOutControl (out=0xaece2058, i_query=<optimized out>, args=...) at external/miplayer/vlc/src/input/es_out.c:3160
+#3  0xb2805cfc in es_out_vaControl (args=..., i_query=-1603949984, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+#4  es_out_Control (out=<optimized out>, i_query=6) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:135
+#5  0xb28b7224 in ControlLocked (p_out=<optimized out>, args=..., i_query=<optimized out>) at external/miplayer/vlc/src/input/es_out_timeshift.c:629
+#6  Control (p_out=<optimized out>, i_query=<optimized out>, args=...) at external/miplayer/vlc/src/input/es_out_timeshift.c:732
+#7  0xb2805cfc in es_out_vaControl (args=..., i_query=0, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+#8  es_out_Control (out=<optimized out>, i_query=6) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:135
+#9  0xb28063b8 in SendOut (p_demux=p_demux@entry=0xb31bc194, pframe=pframe@entry=0xb000b600, idx=0) at external/miplayer/vlc/modules/demux/avformat/demux.c:937
+#10 0xb2807600 in Demux (p_demux=0xb31bc194) at external/miplayer/vlc/modules/demux/avformat/demux.c:1222
+#11 0xb2863a70 in demux_Demux (p_demux=0xb31bc194) at external/miplayer/vlc/src/input/demux.h:44
+#12 MainLoopDemux (i_start_mdate=64570412663, pb_demux_polled=<synthetic pointer>, pb_changed=<synthetic pointer>, p_input=<optimized out>) at external/miplayer/vlc/src/input/input.c:606
+#13 MainLoop (p_input=p_input@entry=0xaecf5974, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:782
+#14 0xb286429c in Run (obj=0xaecf5974) at external/miplayer/vlc/src/input/input.c:561
+#15 0xb289adf4 in joinable_thread (data=0xaec7b510) at external/miplayer/vlc/src/android/thread.c:366
+#16 0xb6f2c8c0 in __pthread_start (arg=0xaeced800, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#17 0xb6f2a7a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#18 0x00000000 in ?? ()
+(gdb) c
+Continuing.
+
+6 buffing代码
+(gdb) bt
+#0  EsOutDecodersStopBuffering (b_forced=b_forced@entry=false, out=<optimized out>) at external/miplayer/vlc/src/input/es_out.c:912
+#1  0xb2ab4d94 in EsOutControlLocked (args=..., i_query=<optimized out>, out=0xb31f9118) at external/miplayer/vlc/src/input/es_out.c:2730
+#2  EsOutControl (out=0xb31f9118, i_query=<optimized out>, args=...) at external/miplayer/vlc/src/input/es_out.c:3160
+#3  0xb2a05cfc in es_out_vaControl (args=..., i_query=-1354761632, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+#4  es_out_Control (out=<optimized out>, i_query=6) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:135
+#5  0xb2ab7224 in ControlLocked (p_out=<optimized out>, args=..., i_query=<optimized out>) at external/miplayer/vlc/src/input/es_out_timeshift.c:629
+#6  Control (p_out=<optimized out>, i_query=<optimized out>, args=...) at external/miplayer/vlc/src/input/es_out_timeshift.c:732
+#7  0xb2a05cfc in es_out_vaControl (args=..., i_query=0, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+#8  es_out_Control (out=<optimized out>, i_query=6) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:135
+#9  0xb2a063b8 in SendOut (p_demux=p_demux@entry=0xaf6fc194, pframe=pframe@entry=0xaf6f5f00, idx=0) at external/miplayer/vlc/modules/demux/avformat/demux.c:937
+#10 0xb2a07600 in Demux (p_demux=0xaf6fc194) at external/miplayer/vlc/modules/demux/avformat/demux.c:1222
+#11 0xb2a63a70 in demux_Demux (p_demux=0xaf6fc194) at external/miplayer/vlc/src/input/demux.h:44
+#12 MainLoopDemux (i_start_mdate=228135429549, pb_demux_polled=<synthetic pointer>, pb_changed=<synthetic pointer>, p_input=<optimized out>) at external/miplayer/vlc/src/input/input.c:606
+#13 MainLoop (p_input=p_input@entry=0xafaffa94, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:782
+#14 0xb2a6429c in Run (obj=0xafaffa94) at external/miplayer/vlc/src/input/input.c:561
+#15 0xb2a9adf4 in joinable_thread (data=0xb31fd3c0) at external/miplayer/vlc/src/android/thread.c:366
+#16 0xb6eef8c0 in __pthread_start (arg=0xb311a700, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#17 0xb6eed7a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#18 0x00000000 in ?? ()
+
+7 seek函数调用后,最终会调用到input.c中的Control函数，i_type类型是INPUT_CONTROL_SET_TIME。此处会调用es_out_SetTime，负责flush数据。具体调用过程主要参考7.5的堆栈分析。
+7.1 input.c中的Control首先接受到seek请求INPUT_CONTROL_SET_TIME。
+Breakpoint 2, Control (p_input=p_input@entry=0xb2e23554, i_type=i_type@entry=4, val=...) at external/miplayer/vlc/src/input/input.c:1805
+1805	            vlc_object_remove_childrens_wakeup_flag(VLC_OBJECT(p_input));
+(gdb) bt
+#0  Control (p_input=p_input@entry=0xb2e23554, i_type=i_type@entry=4, val=...) at external/miplayer/vlc/src/input/input.c:1805
+#1  0xb266b624 in MainLoop (p_input=p_input@entry=0xb2e23554, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:849
+#2  0xb266c2a4 in Run (obj=0xb2e23554) at external/miplayer/vlc/src/input/input.c:561
+#3  0xb26a2dfc in joinable_thread (data=0xb2e02430) at external/miplayer/vlc/src/android/thread.c:366
+#4  0xb6e35178 in __pthread_start (arg=0xb2cb3f80, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#5  0xb6e32f84 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#6  0x00000000 in ?? ()
+(gdb) c
+Continuing.
+[Switching to Thread 7608]
+
+7.2 每次seek都需要flush数据，下面这个堆栈就是硬件解码器flush数据的堆栈。
+Breakpoint 4, FlushOMXCodec (p_dec=p_dec@entry=0xb39462b4) at external/miplayer/vlc/modules/codec/omxil/omxcodecinterface.cpp:1188
+1188	    MiOMXCodecContext *ctx = static_cast<MiOMXCodecContext*>(p_dec->p_sys->pcodeccontext);
+(gdb) bt
+#0  FlushOMXCodec (p_dec=p_dec@entry=0xb39462b4) at external/miplayer/vlc/modules/codec/omxil/omxcodecinterface.cpp:1188
+#1  0xb2621534 in DecodeVideo (p_dec=0xb39462b4, pp_block=0xb39462b4) at external/miplayer/vlc/modules/codec/omxil/micodec.c:300
+#2  0xb26616d8 in DecoderDecodeVideo (p_dec=p_dec@entry=0xb39462b4, p_block=0x6e69616d) at external/miplayer/vlc/src/input/decoder.c:1725
+#3  0xb2664104 in DecoderProcessVideo (b_flush=false, p_block=0xb270542c <emutls_mutex>, p_dec=0xb39462b4) at external/miplayer/vlc/src/input/decoder.c:2151
+#4  DecoderProcess (p_block=<optimized out>, p_dec=0xb39462b4) at external/miplayer/vlc/src/input/decoder.c:2364
+#5  DecoderThread (p_data=0xb39462b4) at external/miplayer/vlc/src/input/decoder.c:1116
+#6  0xb26a2dfc in joinable_thread (data=0xb3876ac0) at external/miplayer/vlc/src/android/thread.c:366
+#7  0xb6e35178 in __pthread_start (arg=0xb38a6800, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#8  0xb6e32f84 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#9  0x00000000 in ?? ()
+(gdb)  
+
+7.3 对于mkv文件，seek命令后，具体实现seek的函数调用关系。matroska_read_seek是mkv文件的接口。
+Breakpoint 1, matroska_read_seek (s=0xb3960400, stream_index=0, timestamp=801987, flags=1) at external/ffmpeg2-2/./libavformat/matroskadec.c:3062
+3062	{
+(gdb) bt
+#0  matroska_read_seek (s=0xb3960400, stream_index=0, timestamp=801987, flags=1) at external/ffmpeg2-2/./libavformat/matroskadec.c:3062
+#1  0xb1fd3a24 in seek_frame_internal (flags=1, timestamp=801987, stream_index=0, s=0xb3960400) at external/ffmpeg2-2/./libavformat/utils.c:2167
+#2  av_seek_frame (s=0xb3960400, stream_index=stream_index@entry=-1, timestamp=<optimized out>, flags=flags@entry=1) at external/ffmpeg2-2/./libavformat/utils.c:2199
+#3  0xb251552c in Control (p_demux=0xb386e1d4, i_query=<optimized out>, args=...) at external/miplayer/vlc/modules/demux/avformat/demux.c:1442
+#4  0xb2566f70 in demux_vaControl (args=..., i_query=0, p_demux=<optimized out>) at external/miplayer/vlc/src/input/demux.h:48
+#5  demux_Control (p_demux=<optimized out>, i_query=4) at external/miplayer/vlc/src/input/demux.h:56
+#6  0xb256b8d4 in Control (p_input=p_input@entry=0xb2e83a94, i_type=i_type@entry=4, val=...) at external/miplayer/vlc/src/input/input.c:1831
+#7  0xb256c654 in MainLoop (p_input=p_input@entry=0xb2e83a94, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:849
+#8  0xb256d2d4 in Run (obj=0xb2e83a94) at external/miplayer/vlc/src/input/input.c:561
+#9  0xb25a3e2c in joinable_thread (data=0xb2d384d8) at external/miplayer/vlc/src/android/thread.c:366
+#10 0xb6e98178 in __pthread_start (arg=0xb2caff80, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#11 0xb6e95f84 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#12 0x00000000 in ?? ()
+
+7.4 matroska_read_packet是mkv文件读取数据的接口，由于在seek后，是通过把数据包的i_flag为设置成BLOCK_FLAG_CORE_FLUSH来通知decoder线程需要flush的，所以需要确认在那里设置的BLOCK_FLAG_CORE_FLUSH。
+Breakpoint 2, matroska_read_packet (s=0xb3960400, pkt=0xb03ff908) at external/ffmpeg2-2/./libavformat/matroskadec.c:3037
+3037	{
+(gdb) bt
+#0  matroska_read_packet (s=0xb3960400, pkt=0xb03ff908) at external/ffmpeg2-2/./libavformat/matroskadec.c:3037
+#1  0xb1fd25e2 in ff_read_packet (s=s@entry=0xb3960400, pkt=pkt@entry=0xb03ff908) at external/ffmpeg2-2/./libavformat/utils.c:680
+#2  0xb1fd2ef4 in read_frame_internal (s=0xb3960400, pkt=0xb03ffb30) at external/ffmpeg2-2/./libavformat/utils.c:1343
+#3  0xb1fd3902 in av_read_frame (s=0xb3960400, pkt=pkt@entry=0xb03ffb30) at external/ffmpeg2-2/./libavformat/utils.c:1531
+#4  0xb251431c in Demux (p_demux=0xb386e1d4) at external/miplayer/vlc/modules/demux/avformat/demux.c:1002
+#5  0xb256caa8 in demux_Demux (p_demux=0xb386e1d4) at external/miplayer/vlc/src/input/demux.h:44
+#6  MainLoopDemux (i_start_mdate=3058336935, pb_demux_polled=<synthetic pointer>, pb_changed=<synthetic pointer>, p_input=<optimized out>) at external/miplayer/vlc/src/input/input.c:606
+#7  MainLoop (p_input=p_input@entry=0xb2e83a94, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:782
+#8  0xb256d2d4 in Run (obj=0xb2e83a94) at external/miplayer/vlc/src/input/input.c:561
+#9  0xb25a3e2c in joinable_thread (data=0xb2d384d8) at external/miplayer/vlc/src/android/thread.c:366
+#10 0xb6e98178 in __pthread_start (arg=0xb2caff80, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#11 0xb6e95f84 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#12 0x00000000 in ?? ()
+
+7.5 VLC接受到seek命令后，在input.c中的函数control中，处理seek消息INPUT_CONTROL_SET_TIME，此时会通过调用函数es_out_SetTime实现对缓冲队列的flush。
+decode线程实现flush是在接收到flag为BLOCK_FLAG_CORE_FLUSH的数据包后，实现flush的。包含BLOCK_FLAG_CORE_FLUSH的包都是通过DecoderBlockFlushNew创建的。
+
+Breakpoint 2, input_DecoderDecode (p_dec=p_dec@entry=0xb2ea2434, p_block=p_block@entry=0xb2ca9b40, b_do_pace=b_do_pace@entry=false) at external/miplayer/vlc/src/input/decoder.c:463
+463	       msg_Err( p_dec, "[%s:%d]lyx p_block->i_flags=0x%x", __FUNCTION__, __LINE__, p_block->i_flags);  
+(gdb) bt
+#0  input_DecoderDecode (p_dec=p_dec@entry=0xb2ea2434, p_block=p_block@entry=0xb2ca9b40, b_do_pace=b_do_pace@entry=false) at external/miplayer/vlc/src/input/decoder.c:463
+#1  0xb2466054 in DecoderFlush (p_dec=0xb2ea2434) at external/miplayer/vlc/src/input/decoder.c:1183
+#2  0xb2466334 in input_DecoderStartBuffering (p_dec=<optimized out>) at external/miplayer/vlc/src/input/decoder.c:644
+#3  0xb24bb384 in EsOutChangePosition (out=out@entry=0xb39a15b0) at external/miplayer/vlc/src/input/es_out.c:760
+#4  0xb24bec8c in EsOutControlLocked (args=..., i_query=<optimized out>, out=0xb39a15b0) at external/miplayer/vlc/src/input/es_out.c:3048
+#5  EsOutControl (out=0xb39a15b0, i_query=<optimized out>, args=...) at external/miplayer/vlc/src/input/es_out.c:3183
+#6  0xb24152a4 in es_out_vaControl (args=..., i_query=-1337983873, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+#7  es_out_Control (out=<optimized out>, i_query=65548) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:135
+#8  0xb24c26ec in es_out_SetTime (i_date=<optimized out>, p_out=<optimized out>) at external/miplayer/vlc/src/input/es_out.h:149
+#9  ControlLockedSetTime (p_out=0xb2c330e8, i_date=<optimized out>) at external/miplayer/vlc/src/input/es_out_timeshift.c:576
+#10 ControlLocked (p_out=0xb2c330e8, args=..., i_query=65548) at external/miplayer/vlc/src/input/es_out_timeshift.c:690
+#11 Control (p_out=0xb2c330e8, i_query=65548, args=...) at external/miplayer/vlc/src/input/es_out_timeshift.c:737
+#12 0xb24152a4 in es_out_vaControl (args=..., i_query=-1337983856, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+#13 es_out_Control (out=<optimized out>, i_query=65548) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:135
+#14 0xb246dc00 in es_out_SetTime (i_date=-1, p_out=<optimized out>) at external/miplayer/vlc/src/input/es_out.h:149
+#15 Control (p_input=p_input@entry=0xb39d2f74, i_type=i_type@entry=4, val=...) at external/miplayer/vlc/src/input/input.c:1821
+#16 0xb246e9f4 in MainLoop (p_input=p_input@entry=0xb39d2f74, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:849
+#17 0xb246f674 in Run (obj=0xb39d2f74) at external/miplayer/vlc/src/input/input.c:561
+#18 0xb24a61cc in joinable_thread (data=0xb394c900) at external/miplayer/vlc/src/android/thread.c:366
+#19 0xb6e16178 in __pthread_start (arg=0xb38a4c80, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#20 0xb6e13f84 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#21 0x00000000 in ?? ()
+(gdb) c
+Continuing.
+
+7.6 demux模块接收到数据后，要送到fifo中，decoder线程会从该队列中取出数据。
+Breakpoint 2, block_FifoPut (p_fifo=0xb2c352b8, p_block=0xb2f0d000) at external/miplayer/vlc/src/misc/block.c:630
+630	{
+(gdb) bt
+#0  block_FifoPut (p_fifo=0xb2c352b8, p_block=0xb2f0d000) at external/miplayer/vlc/src/misc/block.c:630
+#1  0xb26b97f4 in EsOutSend (out=0xb2c342e0, es=0xb2c76c00, p_block=<optimized out>) at external/miplayer/vlc/src/input/es_out.c:2368
+#2  0xb26bcbfc in es_out_Send (p_block=<optimized out>, id=<optimized out>, out=<optimized out>) at external/miplayer/vlc/src/../include/vlc_es_out.h:121
+#3  CmdExecuteSend (p_out=<optimized out>, p_cmd=p_cmd@entry=0xb16d4a28) at external/miplayer/vlc/src/input/es_out_timeshift.c:1290
+#4  0xb26bdeb8 in Send (p_out=0xb2c330e8, p_es=0xb2c2f198, p_block=0xb2f0d000) at external/miplayer/vlc/src/input/es_out_timeshift.c:422
+#5  0xb2611510 in es_out_Send (p_block=0xb2f0d000, id=<optimized out>, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:121
+#6  SendOut (p_demux=0xb2c36694, pframe=pframe@entry=0xb2f0d000, idx=0) at external/miplayer/vlc/modules/demux/avformat/demux.c:960
+#7  0xb2612cd4 in Demux (p_demux=<optimized out>) at external/miplayer/vlc/modules/demux/avformat/demux.c:1250
+#8  0xb266adb0 in demux_Demux (p_demux=0xb2c36694) at external/miplayer/vlc/src/input/demux.h:44
+#9  MainLoopDemux (i_start_mdate=2540172949, pb_demux_polled=<synthetic pointer>, pb_changed=<synthetic pointer>, p_input=<optimized out>) at external/miplayer/vlc/src/input/input.c:606
+#10 MainLoop (p_input=p_input@entry=0xb39a2254, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:782
+#11 0xb266b5dc in Run (obj=0xb39a2254) at external/miplayer/vlc/src/input/input.c:561
+#12 0xb26a2134 in joinable_thread (data=0xb393ea88) at external/miplayer/vlc/src/android/thread.c:366
+#13 0xb6e6b178 in __pthread_start (arg=0xb38a4500, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#14 0xb6e68f84 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#15 0x00000000 in ?? ()
+(gdb) c
+Continuing.
+
+
+---------------------------音频模块---------------------------------------
+/home/user/source/mediafiles/1.rmvb
+b input/decoder.c:1195
+
+音频的播放流程:
+demux模块调用DecoderProcessAudio（）完成对音频数据的处理，包括解码，解码后的数据存入队列，系统时间转换等。
+1. 调用DecodeAudio模块，接收音频数据并解码，返回解码后的原始音频数据。
+2. 调用DecoderPlayAudio模块，接收解码后的原始音频数据：
+   2.1 首先存入队列中。直到队列中的数据达到缓存的个数要求后，才开始处理。
+   2.2 从队列中取出数据后，将每个数据包的时间戳转换成当前系统的时间。由函数DecoderFixTs完成。
+   2.3 根据数据包的系统时间，调用DecoderWaitDate让数据包在要播放前2秒发送给播放模块。（这部分实现的理念与外挂字幕一样）
+3. 调用aout_DecPlay模块(实际是DecoderPlayAudio模块调用的), 该模块作调用音频的检查函数，音频放大函数，resample函数，fileter函数等，完成对音频数据的处理。并最终调用aout_OutputPlay将音频数据放入输出队列。
+4. 在linux平台上，vlc中的aout_OutputPlay函数会调用PulseAudio实现音频的播放。PulseAudio是Linux系统的音频处理系统。http://www.freedesktop.org/software/pulseaudio/doxygen/stream_8h.html
+
+音频播放模块
+1 linux平添使用的音频输出模块
+vlc_module_begin ()
+    set_shortname( "PulseAudio" )
+    set_description( N_("Pulseaudio audio output") )
+    set_capability( "audio output", 160 )
+    set_category( CAT_AUDIO )
+    set_subcategory( SUBCAT_AUDIO_AOUT )
+    add_shortcut( "pulseaudio", "pa" )
+    set_callbacks( Open, Close )
+vlc_module_end ()
+
+2 电视使用的音频输出模块
+vlc_module_begin ()
+    set_description(N_("Android AudioSink output"))
+    set_shortname(N_("AudioSink"))
+    set_category(CAT_AUDIO)
+    set_subcategory(SUBCAT_AUDIO_AOUT)
+    set_capability("audio output", 230)
+    add_shortcut("android_audiosink")
+    set_callbacks(Open, Close)
+vlc_module_end ()
+
+3 手机使用的音频输出模块
+vlc_module_begin ()
+    set_shortname("AudioTrack")
+    set_description(N_("Android AudioTrack audio output"))
+    set_capability("audio output", 225)
+    set_category(CAT_AUDIO)
+    set_subcategory(SUBCAT_AUDIO_AOUT)
+    add_sw_gain()
+    add_shortcut("android")
+    set_callbacks(Open, Close)
+vlc_module_end ()
+
+音频数据流相关的一些栈信息
+1. DecodeAudio
+(gdb) bt
+#0  DecodeAudio (p_dec=0x7fffd4d1d5e8, pp_block=0x7fffc9956df0) at avcodec/audio.c:225
+#1  0x00007ffff78e8666 in DecoderDecodeAudio (p_dec=0x7fffd4d1d5e8, p_block=0x0) at input/decoder.c:1259
+#2  0x00007ffff78e9cb5 in DecoderProcessAudio (p_dec=0x7fffd4d1d5e8, p_block=0x7fffd4cc12c0, b_flush=false) at input/decoder.c:1889
+#3  0x00007ffff78ea094 in DecoderProcess (p_dec=0x7fffd4d1d5e8, p_block=0x7fffd4cc12c0) at input/decoder.c:2010
+#4  0x00007ffff78e7a7e in DecoderThread (p_data=0x7fffd4d1d5e8) at input/decoder.c:936
+#5  0x00007ffff6f3c182 in start_thread (arg=0x7fffc9957700) at pthread_create.c:312
+#6  0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+2. input_DecoderStartBuffering
+(gdb) bt
+#0  input_DecoderStartBuffering (p_dec=0x7fffd4cb4fb8) at input/decoder.c:541
+#1  0x00007ffff78f16ca in EsCreateDecoder (out=0x7fffd0005930, p_es=0x7fffd4c19860) at input/es_out.c:1561
+#2  0x00007ffff78f1a3d in EsSelect (out=0x7fffd0005930, es=0x7fffd4c19860) at input/es_out.c:1642
+#3  0x00007ffff78f21be in EsOutSelect (out=0x7fffd0005930, es=0x7fffd4c19860, b_force=false) at input/es_out.c:1861
+#4  0x00007ffff78f3316 in EsOutControlLocked (out=0x7fffd0005930, i_query=65536, args=0x7fffe7be8a80) at input/es_out.c:2180
+#5  0x00007ffff78f5444 in EsOutControl (out=0x7fffd0005930, i_query=65536, args=0x7fffe7be8a80) at input/es_out.c:2698
+#6  0x00007ffff78f67fe in es_out_vaControl (out=0x7fffd0005930, i_query=65536, args=0x7fffe7be8a80) at ../include/vlc_es_out.h:126
+#7  0x00007ffff78f68ce in es_out_Control (out=0x7fffd0005930, i_query=65536) at ../include/vlc_es_out.h:135
+#8  0x00007ffff78fa344 in CmdExecuteControl (p_out=0x7fffd0005930, p_cmd=0x7fffe7be8bc0) at input/es_out_timeshift.c:1458
+#9  0x00007ffff78f77f0 in ControlLocked (p_out=0x7fffd4000aa0, i_query=65536, args=0x7fffe7be8d10) at input/es_out_timeshift.c:620
+#10 0x00007ffff78f8060 in Control (p_out=0x7fffd4000aa0, i_query=65536, args=0x7fffe7be8d10) at input/es_out_timeshift.c:718
+#11 0x00007ffff78fbb5a in es_out_vaControl (out=0x7fffd4000aa0, i_query=65536, args=0x7fffe7be8d10) at ../include/vlc_es_out.h:126
+#12 0x00007ffff78fbc2a in es_out_Control (out=0x7fffd4000aa0, i_query=65536) at ../include/vlc_es_out.h:135
+#13 0x00007ffff78fbf78 in es_out_SetMode (p_out=0x7fffd4000aa0, i_mode=2) at input/es_out.h:89
+#14 0x00007ffff78ff227 in InitPrograms (p_input=0x7fffd00009b8) at input/input.c:1172
+#15 0x00007ffff78ff59f in Init (p_input=0x7fffd00009b8) at input/input.c:1250
+#16 0x00007ffff78fd5b7 in Run (obj=0x7fffd00009b8) at input/input.c:521
+#17 0x00007ffff6f3c182 in start_thread (arg=0x7fffe7be9700) at pthread_create.c:312
+#18 0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+(gdb) bt
+#0  input_DecoderStartBuffering (p_dec=0x7fffd4c09cd8) at input/decoder.c:541
+#1  0x00007ffff78eeca5 in EsOutChangePosition (out=0x7fffd0005930) at input/es_out.c:579
+#2  0x00007ffff78f3add in EsOutControlLocked (out=0x7fffd0005930, i_query=8, args=0x7fffe7be85e0) at input/es_out.c:2355
+#3  0x00007ffff78f5444 in EsOutControl (out=0x7fffd0005930, i_query=8, args=0x7fffe7be85e0) at input/es_out.c:2698
+#4  0x00007ffff78ed707 in es_out_vaControl (out=0x7fffd0005930, i_query=8, args=0x7fffe7be85e0) at ../include/vlc_es_out.h:126
+#5  0x00007ffff78ed7d7 in es_out_Control (out=0x7fffd0005930, i_query=8) at ../include/vlc_es_out.h:135
+#6  0x00007ffff78f3a61 in EsOutControlLocked (out=0x7fffd0005930, i_query=6, args=0x7fffe7be8970) at input/es_out.c:2345
+#7  0x00007ffff78f5444 in EsOutControl (out=0x7fffd0005930, i_query=6, args=0x7fffe7be8970) at input/es_out.c:2698
+#8  0x00007ffff78f67fe in es_out_vaControl (out=0x7fffd0005930, i_query=6, args=0x7fffe7be8970) at ../include/vlc_es_out.h:126
+#9  0x00007ffff78f68ce in es_out_Control (out=0x7fffd0005930, i_query=6) at ../include/vlc_es_out.h:135
+#10 0x00007ffff78fa367 in CmdExecuteControl (p_out=0x7fffd0005930, p_cmd=0x7fffe7be8ab0) at input/es_out_timeshift.c:1462
+#11 0x00007ffff78f77f0 in ControlLocked (p_out=0x7fffd4000aa0, i_query=6, args=0x7fffe7be8c00) at input/es_out_timeshift.c:620
+#12 0x00007ffff78f8060 in Control (p_out=0x7fffd4000aa0, i_query=6, args=0x7fffe7be8c00) at input/es_out_timeshift.c:718
+#13 0x00007fffe441dffd in es_out_vaControl (out=0x7fffd4000aa0, i_query=6, args=0x7fffe7be8c00) at ../../include/vlc_es_out.h:126
+#14 0x00007fffe441e0cd in es_out_Control (out=0x7fffd4000aa0, i_query=6) at ../../include/vlc_es_out.h:135
+#15 0x00007fffe4420a34 in Demux (p_demux=0x7fffd4c01798) at avformat/demux.c:694
+#16 0x00007ffff78fc38d in demux_Demux (p_demux=0x7fffd4c01798) at input/demux.h:44
+#17 0x00007ffff78fd703 in MainLoopDemux (p_input=0x7fffd00009b8, pb_changed=0x7fffe7be8ece, pb_demux_polled=0x7fffe7be8ecc, i_start_mdate=429689313058) at input/input.c:562
+#18 0x00007ffff78fdd30 in MainLoop (p_input=0x7fffd00009b8, b_interactive=true) at input/input.c:738
+#19 0x00007ffff78fd5cc in Run (obj=0x7fffd00009b8) at input/input.c:524
+#20 0x00007ffff6f3c182 in start_thread (arg=0x7fffe7be9700) at pthread_create.c:312
+#21 0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+
+3. input_DecoderStopBuffering
+(gdb) bt
+#0  input_DecoderStopBuffering (p_dec=0x7fffd4c09cd8) at input/decoder.c:576
+#1  0x00007ffff78ef199 in EsOutDecodersStopBuffering (out=0x7fffd0005930, b_forced=false) at input/es_out.c:674
+#2  0x00007ffff78f38bb in EsOutControlLocked (out=0x7fffd0005930, i_query=6, args=0x7fffe7be8970) at input/es_out.c:2317
+#3  0x00007ffff78f5444 in EsOutControl (out=0x7fffd0005930, i_query=6, args=0x7fffe7be8970) at input/es_out.c:2698
+#4  0x00007ffff78f67fe in es_out_vaControl (out=0x7fffd0005930, i_query=6, args=0x7fffe7be8970) at ../include/vlc_es_out.h:126
+#5  0x00007ffff78f68ce in es_out_Control (out=0x7fffd0005930, i_query=6) at ../include/vlc_es_out.h:135
+#6  0x00007ffff78fa367 in CmdExecuteControl (p_out=0x7fffd0005930, p_cmd=0x7fffe7be8ab0) at input/es_out_timeshift.c:1462
+#7  0x00007ffff78f77f0 in ControlLocked (p_out=0x7fffd4000aa0, i_query=6, args=0x7fffe7be8c00) at input/es_out_timeshift.c:620
+#8  0x00007ffff78f8060 in Control (p_out=0x7fffd4000aa0, i_query=6, args=0x7fffe7be8c00) at input/es_out_timeshift.c:718
+#9  0x00007fffe441dffd in es_out_vaControl (out=0x7fffd4000aa0, i_query=6, args=0x7fffe7be8c00) at ../../include/vlc_es_out.h:126
+#10 0x00007fffe441e0cd in es_out_Control (out=0x7fffd4000aa0, i_query=6) at ../../include/vlc_es_out.h:135
+#11 0x00007fffe4420a34 in Demux (p_demux=0x7fffd4c01798) at avformat/demux.c:694
+#12 0x00007ffff78fc38d in demux_Demux (p_demux=0x7fffd4c01798) at input/demux.h:44
+#13 0x00007ffff78fd703 in MainLoopDemux (p_input=0x7fffd00009b8, pb_changed=0x7fffe7be8ece, pb_demux_polled=0x7fffe7be8ecc, i_start_mdate=429689313058) at input/input.c:562
+#14 0x00007ffff78fdd30 in MainLoop (p_input=0x7fffd00009b8, b_interactive=true) at input/input.c:738
+#15 0x00007ffff78fd5cc in Run (obj=0x7fffd00009b8) at input/input.c:524
+#16 0x00007ffff6f3c182 in start_thread (arg=0x7fffe7be9700) at pthread_create.c:312
+#17 0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+
+4. aout_DecSynchronize
+(gdb) bt
+#0  aout_DecSynchronize (aout=0x6d8858, dec_pts=358659700882, input_rate=1000) at audio_output/dec.c:247
+#1  0x00007ffff792916d in aout_DecPlay (aout=0x6d8858, block=0x7fffc00008c0, input_rate=1000) at audio_output/dec.c:402
+#2  0x00007ffff78e8462 in DecoderPlayAudio (p_dec=0x7fffd4d1d5e8, p_audio=0x7fffc00008c0, pi_played_sum=0x7fffc9956e24, pi_lost_sum=0x7fffc9956e28) at input/decoder.c:1232
+#3  0x00007ffff78e864b in DecoderDecodeAudio (p_dec=0x7fffd4d1d5e8, p_block=0x0) at input/decoder.c:1289
+#4  0x00007ffff78e9cb5 in DecoderProcessAudio (p_dec=0x7fffd4d1d5e8, p_block=0x7fffd4cc12c0, b_flush=false) at input/decoder.c:1889
+#5  0x00007ffff78ea094 in DecoderProcess (p_dec=0x7fffd4d1d5e8, p_block=0x7fffd4cc12c0) at input/decoder.c:2010
+#6  0x00007ffff78e7a7e in DecoderThread (p_data=0x7fffd4d1d5e8) at input/decoder.c:936
+#7  0x00007ffff6f3c182 in start_thread (arg=0x7fffc9957700) at pthread_create.c:312
+#8  0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+5 /**
+ * Queue one audio frame to the playback stream
+ */
+(gdb) bt
+#0  Play (aout=0x6d88c8, block=0x7fffc00008c0) at pulse.c:514
+#1  0x00007ffff792c340 in aout_OutputPlay (aout=0x6d88c8, block=0x7fffc00008c0) at audio_output/output.c:474
+#2  0x00007ffff79291ee in aout_DecPlay (aout=0x6d88c8, block=0x7fffc00008c0, input_rate=1000)
+    at audio_output/dec.c:408
+#3  0x00007ffff78e8462 in DecoderPlayAudio (p_dec=0x7fffcccb0a48, p_audio=0x7fffc00008c0, 
+    pi_played_sum=0x7ffff4070e24, pi_lost_sum=0x7ffff4070e28) at input/decoder.c:1237
+#4  0x00007ffff78e864b in DecoderDecodeAudio (p_dec=0x7fffcccb0a48, p_block=0x0) at input/decoder.c:1294
+#5  0x00007ffff78e9cb5 in DecoderProcessAudio (p_dec=0x7fffcccb0a48, p_block=0x7fffccccc100, b_flush=false)
+    at input/decoder.c:1894
+#6  0x00007ffff78ea094 in DecoderProcess (p_dec=0x7fffcccb0a48, p_block=0x7fffccccc100)
+    at input/decoder.c:2015
+#7  0x00007ffff78e7a7e in DecoderThread (p_data=0x7fffcccb0a48) at input/decoder.c:936
+#8  0x00007ffff6f3c182 in start_thread (arg=0x7ffff4071700) at pthread_create.c:312
+#9  0x00007ffff6a64efd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+5 音频硬件解码
+(gdb) bt
+#0  DecodeAudio (p_dec=0xa3762634, pp_block=0x7df1eca4) at external/miplayer/vlc/modules/codec/omxil/micodec.c:499
+#1  0xa4959338 in DecoderDecodeAudio (p_dec=p_dec@entry=0xa3762634, p_block=0xa49c694c) at external/miplayer/vlc/src/input/decoder.c:1470
+#2  0xa495c0b8 in DecoderProcessAudio (b_flush=false, p_block=0x4, p_dec=0xa3762634) at external/miplayer/vlc/src/input/decoder.c:2196
+#3  DecoderProcess (p_block=<optimized out>, p_dec=0xa3762634) at external/miplayer/vlc/src/input/decoder.c:2337
+#4  DecoderThread (p_data=0xa3762634) at external/miplayer/vlc/src/input/decoder.c:1109
+#5  0xa499adf4 in joinable_thread (data=0xa370c2a8) at external/miplayer/vlc/src/android/thread.c:366
+#6  0xb6ebc8c0 in __pthread_start (arg=0xa2f6df80, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#7  0xb6eba7a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#8  0x00000000 in ?? ()
+
+
+6 音频数据从demux中读出，以mkv为例
+(gdb) bt
+#0  matroska_read_packet (s=0xaf419400, pkt=0xaf1ff908) at external/ffmpeg2-2/./libavformat/matroskadec.c:3055
+#1  0xb13dc332 in ff_read_packet (s=s@entry=0xaf419400, pkt=pkt@entry=0xaf1ff908) at external/ffmpeg2-2/./libavformat/utils.c:680
+#2  0xb13dcc30 in read_frame_internal (s=0xaf419400, pkt=0xaf1ffb30) at external/ffmpeg2-2/./libavformat/utils.c:1336
+#3  0xb13dd60a in av_read_frame (s=0xaf419400, pkt=pkt@entry=0xaf1ffb30) at external/ffmpeg2-2/./libavformat/utils.c:1524
+#4  0xb2c06da4 in Demux (p_demux=0xaf4ed194) at external/miplayer/vlc/modules/demux/avformat/demux.c:987
+#5  0xb2c63a70 in demux_Demux (p_demux=0xaf4ed194) at external/miplayer/vlc/src/input/demux.h:44
+#6  MainLoopDemux (i_start_mdate=1373115864, pb_demux_polled=<synthetic pointer>, pb_changed=<synthetic pointer>, p_input=<optimized out>) at external/miplayer/vlc/src/input/input.c:606
+#7  MainLoop (p_input=p_input@entry=0xb0bf9914, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:782
+#8  0xb2c6429c in Run (obj=0xb0bf9914) at external/miplayer/vlc/src/input/input.c:561
+#9  0xb2c9adf4 in joinable_thread (data=0xb0b93548) at external/miplayer/vlc/src/android/thread.c:366
+#10 0xb6eec8c0 in __pthread_start (arg=0xb0bf1800, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#11 0xb6eea7a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#12 0x00000000 in ?? ()
+
+(gdb) bt
+#0  matroska_read_packet (s=0xaf419400, pkt=0xaf1ff908) at external/ffmpeg2-2/./libavformat/matroskadec.c:3055
+#1  0xb13dc332 in ff_read_packet (s=s@entry=0xaf419400, pkt=pkt@entry=0xaf1ff908) at external/ffmpeg2-2/./libavformat/utils.c:680
+#2  0xb13dcc30 in read_frame_internal (s=0xaf419400, pkt=0xaf1ffb30) at external/ffmpeg2-2/./libavformat/utils.c:1336
+#3  0xb13dd60a in av_read_frame (s=0xaf419400, pkt=pkt@entry=0xaf1ffb30) at external/ffmpeg2-2/./libavformat/utils.c:1524
+#4  0xb2c06da4 in Demux (p_demux=0xaf4ed194) at external/miplayer/vlc/modules/demux/avformat/demux.c:987
+#5  0xb2c63a70 in demux_Demux (p_demux=0xaf4ed194) at external/miplayer/vlc/src/input/demux.h:44
+#6  MainLoopDemux (i_start_mdate=1373115864, pb_demux_polled=<synthetic pointer>, pb_changed=<synthetic pointer>, p_input=<optimized out>) at external/miplayer/vlc/src/input/input.c:606
+#7  MainLoop (p_input=p_input@entry=0xb0bf9914, b_interactive=b_interactive@entry=true) at external/miplayer/vlc/src/input/input.c:782
+#8  0xb2c6429c in Run (obj=0xb0bf9914) at external/miplayer/vlc/src/input/input.c:561
+#9  0xb2c9adf4 in joinable_thread (data=0xb0b93548) at external/miplayer/vlc/src/android/thread.c:366
+#10 0xb6eec8c0 in __pthread_start (arg=0xb0bf1800, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#11 0xb6eea7a4 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+
+
+--------------------MiPlayer下vlc主要主要函数创建过程------------------------------------
+1 MiPlayer调用input_Create创建VLC的instance。
+Breakpoint 2, input_EsOutNew (p_input=p_input@entry=0xb2e24794, i_rate=1000) at external/miplayer/vlc/src/input/es_out.c:261
+261	{
+(gdb) bt
+#0  input_EsOutNew (p_input=p_input@entry=0xb2e24794, i_rate=1000) at external/miplayer/vlc/src/input/es_out.c:261
+#1  0x9f660830 in Create (p_parent=p_parent@entry=0xb2c31d24, p_item=<optimized out>, psz_header=psz_header@entry=0x0, b_quick=b_quick@entry=false, p_resource=0xb2e193a0)
+    at external/miplayer/vlc/src/input/input.c:487
+#2  0x9f660b1c in input_Create (p_parent=p_parent@entry=0xb2c31d24, p_item=<optimized out>, psz_log=psz_log@entry=0x0, p_resource=<optimized out>) at external/miplayer/vlc/src/input/input.c:131
+#3  0x9f64a61c in libvlc_media_player_prepare (p_mi=0xb2c31d24) at external/miplayer/vlc/lib/media_player.c:816
+#4  0x9f5ee940 in MiPlayer::prepareAsync (this=0xb2c2bd00) at external/miplayer/libmiplayer/miplayer/MiPlayer.cpp:827
+#5  0xb6cb14ce in android::MediaPlayerService::Client::prepareAsync (this=<optimized out>) at frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp:1094
+#6  0xb6d68d10 in android::BnMediaPlayer::onTransact (this=0xb2c28080, code=6, data=..., reply=0x9f207ca4, flags=16) at frameworks/av/media/libmedia/IMediaPlayer.cpp:929
+#7  0xb6efe6ce in android::BBinder::transact (this=0xb2c28084, code=6, data=..., reply=0x9f207ca4, flags=16) at frameworks/native/libs/binder/Binder.cpp:108
+#8  0xb6f03790 in android::IPCThreadState::executeCommand (this=this@entry=0xb2c27840, cmd=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:1095
+#9  0xb6f038e6 in android::IPCThreadState::getAndExecuteCommand (this=this@entry=0xb2c27840) at frameworks/native/libs/binder/IPCThreadState.cpp:435
+#10 0xb6f03928 in android::IPCThreadState::joinThreadPool (this=0xb2c27840, isMain=<optimized out>) at frameworks/native/libs/binder/IPCThreadState.cpp:489
+#11 0xb6f07a9e in android::PoolThread::threadLoop (this=0xb386f7c0) at frameworks/native/libs/binder/ProcessState.cpp:62
+#12 0xb6c4a4e2 in android::Thread::_threadLoop (user=0xb386f7c0) at system/core/libutils/Threads.cpp:776
+#13 0xb6c4a052 in thread_data_t::trampoline (t=<optimized out>) at system/core/libutils/Threads.cpp:101
+#14 0xb6e84fdc in __pthread_start (arg=0xb38a4a00, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#15 0xb6e82f24 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#16 0x00000000 in ?? ()
+
+2 MiPlayer调用input_Start创建Run线程，该线程是VLC最主要的
+Breakpoint 1, EsOutAdd (out=0xb2e1b6e8, fmt=0x9ba3e830) at external/miplayer/vlc/src/input/es_out.c:1782
+1782	    if( fmt->i_group < 0 )
+(gdb) bt
+#0  EsOutAdd (out=0xb2e1b6e8, fmt=0x9ba3e830) at external/miplayer/vlc/src/input/es_out.c:1782
+#1  0x9f6b8d30 in es_out_Add (fmt=<optimized out>, out=<optimized out>) at external/miplayer/vlc/src/../include/vlc_es_out.h:110
+#2  CmdExecuteAdd (p_cmd=0x9ba3e718, p_out=<optimized out>) at external/miplayer/vlc/src/input/es_out_timeshift.c:1266
+#3  Add (p_out=<optimized out>, p_fmt=<optimized out>) at external/miplayer/vlc/src/input/es_out_timeshift.c:402
+#4  0x9f60ac74 in es_out_Add (fmt=0x9ba3e830, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:110
+#5  OpenDemux (p_this=<error reading variable: value has been optimized out>) at external/miplayer/vlc/modules/demux/avformat/demux.c:749
+#6  0x9f68a418 in generic_start (func=<optimized out>, ap=..., ap@entry=...) at external/miplayer/vlc/src/modules/modules.c:351
+#7  0x9f68a46c in module_load (obj=obj@entry=0xb2c367b4, m=m@entry=0xb2e47dc0, init=0x9f68a408 <generic_start>, init@entry=0xb6edbdf4 <__stack_chk_guard>, args=...)
+    at external/miplayer/vlc/src/modules/modules.c:185
+#8  0x9f68a92c in vlc_module_load (obj=0xb2c367b4, obj@entry=0xb2e26694, capability=0x3 <Address 0x3 out of bounds>, name=0x1 <Address 0x1 out of bounds>, strict=<optimized out>, 
+    probe=0x9f68a408 <generic_start>) at external/miplayer/vlc/src/modules/modules.c:277
+#9  0x9f68ae4c in module_need (obj=obj@entry=0xb2e26694, cap=<optimized out>, name=<optimized out>, strict=<optimized out>) at external/miplayer/vlc/src/modules/modules.c:366
+#10 0x9f65dea0 in demux_New (p_obj=p_obj@entry=0xb2e24794, p_parent_input=p_parent_input@entry=0xb2e24794, psz_access=<optimized out>, psz_demux=<optimized out>, 
+    psz_location=0xb2e2b920 "127.0.0.1:13499/iqiyi/stream_-101.m3u8?id=-101&tag_num=0&offset=0", s=s@entry=0xb2c367b4, out=0xb2e1b748, b_quick=b_quick@entry=false)
+    at external/miplayer/vlc/src/input/demux.c:188
+#11 0x9f66168c in InputSourceInit (p_input=p_input@entry=0xb2e24794, in=in@entry=0xb2c42888, psz_mrl=<optimized out>, psz_forced_demux=psz_forced_demux@entry=0x0, b_in_can_fail=b_in_can_fail@entry=false)
+    at external/miplayer/vlc/src/input/input.c:2555
+#12 0x9f662454 in Init (p_input=p_input@entry=0xb2e24794) at external/miplayer/vlc/src/input/input.c:1283
+#13 0x9f665838 in Run (obj=0xb2e24794) at external/miplayer/vlc/src/input/input.c:553
+#14 0x9f69c434 in joinable_thread (data=0xb2d3d5b8) at external/miplayer/vlc/src/android/thread.c:366
+#15 0xb6e84fdc in __pthread_start (arg=0xb38a5680, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#16 0xb6e82f24 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#17 0x00000000 in ?? ()
+
+
+-------------VLC release 流程----------------------------------------------------
+
+Playlist停止input线程
+(gdb) bt
+#0  input_Stop (p_input=0x7fffd00009b8, b_abort=false) at input/input.c:240
+#1  0x00007ffff7910ae9 in LoopInput (p_playlist=<optimized out>) at playlist/thread.c:477
+#2  Thread (data=<optimized out>) at playlist/thread.c:532
+#3  0x00007ffff6f83182 in start_thread (arg=0x7ffff7f4c700) at pthread_create.c:312
+#4  0x00007ffff6aabefd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+结束input线程过程中需要调用的函数： 
+(gdb) bt  //释放DecoderThread线程，有时会卡在vlc_join中。
+#0  input_DecoderDelete (p_dec=0x7fffd4c0fa38) at input/decoder.c:344
+#1  0x00007ffff7924895 in EsDestroyDecoder (out=<optimized out>, p_es=0x7fffd4c0ef80) at input/es_out.c:1580
+#2  0x00007ffff792602c in EsUnselect (out=0x7fffd0005930, es=0x7fffd4c0ef80, b_update=true) at input/es_out.c:1691
+#3  0x00007ffff792810f in EsOutControlLocked (args=<optimized out>, i_query=<optimized out>, out=<optimized out>) at input/es_out.c:2176
+#4  EsOutControl (out=0x7fffd0005930, i_query=<optimized out>, args=<optimized out>) at input/es_out.c:2698
+#5  0x00007ffff792b45a in es_out_vaControl (args=<optimized out>, i_query=<optimized out>, out=<optimized out>) at ../include/vlc_es_out.h:126
+#6  es_out_Control (out=0x7fffd4c0fa38, i_query=-725553280) at ../include/vlc_es_out.h:135
+#7  0x00007ffff792c17b in ControlLocked (args=<optimized out>, i_query=<optimized out>, p_out=<optimized out>) at input/es_out_timeshift.c:620
+#8  Control (p_out=0x7fffd4000aa0, i_query=65536, args=0x7fffe5943df0) at input/es_out_timeshift.c:718
+#9  0x00007ffff792e09a in es_out_vaControl (args=<optimized out>, i_query=<optimized out>, out=<optimized out>) at ../include/vlc_es_out.h:126
+#10 es_out_Control (out=0x7fffd4c0fa38, i_query=-725553280) at ../include/vlc_es_out.h:135
+#11 0x00007ffff792f455 in es_out_SetMode (i_mode=<optimized out>, p_out=<optimized out>) at input/es_out.h:89
+#12 End (p_input=0x7fffd00009b8) at input/input.c:1369
+#13 0x00007ffff79344cd in Run (obj=<optimized out>) at input/input.c:527
+#14 0x00007ffff6f83182 in start_thread (arg=0x7fffe5944700) at pthread_create.c:312
+#15 0x00007ffff6aabefd in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:111
+
+micodec卸载
+(gdb) bt
+#0  CloseGeneric (p_this=0xb399d234, p_this@entry=<error reading variable: value has been optimized out>) at external/miplayer/vlc/modules/codec/omxil/micodec.c:622
+#1  0xb2591ccc in generic_stop (func=<optimized out>, ap=...) at external/miplayer/vlc/src/modules/modules.c:359
+#2  0xb25926c0 in vlc_module_unload (module=<optimized out>, deinit=0xb2591cbc <generic_stop>) at external/miplayer/vlc/src/modules/modules.c:340
+#3  0xb259274c in module_unneed (obj=obj@entry=0xb399d234, module=<optimized out>) at external/miplayer/vlc/src/modules/modules.c:373
+#4  0xb2565498 in input_DecoderDelete (p_dec=0xb399d234) at external/miplayer/vlc/src/input/decoder.c:435
+#5  0xb25b7624 in EsDestroyDecoder (p_es=0xb3958800, p_es=0xb3958800, out=0xb2caf598) at external/miplayer/vlc/src/input/es_out.c:1957
+#6  0xb25ba7bc in EsUnselect (out=out@entry=0xb2caf598, es=0xb3958800, b_update=<optimized out>) at external/miplayer/vlc/src/input/es_out.c:2068
+#7  0xb25bbf98 in EsOutControlLocked (args=..., i_query=<optimized out>, out=0xb2caf598) at external/miplayer/vlc/src/input/es_out.c:2568
+#8  EsOutControl (out=0xb2caf598, i_query=<optimized out>, args=...) at external/miplayer/vlc/src/input/es_out.c:3160
+#9  0xb2512f24 in es_out_vaControl (args=..., i_query=0, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+#10 es_out_Control (out=<optimized out>, i_query=65536) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:135
+#11 0xb25c0104 in ControlLocked (p_out=<optimized out>, args=..., i_query=<optimized out>) at external/miplayer/vlc/src/input/es_out_timeshift.c:629
+#12 Control (p_out=<optimized out>, i_query=<optimized out>, args=...) at external/miplayer/vlc/src/input/es_out_timeshift.c:732
+#13 0xb2512f24 in es_out_vaControl (args=..., i_query=1, out=<optimized out>) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+#14 es_out_Control (out=<optimized out>, i_query=65536) at external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:135
+#15 0xb2567988 in es_out_SetMode (i_mode=0, p_out=<optimized out>) at external/miplayer/vlc/src/input/es_out.h:95
+#16 End (p_input=p_input@entry=0xb2cef734) at external/miplayer/vlc/src/input/input.c:1437
+#17 0xb256d190 in Run (obj=0xb2cef734) at external/miplayer/vlc/src/input/input.c:566
+#18 0xb25a3cd4 in joinable_thread (data=0xb2c875f0) at external/miplayer/vlc/src/android/thread.c:366
+#19 0xb6e1b178 in __pthread_start (arg=0xb2c58300, arg@entry=<error reading variable: value has been optimized out>) at bionic/libc/bionic/pthread_create.cpp:141
+#20 0xb6e18f84 in __start_thread (fn=<optimized out>, arg=<optimized out>) at bionic/libc/bionic/clone.cpp:41
+#21 0x00000000 in ?? ()
+
+1
+06-03 20:27:09.670   128   128 I DEBUG   : backtrace:
+06-03 20:27:09.670   128   128 I DEBUG   :     #00 pc 000b19a8  /system/lib/libmiplayer.so (input_Stop+176)
+06-03 20:27:09.670   128   128 I DEBUG   :     #01 pc 00099bdc  /system/lib/libmiplayer.so
+06-03 20:27:09.670   128   128 I DEBUG   :     #02 pc 0009bc18  /system/lib/libmiplayer.so (libvlc_media_player_stop+40)
+06-03 20:27:09.670   128   128 I DEBUG   :     #03 pc 00022278  /system/lib/libmiplayer.so (MiPlayer::vlc_destroy()+80)
+06-03 20:27:09.670   128   128 I DEBUG   :     #04 pc 00023864  /system/lib/libmiplayer.so (MiPlayer::reset()+184)
+06-03 20:27:09.670   128   128 I DEBUG   :     #05 pc 00041ed9  /system/lib/libmediaplayerservice.so (android::MediaPlayerService::Client::reset()+28)
+06-03 20:27:09.670   128   128 I DEBUG   :     #06 pc 00065dd3  /system/lib/libmedia.so (android::BnMediaPlayer::onTransact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+1662)
+06-03 20:27:09.670   128   128 I DEBUG   :     #07 pc 0001a6cd  /system/lib/libbinder.so (android::BBinder::transact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+60)
+06-03 20:27:09.670   128   128 I DEBUG   :     #08 pc 0001f78f  /system/lib/libbinder.so (android::IPCThreadState::executeCommand(int)+602)
+06-03 20:27:09.670   128   128 I DEBUG   :     #09 pc 0001f8e3  /system/lib/libbinder.so (android::IPCThreadState::getAndExecuteCommand()+38)
+06-03 20:27:09.670   128   128 I DEBUG   :     #10 pc 0001f925  /system/lib/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+48)
+06-03 20:27:09.670   128   128 I DEBUG   :     #11 pc 0000203d  /system/bin/mediaserver
+06-03 20:27:09.670   128   128 I DEBUG   :     #12 pc 00012e59  /system/lib/libc.so (__libc_init+44)
+06-03 20:27:09.670   128   128 I DEBUG   :     #13 pc 000022c0  /system/bin/mediaserver
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 000b19a8
+memcpy
+/home/user/source/devdata/inception_3_22/android/bionic/libc/include/string.h:106
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 00099bdc
+release_input_thread
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/lib/media_player.c:124
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ 
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ 
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 0009bc18
+libvlc_media_player_stop
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/lib/media_player.c:926
+
+
+2
+06-03 20:42:00.229   128   128 I DEBUG   : backtrace:
+06-03 20:42:00.229   128   128 I DEBUG   :     #00 pc 000ae5e8  /system/lib/libmiplayer.so (input_DecoderDelete+424)
+06-03 20:42:00.229   128   128 I DEBUG   :     #01 pc 001007b0  /system/lib/libmiplayer.so
+06-03 20:42:00.229   128   128 I DEBUG   :     #02 pc 00103948  /system/lib/libmiplayer.so
+06-03 20:42:00.229   128   128 I DEBUG   :     #03 pc 00105118  /system/lib/libmiplayer.so
+06-03 20:42:00.229   128   128 I DEBUG   :     #04 pc 0003c3d8  /system/lib/libmiplayer.so
+06-03 20:42:00.229   128   128 I DEBUG   :     #05 pc 00109290  /system/lib/libmiplayer.so
+06-03 20:42:00.229   128   128 I DEBUG   :     #06 pc 0003c3d8  /system/lib/libmiplayer.so
+06-03 20:42:00.229   128   128 I DEBUG   :     #07 pc 000b0b44  /system/lib/libmiplayer.so
+06-03 20:42:00.229   128   128 I DEBUG   :     #08 pc 000b634c  /system/lib/libmiplayer.so
+06-03 20:42:00.229   128   128 I DEBUG   :     #09 pc 000ecde0  /system/lib/libmiplayer.so
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 000ae5e8
+memcpy
+/home/user/source/devdata/inception_3_22/android/bionic/libc/include/string.h:106
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 001007b0
+EsDestroyDecoder
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.c:1959
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 00103948
+EsUnselect
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.c:2070
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 00105118
+EsOutControlLocked
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.c:2570
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 0003c3d8
+es_out_vaControl
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 00109290
+ControlLocked
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out_timeshift.c:629
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 0003c3d8
+es_out_vaControl
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/modules/demux/../../include/vlc_es_out.h:126
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 000b0b44
+es_out_SetMode
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/es_out.h:95
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 000b634c
+Run
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/input/input.c:566
+user@user-OptiPlex-9020:~/source/devdata/inception_3_22/android$ arm-linux-androideabi-addr2line -Cfe out/target/product/inception/symbols/system/lib/libmiplayer.so 000ecde0
+joinable_thread
+/home/user/source/devdata/inception_3_22/android/external/miplayer/vlc/src/android/thread.c:366
+
+
+
+-----------------------------vlc command-------------------------------
+播放指定的文件
+r /home/user/source/mediafiles/AVI_WMV3_Unknown_1920x1080@23.976_6970K_ADPCM_44.1K_Stereo.avi
+
+用指定的demux播放指定的文件
+r --demux=avformat  ~/source/mediafiles/GL-3312/bbb_full.ffmpeg.1920x1080.mp4.libx264_10000kbps_30fps.libfaac_stereo_192kbps_48000Hz.mp4
+
+播放pcm音频
+vlc --demux=rawaud --rawaud-channels 2 --raw aud-samplerate 44100 F:\adbtools\logs\dump_audio_pcm.bin
+
+------------------------------vlc 编译------------------------------
+./configure --enable-debug --disable-optimizations --disable-nls
+./configure --enable-debug --disable-optimizations  
+vlc的enable-debug并不完全起作用，所以需要手动产出所有Makefile中的-O2选项，避免编译过程中出现优化。
+
+
+/////////////////////////////////////参考资料/////////////////////////////////////////////////////////////////////////////
+1 
+/**
+ * Initialize a libvlc instance
+ * This function initializes a previously allocated libvlc instance:
+ *  - CPU detection
+ *  - gettext initialization
+ *  - message queue, module bank and playlist initialization
+ *  - configuration and commandline parsing
+ */
+int libvlc_InternalInit( libvlc_int_t *p_libvlc, int i_argc,
+                         const char *ppsz_argv[] )
+3
+2 vlc的代码结构主要如下：
+2.1 lib目录：该目录是vlc提供的一些库，用于支持二次开发，比如用这些接口实现自己的播放器；
+2.2 src目录：vlc的核心源码，readme文件的描述是：libvlccore source code.
+2.3 modules目录：vlc的组件和插件源码，vlc开发用了比较多面向对象的编程方法，很多功能通过组件的方式提供，然后用函数指针加载，实现会简单，但是个人感觉这正是学习vlc源码可读性差的地方，开源代码可读性都不怎么样，不像企业更多追求可读性。
+2.4 bin目录：这个目录代码很少，readme的描述是VLC binaries.没怎么了解，但是这个目录的vlc.c中定义了一个main函数，是程序入口。
+
+3主要代码路径贴一下：
+3.1 main()(bin/vlc.c)<-libvlc_new()<-libvlc_InternalInit()<-module_InitBank()//这里执行了较多接口,module_InitBank是初始化module,然后解析执行命令中的参数等,当然包含一个主角GetFilenames(),该接口会创建一个playlist.playlist代表vlc播放的一个节目.
+3.2 pl_Get()->playlist_Create()(engine.c)->playlist_MLload()&playlist_Active()->Thread->LoopRequest()->playItem()->input_Create()&input_Start()->Run()->Init()->InputSourceInit()
+3.3 这个为创建输入的主流程,playlist_MLload()会调用module_need加载一些模块,InputSourceInit()也会调用module_need加载模块,看log时要注意这点.
+3.4 pl_Get()->playlist_Create()(engine.c)->playlist_MLload()->input_item_NewExt()&input_Read()
+    input_item_NewExt()->input_item_NewWithType()  //创建并初始化input_item_t p_input
+	input_Read()->static input_thread_t *Create() {This function creates a new input, and returns a pointer to its description} ->input_EsOutNew
+3.5 Input fields
+    p_input->p->input.p_access = NULL;
+    p_input->p->input.p_stream = NULL;
+    p_input->p->input.p_demux  = NULL;
+    p_input->p->input.b_title_demux = false;
+    p_input->p->input.i_title  = 0;
+    p_input->p->input.title    = NULL;
+    p_input->p->input.i_title_offset = p_input->p->input.i_seekpoint_offset = 0;
+    p_input->p->input.b_can_pace_control = true;
+    p_input->p->input.b_can_rate_control = true;
+    p_input->p->input.b_rescale_ts = true;
+    p_input->p->input.b_eof = false;
+3.6 p_input->p->p_es_out_display = input_EsOutNew( p_input, p_input->p->i_rate ); //通过p_input的p_es_out_display可以找到对应的demux,decodec,output的接口。
+3.7 input_EsOutNew中初始化的函数接口
+    out->pf_add     = EsOutAdd;
+    out->pf_send    = EsOutSend;
+    out->pf_del     = EsOutDel;
+    out->pf_control = EsOutControl;
+    out->pf_destroy = EsOutDelete;
+    out->p_sys      = p_sys;
+3.8 input_Read()->Init()->input_EsOutTimeshiftNew() & InputSourceInit()
+3.9 InputSourceInit()->demux_New()->module_need()->vlc_module_load() //根据access_demux,并没有找到需要的module
+    InputSourceInit()->access_New()->module_need()->vlc_module_load() //对于测试例子，根据access,找到了/home/user/source/vlcsrc/vlc-2.1.5/modules/access/.libs/libfilesystem_plugin.so
+	InputSourceInit()->stream_AccessNew()
+	InputSourceInit()->demux_New()->module_need()->vlc_module_load() //根据demux，找到需要的module.  demux/playlist/playlist.c:153
+?? 这里找到的demux module居然是playlist.c
+3.10将要播放的视频作为input_item放入playlist中，然后在 playlist_preparser_Push()中创建线程，该线程会Preparse调用函数。
+main()->libvlc_new()->libvlc_InternalInit()->GetFilenames()->playlist_AddExt()->playlist_AddInput()->GoAndPreparse()->playlist_PreparseEnqueue()->playlist_preparser_Push()   
+3.11 
+Thread()/*playlist/preparser.c*/->Preparse()->input_Preparse()->Init()->InputSourceInit()
+
+在播放RTSP流时,必须创建一个input,并对应一个节目,创建input和节目的流程见前面所述,这里说明下建立rtsp session的过程:
+InputSourceInit()->demux_New()->module_need()->vlc_module_load()->module_load()->m_pfactive()(对应的是open函数)->connect()&session_setup();
+connect()接口使用live555库先发送rtsp:option,服务端响应后发送rtsp:describe,得到服务器响应的describe后从connect()返回,此时已经解析到了sdp信息,然后调用session_setup()创建RTP session.session_setup先发送两个Setup到服务端并等待响应,setup交互过程中指定了服务器端和客户端的udp端口号,这样客户端可以创建socket接收RTP数据.客户端发送rtsp:play后服务端会开始发送音视频数据.由于时间关系,只分析了这部分流程,后面有时间看看能否补充.
+后面贴一下使用vlc播放rtsp流的
+
+
+-------------------wowza media server--------------------
+文档： 
+http://www.wowza.cn/vod
+
+rtmp://192.168.31.231:1935/vod/sample.mp4
+http://192.168.31.231:1935/vod/mp4:sample.mp4/manifest.m3u8
+
+rtmp://localhost:1935/vod/sample.mp4
+http://localhost:1935/live/myStream/playlist.m3u8
+http://localhost:1935/vod/mp4:sample.mp4/playlist.m3u8
+
+#启动wowza
+sudo /etc/init.d/WowzaStreamingEngine start
+
+#启动wowza的页面管理
+sudo /etc/init.d/WowzaStreamingEngineManager start
+
+1 启动wowza
+cd /etc/init.d/
+sudo ./WowzaStreamingEngine start
+
+2 rtsp地址
+url:rtsp://10.235.172.44:1935/vod/mp4:sample.mp4
+
+-----------------------一些提交---------------------------
+1 commit 6ba54d00086f4172f07e4f8d93e37f25896c5f3e
+Author: chen bin <bin.chen@xiaomi.com>
+Date:   Mon Mar 30 17:14:20 2015 +0800
+
+    handle interruption during io seek/read
+    
+    N/A
+    
+    For stream,
+    1. flush stream internal buffer if io seek fails
+    2. need refill buffer if previous read fails
+    For io, return the bytes which are received before interruption
+
+2
+commit d3c34c163e38831db581576e756ea898e4f303db
+Author: chen bin <bin.chen@xiaomi.com>
+Date:   Wed Apr 8 15:44:02 2015 +0800
+
+    align discontinuity
+    
+    HA-676
+    
+    If we meet one stream dts/pts discontinuity, we add it and followed frames into
+    the block fifo till each stream's discontinuity arrives. Then correct
+    their pts/dts with pts_dts_offset, send them out. This can make sure
+    frames' dts/pts before discontinuity are not corrected by mistake.
+
+这个cook格式的音频，seek都会有1-2s 无声，mstplayer也存在，是一直存在的问题。
+因为cook的frame size 比较大 导致的。
+
+
