@@ -1,0 +1,153 @@
+
+diff -urN /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc/libvlc_media.h /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc/libvlc_media.h
+--- /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc/libvlc_media.h	2015-12-11 19:06:34.052880404 +0800
++++ /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc/libvlc_media.h	2014-08-14 15:20:03.000000000 +0800
+@@ -241,9 +241,6 @@
+                                    libvlc_instance_t *p_instance,
+                                    const char * psz_mrl );
+ 
+-LIBVLC_API int libvlc_media_set_android_audiosink(libvlc_instance_t *p_instance, void *audiosink);
+-
+-
+ /**
+  * Create a media for a certain file path.
+  *
+diff -urN /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc/libvlc_media_player.h /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc/libvlc_media_player.h
+--- /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc/libvlc_media_player.h	2015-12-11 19:04:12.680876843 +0800
++++ /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc/libvlc_media_player.h	2014-11-17 02:57:58.000000000 +0800
+@@ -227,15 +227,6 @@
+ LIBVLC_API int libvlc_media_player_play ( libvlc_media_player_t *p_mi );
+ 
+ /**
+- * Prepare (create pipeline but doesn't start to decoding )
+- *
+- * \param p_mi the Media Player
+- * \return 0 if playback is prepared , or -1 on error.
+- */
+-LIBVLC_API int libvlc_media_player_prepare ( libvlc_media_player_t *p_mi );
+-
+-
+-/**
+  * Pause or resume (no effect if there is no media)
+  *
+  * \param mp the Media Player
+@@ -919,15 +910,6 @@
+ LIBVLC_API void libvlc_set_fullscreen( libvlc_media_player_t *p_mi, int b_fullscreen );
+ 
+ /**
+- * Set native window.
+- *
+- * \param p_mi the media player
+- * \param p_window the native window pointer
+- */
+-LIBVLC_API void libvlc_set_nativewindow( libvlc_media_player_t *p_mi, void *p_window);
+-
+-
+-/**
+  * Get current fullscreen status.
+  *
+  * \param p_mi the media player
+diff -urN /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc_arrays.h /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc_arrays.h
+--- /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc_arrays.h	2015-12-03 14:54:24.239092601 +0800
++++ /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc_arrays.h	2014-08-14 15:20:03.000000000 +0800
+@@ -422,10 +422,9 @@
+                                          void ( * pf_free )( void * p_data, void * p_obj ),
+                                          void * p_obj )
+ {
+-    int i = 0;
+     if( p_dict->p_entries )
+     {
+-        for( i = 0; i < p_dict->i_size; i++ )
++        for( int i = 0; i < p_dict->i_size; i++ )
+         {
+             vlc_dictionary_entry_t * p_current, * p_next;
+             p_current = p_dict->p_entries[i];
+
+diff -urN /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc_fixups.h /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc_fixups.h
+--- /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc_fixups.h	2015-12-02 19:05:36.912753421 +0800
++++ /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc_fixups.h	2015-02-17 17:07:37.000000000 +0800
+@@ -222,12 +222,7 @@
+ #define LC_NUMERIC_MASK  0
+ #define LC_MESSAGES_MASK 0
+ #define LC_GLOBAL_LOCALE ((locale_t)(uintptr_t)1)
+-
+-#ifndef _XLOCALE_H_
+-#define _XLOCALE_H_
+-struct __locale_t;
+-typedef struct __locale_t* locale_t;
+-#endif /* _XLOCALE_H_ */
++typedef void *locale_t;
+ static inline locale_t uselocale(locale_t loc)
+ {
+     (void)loc;
+@@ -363,7 +358,7 @@
+ /* math.h */
+ 
+ #ifdef __ANDROID__
+-//#define nanf(tagp) NAN
++#define nanf(tagp) NAN
+ #endif
+ 
+ #ifdef _WIN32
+
+diff -urN /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc_fourcc.h /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc_fourcc.h
+--- /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc_fourcc.h	2015-12-25 10:38:42.542212120 +0800
++++ /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc_fourcc.h	2014-11-17 02:57:58.000000000 +0800
+@@ -278,10 +278,6 @@
+ /* Broadcom MMAL opaque buffer type */
+ #define VLC_CODEC_MMAL_OPAQUE     VLC_FOURCC('M','M','A','L')
+ 
+-/*android nativewindow output*/
+-#define VLC_CODEC_ANATIVEWINDOW_OUTPUT VLC_FOURCC('A','N','O','T')
+-
+-
+ /* Image codec (video) */
+ #define VLC_CODEC_PNG             VLC_FOURCC('p','n','g',' ')
+ #define VLC_CODEC_PPM             VLC_FOURCC('p','p','m',' ')
+diff -urN /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc_input.h /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc_input.h
+--- /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc_input.h	2015-12-11 19:20:49.556901948 +0800
++++ /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc_input.h	2014-10-08 16:41:29.000000000 +0800
+@@ -295,27 +295,9 @@
+     PAUSE_S,
+     END_S,
+     ERROR_S,
+-    PREPARING_S
+ } input_state_e;
+ 
+ /**
+- * Input error reason
+- *
+- * This enum is used when input theadtime changed to error state
+- *
+- */
+-typedef enum input_error_reason_e
+-{
+-    VLC_INPUT_ERROR_BASE                = -10100,
+-    VLC_INPUT_THREAD_CREATE_ERROR       = VLC_INPUT_ERROR_BASE-1,
+-    VLC_INPUT_SOURCE_OPEN_FAILED        = VLC_INPUT_ERROR_BASE-2,
+-    VLC_INPUT_DEMUX_CREATE_FAILED       = VLC_INPUT_ERROR_BASE-3,
+-    VLC_INPUT_DEMUX_THREAD_ERROR        = VLC_INPUT_ERROR_BASE-4,
+-
+-} input_error_reason_e;
+-
+-
+-/**
+  * Input rate.
+  *
+  * It is an float used by the variable "rate" in the
+diff -urN /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc_vout_display.h /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc_vout_display.h
+--- /home/user/source/myvlc/android/external/myplayer/vlc-2.2.1/include/vlc_vout_display.h	2015-12-25 10:06:25.470196201 +0800
++++ /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/include/vlc_vout_display.h	2014-11-17 02:57:58.000000000 +0800
+@@ -173,12 +173,6 @@
+ 
+     /* Ask an opengl interface if available. */
+     VOUT_DISPLAY_GET_OPENGL,           /* vlc_gl_t ** */
+-
+-    /*Ask mstarnativewindow to release all queued buffers in native window*/
+-    VOUT_DISPLAY_RESET,
+-
+-    /*change androidnativewindow on-fly*/
+-    VOUT_DISPLAY_CHANGE_ANATIVEWINDOW,
+ };
+ 
+ /**

@@ -1,0 +1,34 @@
+--- vlc-2.2.1/include/vlc/libvlc_media_player.h	2015-12-11 19:04:12.680876843 +0800
++++ backup/vlc-2.2.1/include/vlc/libvlc_media_player.h	2014-11-17 02:57:58.000000000 +0800
+@@ -227,15 +227,6 @@
+ LIBVLC_API int libvlc_media_player_play ( libvlc_media_player_t *p_mi );
+ 
+ /**
+- * Prepare (create pipeline but doesn't start to decoding )
+- *
+- * \param p_mi the Media Player
+- * \return 0 if playback is prepared , or -1 on error.
+- */
+-LIBVLC_API int libvlc_media_player_prepare ( libvlc_media_player_t *p_mi );
+-
+-
+-/**
+  * Pause or resume (no effect if there is no media)
+  *
+  * \param mp the Media Player
+@@ -919,15 +910,6 @@
+ LIBVLC_API void libvlc_set_fullscreen( libvlc_media_player_t *p_mi, int b_fullscreen );
+ 
+ /**
+- * Set native window.
+- *
+- * \param p_mi the media player
+- * \param p_window the native window pointer
+- */
+-LIBVLC_API void libvlc_set_nativewindow( libvlc_media_player_t *p_mi, void *p_window);
+-
+-
+-/**
+  * Get current fullscreen status.
+  *
+  * \param p_mi the media player

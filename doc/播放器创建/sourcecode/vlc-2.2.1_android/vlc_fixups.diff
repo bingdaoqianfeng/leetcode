@@ -1,0 +1,9 @@
+225,230c225
+< 
+< #ifndef _XLOCALE_H_
+< #define _XLOCALE_H_
+< struct __locale_t;
+< typedef struct __locale_t* locale_t;
+< #endif /* _XLOCALE_H_ */
+---
+> typedef void *locale_t;

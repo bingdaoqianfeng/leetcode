@@ -1,0 +1,59 @@
+============================================
+PLATFORM_VERSION_CODENAME=REL
+PLATFORM_VERSION=5.1.1
+TARGET_PRODUCT=inception
+TARGET_BUILD_VARIANT=userdebug
+TARGET_BUILD_TYPE=release
+TARGET_BUILD_APPS=
+TARGET_ARCH=arm
+TARGET_ARCH_VARIANT=armv7-a-neon
+TARGET_CPU_VARIANT=cortex-a7
+TARGET_2ND_ARCH=
+TARGET_2ND_ARCH_VARIANT=
+TARGET_2ND_CPU_VARIANT=
+HOST_ARCH=x86_64
+HOST_OS=linux
+HOST_OS_EXTRA=Linux-3.13.0-24-generic-x86_64-with-Ubuntu-14.04-trusty
+HOST_BUILD_TYPE=release
+BUILD_ID=LMY47V
+OUT_DIR=out
+============================================
+No private recovery resources for TARGET_DEVICE inception
+make:进入目录'/home/user/source/myvlc/android'
+Import includes file: out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_filesystem_intermediates/import_includes
+target arm C: libvlc_plugin_filesystem <= external/myplayer/vlc-2.2.1/modules/access/file.c
+target arm C: libvlc_plugin_filesystem <= external/myplayer/vlc-2.2.1/modules/access/directory.c
+target arm C: libvlc_plugin_filesystem <= external/myplayer/vlc-2.2.1/modules/access/fs.c
+Export includes file: external/myplayer/vlc-2.2.1/modules/access/Android.mk -- out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_filesystem_intermediates/export_includes
+target StaticLib: libvlc_plugin_filesystem (out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_filesystem_intermediates/libvlc_plugin_filesystem.a)
+Import includes file: out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_ftp_intermediates/import_includes
+target arm C: libvlc_plugin_ftp <= external/myplayer/vlc-2.2.1/modules/access/ftp.c
+Export includes file: external/myplayer/vlc-2.2.1/modules/access/Android.mk -- out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_ftp_intermediates/export_includes
+target StaticLib: libvlc_plugin_ftp (out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_ftp_intermediates/libvlc_plugin_ftp.a)
+Import includes file: out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_http_intermediates/import_includes
+target arm C: libvlc_plugin_http <= external/myplayer/vlc-2.2.1/modules/access/http.c
+Export includes file: external/myplayer/vlc-2.2.1/modules/access/Android.mk -- out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_http_intermediates/export_includes
+target StaticLib: libvlc_plugin_http (out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_http_intermediates/libvlc_plugin_http.a)
+Import includes file: out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_avio_intermediates/import_includes
+target arm C: libvlc_plugin_avio <= external/myplayer/vlc-2.2.1/modules/access/avio.c
+Export includes file: external/myplayer/vlc-2.2.1/modules/access/Android.mk -- out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_avio_intermediates/export_includes
+target StaticLib: libvlc_plugin_avio (out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_avio_intermediates/libvlc_plugin_avio.a)
+Import includes file: out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_tcp_intermediates/import_includes
+target arm C: libvlc_plugin_tcp <= external/myplayer/vlc-2.2.1/modules/access/tcp.c
+Export includes file: external/myplayer/vlc-2.2.1/modules/access/Android.mk -- out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_tcp_intermediates/export_includes
+target StaticLib: libvlc_plugin_tcp (out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_tcp_intermediates/libvlc_plugin_tcp.a)
+Import includes file: out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_udp_intermediates/import_includes
+target arm C: libvlc_plugin_udp <= external/myplayer/vlc-2.2.1/modules/access/udp.c
+Export includes file: external/myplayer/vlc-2.2.1/modules/access/Android.mk -- out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_udp_intermediates/export_includes
+target StaticLib: libvlc_plugin_udp (out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_udp_intermediates/libvlc_plugin_udp.a)
+Import includes file: out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_rtp_intermediates/import_includes
+target arm C: libvlc_plugin_rtp <= external/myplayer/vlc-2.2.1/modules/access/rtp/input.c
+target arm C: libvlc_plugin_rtp <= external/myplayer/vlc-2.2.1/modules/access/rtp/session.c
+target arm C: libvlc_plugin_rtp <= external/myplayer/vlc-2.2.1/modules/access/rtp/xiph.c
+target arm C: libvlc_plugin_rtp <= external/myplayer/vlc-2.2.1/modules/access/rtp/rtp.c
+Export includes file: external/myplayer/vlc-2.2.1/modules/access/Android.mk -- out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_rtp_intermediates/export_includes
+target StaticLib: libvlc_plugin_rtp (out/target/product/inception/obj/STATIC_LIBRARIES/libvlc_plugin_rtp_intermediates/libvlc_plugin_rtp.a)
+make:离开目录“/home/user/source/myvlc/android”
+
+#### make completed successfully (3 seconds) ####
+

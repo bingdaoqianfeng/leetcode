@@ -1,0 +1,30 @@
+--- vlc-2.2.1/include/vlc_input.h	2015-12-11 19:20:49.556901948 +0800
++++ backup/vlc-2.2.1/include/vlc_input.h	2014-10-08 16:41:29.000000000 +0800
+@@ -295,27 +295,9 @@
+     PAUSE_S,
+     END_S,
+     ERROR_S,
+-    PREPARING_S
+ } input_state_e;
+ 
+ /**
+- * Input error reason
+- *
+- * This enum is used when input theadtime changed to error state
+- *
+- */
+-typedef enum input_error_reason_e
+-{
+-    VLC_INPUT_ERROR_BASE                = -10100,
+-    VLC_INPUT_THREAD_CREATE_ERROR       = VLC_INPUT_ERROR_BASE-1,
+-    VLC_INPUT_SOURCE_OPEN_FAILED        = VLC_INPUT_ERROR_BASE-2,
+-    VLC_INPUT_DEMUX_CREATE_FAILED       = VLC_INPUT_ERROR_BASE-3,
+-    VLC_INPUT_DEMUX_THREAD_ERROR        = VLC_INPUT_ERROR_BASE-4,
+-
+-} input_error_reason_e;
+-
+-
+-/**
+  * Input rate.
+  *
+  * It is an float used by the variable "rate" in the

@@ -1,0 +1,74 @@
+--- vlc-2.2.1/lib/media_player.c	2015-12-23 14:26:31.102447433 +0800
++++ /home/user/source/vlcsrc/vlctemp/vlc-2.2.1/lib/media_player.c	2015-01-17 15:50:50.000000000 +0800
+@@ -416,7 +416,6 @@
+     var_Create (mp, "vmem-pitch", VLC_VAR_INTEGER | VLC_VAR_DOINHERIT);
+     var_Create (mp, "avcodec-hw", VLC_VAR_STRING);
+     var_Create (mp, "drawable-xid", VLC_VAR_INTEGER);
+-    var_Create (mp, "androidnativewindowptr", VLC_VAR_ADDRESS);
+ #if defined (_WIN32) || defined (__OS2__)
+     var_Create (mp, "drawable-hwnd", VLC_VAR_INTEGER);
+ #endif
+@@ -771,63 +770,6 @@
+     return 0;
+ }
+ 
+-
+-/**************************************************************************
+- * Tell media player to start playing.
+- **************************************************************************/
+-int libvlc_media_player_prepare( libvlc_media_player_t *p_mi )
+-{
+-    lock_input( p_mi );
+-
+-    input_thread_t *p_input_thread = p_mi->input.p_thread;
+-    if( p_input_thread )
+-    {
+-        libvlc_printerr("media player is already created!");
+-        unlock_input( p_mi );
+-        return -1;
+-    }
+-
+-    /* Ignore previous exception */
+-    lock(p_mi);
+-
+-    if( !p_mi->p_md )
+-    {
+-        unlock(p_mi);
+-        unlock_input( p_mi );
+-        libvlc_printerr( "No associated media descriptor" );
+-        return -1;
+-    }
+-
+-    p_input_thread = input_Create( p_mi, p_mi->p_md->p_input_item, NULL,
+-                                   p_mi->input.p_resource );
+-    unlock(p_mi);
+-    if( !p_input_thread )
+-    {
+-        unlock_input(p_mi);
+-        libvlc_printerr( "Not enough memory" );
+-        return -1;
+-    }
+-
+-    var_AddCallback( p_input_thread, "can-seek", input_seekable_changed, p_mi );
+-    var_AddCallback( p_input_thread, "can-pause", input_pausable_changed, p_mi );
+-    var_AddCallback( p_input_thread, "intf-event", input_event_changed, p_mi );
+-
+-    if( input_Prepare( p_input_thread ) )
+-    {
+-        unlock_input(p_mi);
+-        var_DelCallback( p_input_thread, "intf-event", input_event_changed, p_mi );
+-        var_DelCallback( p_input_thread, "can-pause", input_pausable_changed, p_mi );
+-        var_DelCallback( p_input_thread, "can-seek", input_seekable_changed, p_mi );
+-        vlc_object_release( p_input_thread );
+-        libvlc_printerr( "Input initialization failure" );
+-        return -1;
+-    }
+-    p_mi->input.p_thread = p_input_thread;
+-    unlock_input(p_mi);
+-    return 0;
+-}
+-
+-
+ void libvlc_media_player_set_pause( libvlc_media_player_t *p_mi, int paused )
+ {
+     input_thread_t * p_input_thread = libvlc_get_input_thread( p_mi );

@@ -1,0 +1,11 @@
+1 如何将一个新的播放器加载到系统中
+1.1 在文件media/libmediaplayerservice/MediaPlayerFactory.cpp中添加新播放器的creat函数接口
+1.2 获得android本版的vlc代码
+    git clone git://git.videolan.org/vlc/vlc-android.git
+
+----------------------------------------------------------
+回答一下几个问题
+1 如何将一个新的播放器加载到系统中
+2 如何将VLC加进来，全部使用VLC的模块
+3 如何用ffmpeg加入到VLC，作为其demux,decode模块
+4 如何把硬件加码加到VLC中

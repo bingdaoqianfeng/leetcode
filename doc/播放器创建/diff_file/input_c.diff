@@ -1,0 +1,35 @@
+--- vlc-2.2.1/src/input/input.c	2015-12-11 19:16:27.380895346 +0800
++++ backup/vlc-2.2.1/src/input/input.c	2014-12-19 04:00:38.000000000 +0800
+@@ -223,32 +223,6 @@
+ }
+ 
+ /**
+- * Start a input_thread_t created by input_Create, and pause the thread after piple line is created.
+- *
+- * You must not start an already running input_thread_t.
+- *
+- * \param the input thread to start
+- */
+-int input_Prepare( input_thread_t *p_input )
+-{
+-    /*pause the mainloop thread*/
+-    input_ChangeState(p_input, PREPARING_S);
+-
+-    /* Create thread and wait for its readiness. */
+-    p_input->p->is_running = !vlc_clone( &p_input->p->thread,
+-                                         Run, p_input, VLC_THREAD_PRIORITY_INPUT );
+-    if( !p_input->p->is_running )
+-    {
+-        var_SetInteger( p_input, "input-error-reason",VLC_INPUT_THREAD_CREATE_ERROR);
+-        input_ChangeState( p_input, ERROR_S );
+-        msg_Err( p_input, "cannot create input thread" );
+-        return VLC_EGENERIC;
+-    }
+-    return VLC_SUCCESS;
+-}
+-
+-
+-/**
+  * Request a running input thread to stop and die
+  *
+  * b_abort must be true when a user stop is requested and not because you have

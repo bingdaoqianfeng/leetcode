@@ -1,0 +1,1542 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ADAPTOR_LONGTEXT	xcb/xvideo.c	45;"	d	file:
+ADAPTOR_TEXT	xcb/xvideo.c	44;"	d	file:
+ALIGN	opengl.c	814;"	d	file:
+ALIGN_16_PIXELS	android/android_window.c	295;"	d	file:
+AM_CFLAGS	Android.mk	/^AM_CFLAGS :=$/;"	m
+AM_CPPFLAGS	Android.mk	/^AM_CPPFLAGS := -DMODULE_STRING=\\"$(MODULE_NAME)\\" -DMODULE_NAME=$(MODULE_NAME) \\$/;"	m
+AM_CPPFLAGS	Android.mk	/^AM_CPPFLAGS := -DMODULE_STRING=\\"$(MODULE_NAME)\\" -DMODULE_NAME=$(MODULE_NAME)$/;"	m
+ANDROID_HC_OR_LATER	android/nativewindowpriv.c	34;"	d	file:
+ANDROID_ICS_OR_LATER	android/nativewindowpriv.c	35;"	d	file:
+ANDROID_JBMR2_OR_LATER	android/nativewindowpriv.c	36;"	d	file:
+ANDROID_SYM_S_LOCK	android/utils.c	77;"	d	file:
+ANDROID_SYM_S_LOCK2	android/utils.c	80;"	d	file:
+ANDROID_SYM_S_UNLOCK	android/utils.c	83;"	d	file:
+ANDROID_WINDOW_H_	android/android_window.h	28;"	d
+ANativeWindowBuffer_t	android/nativewindowpriv.c	/^typedef android_native_buffer_t ANativeWindowBuffer_t;$/;"	t	file:
+ANativeWindowPriv_cancel	android/nativewindowpriv.c	/^int ANativeWindowPriv_cancel( native_window_priv *priv, void *p_handle )$/;"	f
+ANativeWindowPriv_connect	android/nativewindowpriv.c	/^native_window_priv *ANativeWindowPriv_connect( void *window )$/;"	f
+ANativeWindowPriv_dequeue	android/nativewindowpriv.c	/^int ANativeWindowPriv_dequeue( native_window_priv *priv, void **pp_handle )$/;"	f
+ANativeWindowPriv_disconnect	android/nativewindowpriv.c	/^int ANativeWindowPriv_disconnect( native_window_priv *priv )$/;"	f
+ANativeWindowPriv_getMaxBufferCount	android/nativewindowpriv.c	/^int ANativeWindowPriv_getMaxBufferCount( native_window_priv *priv, unsigned int *max_buffer_count )$/;"	f
+ANativeWindowPriv_getMinUndequeued	android/nativewindowpriv.c	/^int ANativeWindowPriv_getMinUndequeued( native_window_priv *priv, unsigned int *min_undequeued )$/;"	f
+ANativeWindowPriv_lock	android/nativewindowpriv.c	/^int ANativeWindowPriv_lock( native_window_priv *priv, void *p_handle )$/;"	f
+ANativeWindowPriv_lockData	android/nativewindowpriv.c	/^int ANativeWindowPriv_lockData( native_window_priv *priv, void **pp_handle,$/;"	f
+ANativeWindowPriv_queue	android/nativewindowpriv.c	/^int ANativeWindowPriv_queue( native_window_priv *priv, void *p_handle )$/;"	f
+ANativeWindowPriv_setBufferCount	android/nativewindowpriv.c	/^int ANativeWindowPriv_setBufferCount(native_window_priv *priv, unsigned int count )$/;"	f
+ANativeWindowPriv_setBuffersGeometry	android/nativewindowpriv.c	/^int ANativeWindowPriv_setBuffersGeometry( native_window_priv *priv, int w, int h, int hal_format )$/;"	f
+ANativeWindowPriv_setCrop	android/nativewindowpriv.c	/^int ANativeWindowPriv_setCrop( native_window_priv *priv, int ofs_x, int ofs_y, int w, int h )$/;"	f
+ANativeWindowPriv_setOrientation	android/nativewindowpriv.c	/^int ANativeWindowPriv_setOrientation( native_window_priv *priv, int orientation )$/;"	f
+ANativeWindowPriv_setUsage	android/nativewindowpriv.c	/^int ANativeWindowPriv_setUsage( native_window_priv *priv,  bool is_hw, int hw_usage )$/;"	f
+ANativeWindowPriv_unlockData	android/nativewindowpriv.c	/^int ANativeWindowPriv_unlockData( native_window_priv *priv, void *p_handle,$/;"	f
+API	gl.c	48;"	d	file:
+AUDIO_CFG_PREFIX	decklink.cpp	111;"	d	file:
+AUDIO_CONNECTION_LONGTEXT	decklink.cpp	87;"	d	file:
+AUDIO_CONNECTION_TEXT	decklink.cpp	86;"	d	file:
+AWindowHandler	android/utils.c	/^struct AWindowHandler$/;"	s	file:
+AWindowHandler	android/utils.h	/^typedef struct AWindowHandler AWindowHandler;$/;"	t	typeref:struct:AWindowHandler
+AWindowHandler_destroy	android/utils.c	/^AWindowHandler_destroy(AWindowHandler *p_awh)$/;"	f
+AWindowHandler_getANativeWindow	android/utils.c	/^AWindowHandler_getANativeWindow(AWindowHandler *p_awh, enum AWindow_ID id)$/;"	f
+AWindowHandler_getANativeWindowAPI	android/utils.c	/^AWindowHandler_getANativeWindowAPI(AWindowHandler *p_awh)$/;"	f
+AWindowHandler_getANativeWindowPrivAPI	android/utils.c	/^AWindowHandler_getANativeWindowPrivAPI(AWindowHandler *p_awh)$/;"	f
+AWindowHandler_getEnv	android/utils.c	/^AWindowHandler_getEnv(AWindowHandler *p_awh)$/;"	f	file:
+AWindowHandler_getMouseCoordinates	android/utils.c	/^AWindowHandler_getMouseCoordinates(AWindowHandler *p_awh,$/;"	f
+AWindowHandler_getSurface	android/utils.c	/^AWindowHandler_getSurface(AWindowHandler *p_awh, enum AWindow_ID id)$/;"	f
+AWindowHandler_getWindowSize	android/utils.c	/^AWindowHandler_getWindowSize(AWindowHandler *p_awh,$/;"	f
+AWindowHandler_new	android/utils.c	/^AWindowHandler_new(vlc_object_t *p_obj)$/;"	f
+AWindowHandler_registerCallback	android/utils.c	/^AWindowHandler_registerCallback(AWindowHandler *p_awh)$/;"	f	file:
+AWindowHandler_releaseANativeWindow	android/utils.c	/^void AWindowHandler_releaseANativeWindow(AWindowHandler *p_awh,$/;"	f
+AWindowHandler_releaseSurface	android/utils.c	/^AWindowHandler_releaseSurface(AWindowHandler *p_awh, enum AWindow_ID id)$/;"	f
+AWindowHandler_releaseSurfaceEnv	android/utils.c	/^AWindowHandler_releaseSurfaceEnv(AWindowHandler *p_awh, JNIEnv *p_env,$/;"	f	file:
+AWindowHandler_setBuffersGeometry	android/utils.c	/^AWindowHandler_setBuffersGeometry(AWindowHandler *p_awh, enum AWindow_ID id,$/;"	f
+AWindowHandler_setWindowLayout	android/utils.c	/^AWindowHandler_setWindowLayout(AWindowHandler *p_awh,$/;"	f
+AWindow_ID	android/utils.h	/^enum AWindow_ID {$/;"	g
+AWindow_Max	android/utils.h	/^    AWindow_Max,$/;"	e	enum:AWindow_ID
+AWindow_Subtitles	android/utils.h	/^    AWindow_Subtitles,$/;"	e	enum:AWindow_ID
+AWindow_Video	android/utils.h	/^    AWindow_Video,$/;"	e	enum:AWindow_ID
+AcquireDrawable	xcb/window.c	/^static int AcquireDrawable (vlc_object_t *obj, xcb_window_t window)$/;"	f	file:
+ActiveTexture	opengl.c	/^    PFNGLACTIVETEXTUREPROC  ActiveTexture;$/;"	m	struct:vout_display_opengl_t	file:
+AlignRect	msw/common.c	/^void AlignRect(RECT *r, int align_boundary, int align_size)$/;"	f
+AllocQuad	msw/direct3d11.c	/^static int AllocQuad(vout_display_t *vd, const video_format_t *fmt, d3d_quad_t *quad,$/;"	f	file:
+AndroidNativeWindow	android/utils.c	/^    } AndroidNativeWindow;$/;"	m	struct:__anon9	typeref:struct:__anon9::__anon10	file:
+AndroidNativeWindow_onMouseEvent	android/utils.c	/^AndroidNativeWindow_onMouseEvent(JNIEnv* env, jobject clazz, jlong handle,$/;"	f	file:
+AndroidNativeWindow_onWindowSize	android/utils.c	/^AndroidNativeWindow_onWindowSize(JNIEnv* env, jobject clazz, jlong handle,$/;"	f	file:
+AndroidOpaquePicture_DetachDecoder	android/android_window.h	/^AndroidOpaquePicture_DetachDecoder(picture_sys_t *p_picsys)$/;"	f
+AndroidOpaquePicture_DetachVout	android/android_window.c	/^static void AndroidOpaquePicture_DetachVout(picture_t *p_pic)$/;"	f	file:
+AndroidOpaquePicture_Release	android/android_window.h	/^AndroidOpaquePicture_Release(picture_sys_t *p_picsys, bool b_render)$/;"	f
+AndroidSurface_lock	android/utils.c	/^typedef void (*AndroidSurface_lock)(void *, void *, int);$/;"	t	file:
+AndroidSurface_lock2	android/utils.c	/^typedef void (*AndroidSurface_lock2)(void *, void *, void *);$/;"	t	file:
+AndroidSurface_unlockAndPost	android/utils.c	/^typedef void (*AndroidSurface_unlockAndPost)(void *);$/;"	t	file:
+AndroidWindow_ConfigureJavaSurface	android/android_window.c	/^static int AndroidWindow_ConfigureJavaSurface(vout_display_sys_t *sys,$/;"	f	file:
+AndroidWindow_ConnectSurface	android/android_window.c	/^static int AndroidWindow_ConnectSurface(vout_display_sys_t *sys,$/;"	f	file:
+AndroidWindow_Destroy	android/android_window.c	/^static void AndroidWindow_Destroy(vout_display_t *vd,$/;"	f	file:
+AndroidWindow_DisconnectSurface	android/android_window.c	/^static void AndroidWindow_DisconnectSurface(vout_display_sys_t *sys,$/;"	f	file:
+AndroidWindow_LockPicture	android/android_window.c	/^static int AndroidWindow_LockPicture(vout_display_sys_t *sys,$/;"	f	file:
+AndroidWindow_New	android/android_window.c	/^static android_window *AndroidWindow_New(vout_display_t *vd,$/;"	f	file:
+AndroidWindow_Setup	android/android_window.c	/^static int AndroidWindow_Setup(vout_display_sys_t *sys,$/;"	f	file:
+AndroidWindow_SetupANW	android/android_window.c	/^static int AndroidWindow_SetupANW(vout_display_sys_t *sys,$/;"	f	file:
+AndroidWindow_SetupANWP	android/android_window.c	/^static int AndroidWindow_SetupANWP(vout_display_sys_t *sys,$/;"	f	file:
+AndroidWindow_UnlockPicture	android/android_window.c	/^static void AndroidWindow_UnlockPicture(vout_display_sys_t *sys,$/;"	f	file:
+AndroidWindow_UpdateCrop	android/android_window.c	/^static int AndroidWindow_UpdateCrop(vout_display_sys_t *sys,$/;"	f	file:
+Atom	xcb/window.c	/^typedef xcb_atom_t Atom;$/;"	t	file:
+AttachShader	opengl.c	/^    PFNGLATTACHSHADERPROC  AttachShader;$/;"	m	struct:vout_display_opengl_t	file:
+BUFFER_FIFO_POP	evas.c	235;"	d	file:
+BUFFER_FIFO_PUSH	evas.c	234;"	d	file:
+BUILTIN_SHADERS_COUNT	msw/builtin_shaders.h	150;"	d
+BetterFormat	xcb/xvideo.c	/^static bool BetterFormat (vlc_fourcc_t a, const vlc_fourcc_t *tab,$/;"	f	file:
+BindBuffer	opengl.c	/^    PFNGLBINDBUFFERPROC    BindBuffer;$/;"	m	struct:vout_display_opengl_t	file:
+BufferData	opengl.c	/^    PFNGLBUFFERDATAPROC    BufferData;$/;"	m	struct:vout_display_opengl_t	file:
+BuffersClean	evas.c	/^BuffersClean( vout_display_t *vd )$/;"	f	file:
+BuffersSetup	evas.c	/^BuffersSetup( vout_display_t *vd, video_format_t *p_fmt,$/;"	f	file:
+BuildRGBAFragmentShader	opengl.c	/^static void BuildRGBAFragmentShader(vout_display_opengl_t *vgl,$/;"	f	file:
+BuildVertexShader	opengl.c	/^static void BuildVertexShader(vout_display_opengl_t *vgl,$/;"	f	file:
+BuildXYZFragmentShader	opengl.c	/^static void BuildXYZFragmentShader(vout_display_opengl_t *vgl,$/;"	f	file:
+BuildYUVFragmentShader	opengl.c	/^static void BuildYUVFragmentShader(vout_display_opengl_t *vgl,$/;"	f	file:
+CARD_INDEX_LONGTEXT	decklink.cpp	76;"	d	file:
+CARD_INDEX_TEXT	decklink.cpp	75;"	d	file:
+CFG_PREFIX	android/android_window.c	50;"	d	file:
+CFG_PREFIX	decklink.cpp	109;"	d	file:
+CFG_PREFIX	yuv.c	52;"	d	file:
+CHANNELS_LONGTEXT	decklink.cpp	97;"	d	file:
+CHANNELS_MAX	decklink.cpp	51;"	d	file:
+CHANNELS_TEXT	decklink.cpp	96;"	d	file:
+CHECK	decklink.cpp	302;"	d	file:
+CHECK	decklink.cpp	499;"	d	file:
+CHECK_ANB	android/nativewindowpriv.c	84;"	d	file:
+CHECK_ERR	android/nativewindowpriv.c	77;"	d	file:
+CHECK_EXCEPTION	android/utils.c	414;"	d	file:
+CHECK_EXCEPTION	android/utils.c	435;"	d	file:
+CHROMA_LONGTEXT	android/android_window.c	47;"	d	file:
+CHROMA_LONGTEXT	evas.c	51;"	d	file:
+CHROMA_LONGTEXT	fb.c	74;"	d	file:
+CHROMA_LONGTEXT	sdl.c	57;"	d	file:
+CHROMA_LONGTEXT	vdummy.c	37;"	d	file:
+CHROMA_LONGTEXT	yuv.c	45;"	d	file:
+CHROMA_TEXT	android/android_window.c	46;"	d	file:
+CHROMA_TEXT	evas.c	50;"	d	file:
+CHROMA_TEXT	fb.c	73;"	d	file:
+CHROMA_TEXT	sdl.c	56;"	d	file:
+CHROMA_TEXT	vdummy.c	36;"	d	file:
+CHROMA_TEXT	yuv.c	44;"	d	file:
+COBJMACROS	msw/common.c	41;"	d	file:
+COBJMACROS	msw/direct3d11.c	34;"	d	file:
+COLOR_KEY	kva.c	135;"	d	file:
+CUSTOMVERTEX	msw/direct3d9.c	/^} CUSTOMVERTEX;$/;"	t	typeref:struct:__anon26	file:
+CacheAtoms	xcb/window.c	/^static void CacheAtoms (vout_window_sys_t *p_sys)$/;"	f	file:
+CheckAPI	egl.c	/^static bool CheckAPI (EGLDisplay dpy, const char *api)$/;"	f	file:
+CheckClientExt	egl.c	/^static bool CheckClientExt(const char *name)$/;"	f	file:
+CheckGLX	glx.c	/^static bool CheckGLX (vlc_object_t *vd, Display *dpy)$/;"	f	file:
+CheckGLXext	glx.c	/^static bool CheckGLXext (Display *dpy, unsigned snum, const char *ext)$/;"	f	file:
+CheckToken	egl.c	/^static bool CheckToken(const char *haystack, const char *needle)$/;"	f	file:
+CheckXVideo	xcb/xvideo.c	/^static bool CheckXVideo (vout_display_t *vd, xcb_connection_t *conn)$/;"	f	file:
+ChromaToAndroidHal	android/android_window.c	/^static inline int ChromaToAndroidHal(vlc_fourcc_t i_chroma)$/;"	f	file:
+Clean	msw/wingdi.c	/^static void Clean(vout_display_t *vd)$/;"	f	file:
+ClearScreen	fb.c	/^static void ClearScreen(vout_display_sys_t *sys)$/;"	f	file:
+ClientActiveTexture	opengl.c	/^    PFNGLCLIENTACTIVETEXTUREPROC  ClientActiveTexture;$/;"	m	struct:vout_display_opengl_t	file:
+Close	aa.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	android/android_window.c	/^static void Close(vlc_object_t *p_this)$/;"	f	file:
+Close	android/nativewindow.c	/^static void Close(vout_window_t *wnd)$/;"	f	file:
+Close	caca.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	directfb.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	drawable.c	/^static void Close (vout_window_t *wnd)$/;"	f	file:
+Close	egl.c	/^static void Close (vlc_object_t *obj)$/;"	f	file:
+Close	evas.c	/^Close( vlc_object_t *p_this )$/;"	f	file:
+Close	fb.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	gl.c	/^static void Close (vlc_object_t *obj)$/;"	f	file:
+Close	glx.c	/^static void Close (vlc_object_t *obj)$/;"	f	file:
+Close	kva.c	/^static void Close ( vlc_object_t *object )$/;"	f	file:
+Close	msw/direct2d.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	msw/direct3d11.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	msw/direct3d9.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	msw/directdraw.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	msw/glwin32.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	msw/wingdi.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	sdl.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	vdummy.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	vmem.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+Close	wayland/shell_surface.c	/^static void Close(vout_window_t *wnd)$/;"	f	file:
+Close	wayland/shm.c	/^static void Close(vlc_object_t *obj)$/;"	f	file:
+Close	xcb/glx.c	/^static void Close (vlc_object_t *obj)$/;"	f	file:
+Close	xcb/window.c	/^static void Close (vout_window_t *wnd)$/;"	f	file:
+Close	xcb/x11.c	/^static void Close (vlc_object_t *obj)$/;"	f	file:
+Close	xcb/xvideo.c	/^static void Close (vlc_object_t *obj)$/;"	f	file:
+Close	yuv.c	/^static void Close(vlc_object_t *object)$/;"	f	file:
+CloseAudio	decklink.cpp	/^static void CloseAudio(vlc_object_t *p_this)$/;"	f	file:
+CloseDisplay	fb.c	/^static void CloseDisplay(vout_display_t *vd)$/;"	f	file:
+CloseDisplay	kva.c	/^static void CloseDisplay( vout_display_t *vd )$/;"	f	file:
+CloseGestures	msw/win32touch.c	/^void CloseGestures( win32_gesture_sys_t *p_gesture )$/;"	f
+CloseVideo	decklink.cpp	/^static void CloseVideo(vlc_object_t *p_this)$/;"	f	file:
+CommonChangeThumbnailClip	msw/common.c	/^static void CommonChangeThumbnailClip(vout_display_t *vd, bool show)$/;"	f	file:
+CommonChangeThumbnailClip	msw/common.c	/^void CommonChangeThumbnailClip(vout_display_t *vd, bool show) {}$/;"	f
+CommonClean	msw/common.c	/^void CommonClean(vout_display_t *vd) {}$/;"	f
+CommonClean	msw/common.c	/^void CommonClean(vout_display_t *vd)$/;"	f
+CommonControl	msw/common.c	/^int CommonControl(vout_display_t *vd, int query, va_list args)$/;"	f
+CommonControlSetFullscreen	msw/common.c	/^static int CommonControlSetFullscreen(vout_display_t *vd, bool is_fullscreen)$/;"	f	file:
+CommonDisplay	msw/common.c	/^void CommonDisplay(vout_display_t *vd) {}$/;"	f
+CommonDisplay	msw/common.c	/^void CommonDisplay(vout_display_t *vd)$/;"	f
+CommonInit	msw/common.c	/^int CommonInit(vout_display_t *vd)$/;"	f
+CommonManage	msw/common.c	/^void CommonManage(vout_display_t *vd) {$/;"	f
+CommonManage	msw/common.c	/^void CommonManage(vout_display_t *vd)$/;"	f
+CommonPool	msw/common.c	/^picture_pool_t *CommonPool(vout_display_t *vd, unsigned count)$/;"	f
+CommonUpdatePicture	msw/common.c	/^int CommonUpdatePicture(picture_t *picture, picture_t **fallback,$/;"	f
+CompileShader	opengl.c	/^    PFNGLCOMPILESHADERPROC CompileShader;$/;"	m	struct:vout_display_opengl_t	file:
+Connect	xcb/events.c	/^static xcb_connection_t *Connect (vlc_object_t *obj, const char *display)$/;"	f	file:
+Control	aa.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	android/android_window.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	android/nativewindow.c	/^static int Control(vout_window_t *wnd, int cmd, va_list ap)$/;"	f	file:
+Control	caca.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	directfb.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	drawable.c	/^static int Control (vout_window_t *wnd, int query, va_list ap)$/;"	f	file:
+Control	evas.c	/^Control( vout_display_t *vd, int i_query, va_list ap )$/;"	f	file:
+Control	fb.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	gl.c	/^static int Control (vout_display_t *vd, int query, va_list ap)$/;"	f	file:
+Control	kva.c	/^static int Control( vout_display_t *vd, int query, va_list args )$/;"	f	file:
+Control	msw/direct2d.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	msw/direct3d9.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	msw/directdraw.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	msw/wingdi.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	sdl.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	vdummy.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	vmem.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+Control	wayland/shell_surface.c	/^static int Control(vout_window_t *wnd, int cmd, va_list ap)$/;"	f	file:
+Control	wayland/shm.c	/^static int Control(vout_display_t *vd, int query, va_list ap)$/;"	f	file:
+Control	xcb/glx.c	/^static int Control (vout_display_t *vd, int query, va_list ap)$/;"	f	file:
+Control	xcb/window.c	/^static int Control (vout_window_t *wnd, int cmd, va_list ap)$/;"	f	file:
+Control	xcb/x11.c	/^static int Control (vout_display_t *vd, int query, va_list ap)$/;"	f	file:
+Control	xcb/xvideo.c	/^static int Control (vout_display_t *vd, int query, va_list ap)$/;"	f	file:
+Control	yuv.c	/^static int Control(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+ControlReopenDevice	msw/direct3d9.c	/^static int ControlReopenDevice(vout_display_t *vd)$/;"	f	file:
+ControlResetDevice	msw/direct3d9.c	/^static int ControlResetDevice(vout_display_t *vd)$/;"	f	file:
+ControlVideo	decklink.cpp	/^static int ControlVideo(vout_display_t *vd, int query, va_list args)$/;"	f	file:
+ConvertKey	kva.c	/^static int ConvertKey( USHORT i_pmkey )$/;"	f	file:
+ConvertKey	sdl.c	/^static int ConvertKey(SDLKey sdl_key)$/;"	f	file:
+ConvertKeySym	xcb/keys.c	/^static uint_fast32_t ConvertKeySym (xcb_keysym_t sym)$/;"	f	file:
+CopySourceAspect	android/android_window.c	/^static void CopySourceAspect(video_format_t *p_dest,$/;"	f	file:
+CreateGPUAffinityDC	msw/glwin32.c	/^static void CreateGPUAffinityDC(vout_display_t *vd, UINT nVidiaAffinity) {$/;"	f	file:
+CreateProgram	opengl.c	/^    PFNGLCREATEPROGRAMPROC CreateProgram;$/;"	m	struct:vout_display_opengl_t	file:
+CreateShader	opengl.c	/^    PFNGLCREATESHADERPROC CreateShader;$/;"	m	struct:vout_display_opengl_t	file:
+CreateWindowSurface	egl.c	/^static EGLSurface CreateWindowSurface(EGLDisplay dpy, EGLConfig config,$/;"	f	file:
+CreateWindowSurfaceEXT	egl.c	/^static EGLSurface CreateWindowSurfaceEXT(EGLDisplay dpy, EGLConfig config,$/;"	f	file:
+D2D_CreateRenderTarget	msw/direct2d.c	/^static int D2D_CreateRenderTarget(vout_display_t *vd)$/;"	f	file:
+D2D_DestroyRenderTarget	msw/direct2d.c	/^static void D2D_DestroyRenderTarget(vout_display_t *vd)$/;"	f	file:
+D2D_HELP	msw/direct2d.c	51;"	d	file:
+D2D_ResizeRenderTarget	msw/direct2d.c	/^static void D2D_ResizeRenderTarget(vout_display_t *vd)$/;"	f	file:
+D3D11CreateDevice	msw/direct3d11.c	49;"	d	file:
+D3D11CreateDeviceAndSwapChain	msw/direct3d11.c	47;"	d	file:
+D3D11_HELP	msw/direct3d11.c	60;"	d	file:
+D3D9_HELP	msw/direct3d9.c	75;"	d	file:
+D3DCompile	msw/direct3d11.c	51;"	d	file:
+D3DFVF_CUSTOMVERTEX	msw/direct3d9.c	136;"	d	file:
+DEFS	Android.mk	/^DEFS := -DHAVE_CONFIG_H$/;"	m
+DESKTOP_LONGTEXT	msw/direct3d9.c	60;"	d	file:
+DEVICE_LONGTEXT	fb.c	57;"	d	file:
+DEVICE_LONGTEXT	msw/directdraw.c	83;"	d	file:
+DEVICE_TEXT	fb.c	56;"	d	file:
+DEVICE_TEXT	msw/directdraw.c	82;"	d	file:
+DIRECTDRAWENUMERATEEX_NAME	msw/directdraw.c	60;"	d	file:
+DISPLAY_LONGTEXT	wayland/shell_surface.c	406;"	d	file:
+DISPLAY_LONGTEXT	xcb/window.c	640;"	d	file:
+DISPLAY_TEXT	wayland/shell_surface.c	405;"	d	file:
+DISPLAY_TEXT	xcb/window.c	639;"	d	file:
+DX_DESKTOP_CHANGE	msw/common.h	285;"	d
+DX_HELP	msw/directdraw.c	88;"	d	file:
+DX_POSITION_CHANGE	msw/common.h	283;"	d
+DX_WALLPAPER_CHANGE	msw/common.h	284;"	d
+DecodeGesture	msw/win32touch.c	/^LRESULT DecodeGesture( vlc_object_t *p_this, win32_gesture_sys_t *p_gesture,$/;"	f
+DeleteBuffers	opengl.c	/^    PFNGLDELETEBUFFERSPROC DeleteBuffers;$/;"	m	struct:vout_display_opengl_t	file:
+DeleteProgram	opengl.c	/^    PFNGLDELETEPROGRAMPROC DeleteProgram;$/;"	m	struct:vout_display_opengl_t	file:
+DeleteShader	opengl.c	/^    PFNGLDELETESHADERPROC   DeleteShader;$/;"	m	struct:vout_display_opengl_t	file:
+DesktopCallback	msw/direct3d9.c	/^static int DesktopCallback(vlc_object_t *object, char const *psz_cmd,$/;"	f	file:
+DestroyDisplayPicture	msw/direct3d11.c	/^static void DestroyDisplayPicture(picture_t *picture)$/;"	f	file:
+DestroyDisplayPoolPicture	msw/direct3d11.c	/^static void DestroyDisplayPoolPicture(picture_t *picture)$/;"	f	file:
+DestroyGPUAffinityDC	msw/glwin32.c	/^static void DestroyGPUAffinityDC(vout_display_t *vd) {$/;"	f	file:
+DestroyPicture	msw/direct3d9.c	/^static void DestroyPicture(picture_t *picture)$/;"	f	file:
+DestroyPictureQuad	msw/direct3d11.c	/^static void DestroyPictureQuad(picture_t *p_picture)$/;"	f	file:
+Direct3D11Close	msw/direct3d11.c	/^static void Direct3D11Close(vout_display_t *vd)$/;"	f	file:
+Direct3D11CreatePool	msw/direct3d11.c	/^static int Direct3D11CreatePool(vout_display_t *vd, video_format_t *fmt)$/;"	f	file:
+Direct3D11CreateResources	msw/direct3d11.c	/^static int Direct3D11CreateResources(vout_display_t *vd, video_format_t *fmt)$/;"	f	file:
+Direct3D11DeleteRegions	msw/direct3d11.c	/^static void Direct3D11DeleteRegions(int count, picture_t **region)$/;"	f	file:
+Direct3D11Destroy	msw/direct3d11.c	/^static void Direct3D11Destroy(vout_display_t *vd)$/;"	f	file:
+Direct3D11DestroyPool	msw/direct3d11.c	/^static void Direct3D11DestroyPool(vout_display_t *vd)$/;"	f	file:
+Direct3D11DestroyResources	msw/direct3d11.c	/^static void Direct3D11DestroyResources(vout_display_t *vd)$/;"	f	file:
+Direct3D11LoadShaderLibrary	msw/direct3d11.c	/^static HINSTANCE Direct3D11LoadShaderLibrary(void)$/;"	f	file:
+Direct3D11MapSubpicture	msw/direct3d11.c	/^static int Direct3D11MapSubpicture(vout_display_t *vd, int *subpicture_region_count,$/;"	f	file:
+Direct3D11MapTexture	msw/direct3d11.c	/^static int Direct3D11MapTexture(picture_t *picture)$/;"	f	file:
+Direct3D11Open	msw/direct3d11.c	/^static int Direct3D11Open(vout_display_t *vd, video_format_t *fmt)$/;"	f	file:
+Direct3D9CheckConversion	msw/direct3d9.c	/^static int Direct3D9CheckConversion(vout_display_t *vd,$/;"	f	file:
+Direct3D9Close	msw/direct3d9.c	/^static void Direct3D9Close(vout_display_t *vd)$/;"	f	file:
+Direct3D9CompileShader	msw/direct3d9.c	/^static int Direct3D9CompileShader(vout_display_t *vd, const char *shader_source, size_t source_length)$/;"	f	file:
+Direct3D9Create	msw/direct3d9.c	/^static int Direct3D9Create(vout_display_t *vd)$/;"	f	file:
+Direct3D9CreatePool	msw/direct3d9.c	/^static int Direct3D9CreatePool(vout_display_t *vd, video_format_t *fmt)$/;"	f	file:
+Direct3D9CreateResources	msw/direct3d9.c	/^static int Direct3D9CreateResources(vout_display_t *vd, video_format_t *fmt)$/;"	f	file:
+Direct3D9CreateScene	msw/direct3d9.c	/^static int Direct3D9CreateScene(vout_display_t *vd, const video_format_t *fmt)$/;"	f	file:
+Direct3D9CreateShaders	msw/direct3d9.c	/^static int Direct3D9CreateShaders(vout_display_t *vd)$/;"	f	file:
+Direct3D9DeleteRegions	msw/direct3d9.c	/^static void Direct3D9DeleteRegions(int count, d3d_region_t *region)$/;"	f	file:
+Direct3D9Destroy	msw/direct3d9.c	/^static void Direct3D9Destroy(vout_display_t *vd)$/;"	f	file:
+Direct3D9DestroyPool	msw/direct3d9.c	/^static void Direct3D9DestroyPool(vout_display_t *vd)$/;"	f	file:
+Direct3D9DestroyResources	msw/direct3d9.c	/^static void Direct3D9DestroyResources(vout_display_t *vd)$/;"	f	file:
+Direct3D9DestroyScene	msw/direct3d9.c	/^static void Direct3D9DestroyScene(vout_display_t *vd)$/;"	f	file:
+Direct3D9DestroyShaders	msw/direct3d9.c	/^static void Direct3D9DestroyShaders(vout_display_t *vd)$/;"	f	file:
+Direct3D9FillPresentationParameters	msw/direct3d9.c	/^static int Direct3D9FillPresentationParameters(vout_display_t *vd)$/;"	f	file:
+Direct3D9ImportPicture	msw/direct3d9.c	/^static int Direct3D9ImportPicture(vout_display_t *vd,$/;"	f	file:
+Direct3D9ImportSubpicture	msw/direct3d9.c	/^static void Direct3D9ImportSubpicture(vout_display_t *vd,$/;"	f	file:
+Direct3D9LoadShaderLibrary	msw/direct3d9.c	/^static HINSTANCE Direct3D9LoadShaderLibrary(void)$/;"	f	file:
+Direct3D9LockSurface	msw/direct3d9.c	/^static int Direct3D9LockSurface(picture_t *picture)$/;"	f	file:
+Direct3D9Open	msw/direct3d9.c	/^static int Direct3D9Open(vout_display_t *vd, video_format_t *fmt)$/;"	f	file:
+Direct3D9RenderRegion	msw/direct3d9.c	/^static int Direct3D9RenderRegion(vout_display_t *vd,$/;"	f	file:
+Direct3D9RenderScene	msw/direct3d9.c	/^static void Direct3D9RenderScene(vout_display_t *vd,$/;"	f	file:
+Direct3D9Reset	msw/direct3d9.c	/^static int Direct3D9Reset(vout_display_t *vd)$/;"	f	file:
+Direct3D9SetupVertices	msw/direct3d9.c	/^static void Direct3D9SetupVertices(CUSTOMVERTEX *vertices,$/;"	f	file:
+Direct3D9UnlockSurface	msw/direct3d9.c	/^static void Direct3D9UnlockSurface(picture_t *picture)$/;"	f	file:
+Direct3DFindFormat	msw/direct3d9.c	/^static const d3d_format_t *Direct3DFindFormat(vout_display_t *vd, vlc_fourcc_t chroma, D3DFORMAT target)$/;"	f	file:
+DirectXCheckLockingSurface	msw/directdraw.c	/^static int DirectXCheckLockingSurface(LPDIRECTDRAWSURFACE2 front_surface,$/;"	f	file:
+DirectXClose	msw/directdraw.c	/^static void DirectXClose(vout_display_t *vd)$/;"	f	file:
+DirectXCloseDDraw	msw/directdraw.c	/^static void DirectXCloseDDraw(vout_display_t *vd)$/;"	f	file:
+DirectXCloseDisplay	msw/directdraw.c	/^static void DirectXCloseDisplay(vout_display_t *vd)$/;"	f	file:
+DirectXCreateClipper	msw/directdraw.c	/^static void DirectXCreateClipper(vout_display_t *vd)$/;"	f	file:
+DirectXCreatePictureResource	msw/directdraw.c	/^static int DirectXCreatePictureResource(vout_display_t *vd,$/;"	f	file:
+DirectXCreatePictureResourceRgb	msw/directdraw.c	/^static int DirectXCreatePictureResourceRgb(vout_display_t *vd,$/;"	f	file:
+DirectXCreatePictureResourceYuv	msw/directdraw.c	/^static int DirectXCreatePictureResourceYuv(vout_display_t *vd,$/;"	f	file:
+DirectXCreatePictureResourceYuvOverlay	msw/directdraw.c	/^static int DirectXCreatePictureResourceYuvOverlay(vout_display_t *vd,$/;"	f	file:
+DirectXCreatePool	msw/directdraw.c	/^static int DirectXCreatePool(vout_display_t *vd,$/;"	f	file:
+DirectXCreateSurface	msw/directdraw.c	/^static int DirectXCreateSurface(vout_display_t *vd,$/;"	f	file:
+DirectXDestroyPictureResource	msw/directdraw.c	/^static void DirectXDestroyPictureResource(vout_display_t *vd)$/;"	f	file:
+DirectXDestroyPool	msw/directdraw.c	/^static void DirectXDestroyPool(vout_display_t *vd)$/;"	f	file:
+DirectXDestroySurface	msw/directdraw.c	/^static void DirectXDestroySurface(LPDIRECTDRAWSURFACE2 surface)$/;"	f	file:
+DirectXEnumCallback2	msw/directdraw.c	/^static BOOL WINAPI DirectXEnumCallback2(GUID *guid, LPSTR desc,$/;"	f	file:
+DirectXFindColorkey	msw/directdraw.c	/^static uint32_t DirectXFindColorkey(vout_display_t *vd, uint32_t *color)$/;"	f	file:
+DirectXGetDDrawCaps	msw/directdraw.c	/^static void DirectXGetDDrawCaps(vout_display_t *vd)$/;"	f	file:
+DirectXGetFourcc	msw/directdraw.c	/^static DWORD DirectXGetFourcc(vlc_fourcc_t codec)$/;"	f	file:
+DirectXLock	msw/directdraw.c	/^static int DirectXLock(picture_t *picture)$/;"	f	file:
+DirectXLockSurface	msw/directdraw.c	/^static int DirectXLockSurface(LPDIRECTDRAWSURFACE2 front_surface,$/;"	f	file:
+DirectXOpen	msw/directdraw.c	/^static int DirectXOpen(vout_display_t *vd, video_format_t *fmt)$/;"	f	file:
+DirectXOpenDDraw	msw/directdraw.c	/^static int DirectXOpenDDraw(vout_display_t *vd)$/;"	f	file:
+DirectXOpenDDrawCallback	msw/directdraw.c	/^static BOOL WINAPI DirectXOpenDDrawCallback(GUID *guid, LPSTR desc,$/;"	f	file:
+DirectXOpenDisplay	msw/directdraw.c	/^static int DirectXOpenDisplay(vout_display_t *vd)$/;"	f	file:
+DirectXUnlock	msw/directdraw.c	/^static void DirectXUnlock(picture_t *picture)$/;"	f	file:
+DirectXUnlockSurface	msw/directdraw.c	/^static void DirectXUnlockSurface(LPDIRECTDRAWSURFACE2 front_surface,$/;"	f	file:
+DirectXUpdateOverlay	msw/directdraw.c	/^static int DirectXUpdateOverlay(vout_display_t *vd, LPDIRECTDRAWSURFACE2 surface)$/;"	f	file:
+DisableScreensaver	msw/common.c	/^static void DisableScreensaver(vout_display_t *vd)$/;"	f	file:
+Display	android/android_window.c	/^static void Display(vout_display_t *vd, picture_t *picture,$/;"	f	file:
+Display	directfb.c	/^static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Display	evas.c	/^Display( vout_display_t *vd, picture_t *p_pic, subpicture_t *p_subpic )$/;"	f	file:
+Display	fb.c	/^static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Display	kva.c	/^static void Display( vout_display_t *vd, picture_t *picture,$/;"	f	file:
+Display	msw/direct2d.c	/^static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Display	msw/direct3d11.c	/^static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Display	msw/direct3d9.c	/^static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Display	msw/directdraw.c	/^static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Display	msw/glwin32.c	/^static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Display	msw/wingdi.c	/^static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Display	vdummy.c	/^static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Display	vmem.c	/^static void Display(vout_display_t *vd, picture_t *pic, subpicture_t *subpic)$/;"	f	file:
+Display	wayland/shm.c	/^static void Display(vout_display_t *vd, picture_t *pic, subpicture_t *subpic)$/;"	f	file:
+Display	xcb/x11.c	/^static void Display (vout_display_t *vd, picture_t *pic, subpicture_t *subpicture)$/;"	f	file:
+Display	xcb/xvideo.c	/^static void Display (vout_display_t *vd, picture_t *pic, subpicture_t *subpicture)$/;"	f	file:
+Display	yuv.c	/^static void Display(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+DisplayD3DPicture	msw/direct3d11.c	/^static void DisplayD3DPicture(vout_display_sys_t *sys, d3d_quad_t *quad)$/;"	f	file:
+DisplayStat	vdummy.c	/^static void DisplayStat(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+DisplayVideo	decklink.cpp	/^static void DisplayVideo(vout_display_t *vd, picture_t *picture, subpicture_t *)$/;"	f	file:
+DrawWithShaders	opengl.c	/^static void DrawWithShaders(vout_display_opengl_t *vgl,$/;"	f	file:
+DrawWithoutShaders	opengl.c	/^static void DrawWithoutShaders(vout_display_opengl_t *vgl,$/;"	f	file:
+EVENT_FIFO_POP	evas.c	237;"	d	file:
+EVENT_FIFO_PUSH	evas.c	236;"	d	file:
+EcoreMainLoopCallSync	evas.c	/^EcoreMainLoopCallSync( vout_display_t *vd, mainloop_cb p_cb )$/;"	f	file:
+EcoreMainLoopCb	evas.c	/^EcoreMainLoopCb( void *p_opaque )$/;"	f	file:
+EmClose	xcb/window.c	/^static void EmClose (vout_window_t *wnd)$/;"	f	file:
+EmOpen	xcb/window.c	/^static int EmOpen (vout_window_t *wnd, const vout_window_cfg_t *cfg)$/;"	f	file:
+EmptyCursor	msw/events.c	/^static HCURSOR EmptyCursor( HINSTANCE instance )$/;"	f	file:
+EnableVertexAttribArray	opengl.c	/^    PFNGLENABLEVERTEXATTRIBARRAYPROC EnableVertexAttribArray;$/;"	m	struct:vout_display_opengl_t	file:
+EnumAdaptors	xcb/xvideo.c	/^static int EnumAdaptors (vlc_object_t *obj, const char *var,$/;"	f	file:
+EvasDeinitMainloopCb	evas.c	/^EvasDeinitMainloopCb( vout_display_t *vd )$/;"	f	file:
+EvasDisplayMainloopCb	evas.c	/^EvasDisplayMainloopCb( vout_display_t *vd )$/;"	f	file:
+EvasImageBuffersAlloc	evas.c	/^EvasImageBuffersAlloc( vout_display_t *vd, video_format_t *p_fmt )$/;"	f	file:
+EvasImageBuffersFree	evas.c	/^EvasImageBuffersFree( vout_display_t *vd )$/;"	f	file:
+EvasImageSetData	evas.c	/^EvasImageSetData( vout_display_t *vd )$/;"	f	file:
+EvasImageSetup	evas.c	/^EvasImageSetup( vout_display_t *vd )$/;"	f	file:
+EvasInitMainloopCb	evas.c	/^EvasInitMainloopCb( vout_display_t *vd )$/;"	f	file:
+EvasIsOpenGLSupported	evas.c	/^EvasIsOpenGLSupported( vout_display_t *vd )$/;"	f	file:
+EvasKeyUpCb	evas.c	/^EvasKeyUpCb( void *data, Evas *e, Evas_Object *obj, void *event )$/;"	f	file:
+EvasMouseMoveCb	evas.c	/^EvasMouseMoveCb( void *data, Evas *e, Evas_Object *obj, void *event )$/;"	f	file:
+EvasMouseUpCb	evas.c	/^EvasMouseUpCb( void *data, Evas *e, Evas_Object *obj, void *event )$/;"	f	file:
+EvasMultiDownCb	evas.c	/^EvasMultiDownCb( void *data, Evas *e, Evas_Object *obj, void *event )$/;"	f	file:
+EvasMultiMoveCb	evas.c	/^EvasMultiMoveCb( void *data, Evas *e, Evas_Object *obj, void *event )$/;"	f	file:
+EvasMultiUpCb	evas.c	/^EvasMultiUpCb( void *data, Evas *e, Evas_Object *obj, void *event )$/;"	f	file:
+EvasResetMainloopCb	evas.c	/^EvasResetMainloopCb( vout_display_t *vd )$/;"	f	file:
+EvasResizeCb	evas.c	/^EvasResizeCb( void *data, Evas *e, Evas_Object *obj, void *event )$/;"	f	file:
+EventMouseDownCb	evas.c	/^EventMouseDownCb( void *data, Evas *e, Evas_Object *obj, void *event )$/;"	f	file:
+EventSendKey	evas.c	/^EventSendKey( vout_display_t *vd, int i_key )$/;"	f	file:
+EventSendMouseButton	evas.c	/^EventSendMouseButton( vout_display_t *vd, int i_type, int i_button )$/;"	f	file:
+EventSendMouseMoved	evas.c	/^EventSendMouseMoved( vout_display_t *vd, int i_x, int i_y )$/;"	f	file:
+EventThread	msw/events.c	/^static void *EventThread( void *p_this )$/;"	f	file:
+EventThreadCreate	msw/events.c	/^event_thread_t *EventThreadCreate( vout_display_t *vd)$/;"	f
+EventThreadDestroy	msw/events.c	/^void EventThreadDestroy( event_thread_t *p_event )$/;"	f
+EventThreadGetAndResetHasMoved	msw/events.c	/^bool EventThreadGetAndResetHasMoved( event_thread_t *p_event )$/;"	f
+EventThreadGetWindowStyle	msw/events.c	/^int EventThreadGetWindowStyle( event_thread_t *p_event )$/;"	f
+EventThreadMouseHide	msw/events.c	/^void EventThreadMouseHide( event_thread_t *p_event )$/;"	f
+EventThreadStart	msw/events.c	/^int EventThreadStart( event_thread_t *p_event, event_hwnd_t *p_hwnd, const event_cfg_t *p_cfg )$/;"	f
+EventThreadStop	msw/events.c	/^void EventThreadStop( event_thread_t *p_event )$/;"	f
+EventThreadUpdateSourceAndPlace	msw/events.c	/^void EventThreadUpdateSourceAndPlace( event_thread_t *p_event,$/;"	f
+EventThreadUpdateTitle	msw/events.c	/^void EventThreadUpdateTitle( event_thread_t *p_event, const char *psz_fallback )$/;"	f
+EventThreadUpdateWindowPosition	msw/events.c	/^void EventThreadUpdateWindowPosition( event_thread_t *p_event,$/;"	f
+EventThreadUseOverlay	msw/events.c	/^void EventThreadUseOverlay( event_thread_t *p_event, bool b_used )$/;"	f
+FB_DEV_VAR	fb.c	54;"	d	file:
+FB_MODE_LONGTEXT	fb.c	66;"	d	file:
+FB_MODE_TEXT	fb.c	65;"	d	file:
+FORMAT_LONGTEXT	xcb/xvideo.c	50;"	d	file:
+FORMAT_TEXT	xcb/xvideo.c	49;"	d	file:
+FRAME_SIZE	decklink.cpp	50;"	d	file:
+FindDepth	xcb/x11.c	/^static const xcb_depth_t *FindDepth (const xcb_screen_t *scr,$/;"	f	file:
+FindDevicesCallback	msw/directdraw.c	/^static int FindDevicesCallback(vlc_object_t *object, const char *name,$/;"	f	file:
+FindFormat	xcb/xvideo.c	/^FindFormat (vlc_object_t *obj, xcb_connection_t *conn, video_format_t *fmt,$/;"	f	file:
+FindScreen	xcb/events.c	/^static const xcb_screen_t *FindScreen (vlc_object_t *obj,$/;"	f	file:
+FindShadersCallback	msw/direct3d9.c	/^static int FindShadersCallback(vlc_object_t *object, const char *name,$/;"	f	file:
+FixSubtitleFormat	android/android_window.c	/^static void FixSubtitleFormat(vout_display_sys_t *sys)$/;"	f	file:
+Flush	decklink.cpp	/^static void Flush (audio_output_t *aout, bool drain)$/;"	f	file:
+FmtUpdate	evas.c	/^FmtUpdate( vout_display_t *vd )$/;"	f	file:
+GESTURE_ACTION_BRIGHTNESS	msw/win32touch.h	/^    GESTURE_ACTION_BRIGHTNESS$/;"	e	enum:__anon22
+GESTURE_ACTION_JUMP	msw/win32touch.h	/^    GESTURE_ACTION_JUMP,$/;"	e	enum:__anon22
+GESTURE_ACTION_UNDEFINED	msw/win32touch.h	/^    GESTURE_ACTION_UNDEFINED = 0,$/;"	e	enum:__anon22
+GESTURE_ACTION_VOLUME	msw/win32touch.h	/^    GESTURE_ACTION_VOLUME,$/;"	e	enum:__anon22
+GET_METHOD	android/utils.c	423;"	d	file:
+GET_METHOD	android/utils.c	436;"	d	file:
+GLES2_TEXT	gl.c	41;"	d	file:
+GLES_TEXT	gl.c	42;"	d	file:
+GLEW_STATIC	msw/glwin32.c	33;"	d	file:
+GLSL_VERSION	opengl.c	78;"	d	file:
+GLSL_VERSION	opengl.c	90;"	d	file:
+GL_CLAMP_TO_EDGE	opengl.c	43;"	d	file:
+GL_MAX_TEXTURE_IMAGE_UNITS	opengl.c	87;"	d	file:
+GL_TEXT	gl.c	40;"	d	file:
+GUID_EXT	msw/directdraw.c	132;"	d	file:
+GUID_EXT	msw/directdraw.c	133;"	d	file:
+GenBuffers	opengl.c	/^    PFNGLGENBUFFERSPROC    GenBuffers;$/;"	m	struct:vout_display_opengl_t	file:
+GetAlignedSize	opengl.c	/^static inline int GetAlignedSize(unsigned size)$/;"	f	file:
+GetAttribLocation	opengl.c	/^    PFNGLGETATTRIBLOCATIONPROC       GetAttribLocation;$/;"	m	struct:vout_display_opengl_t	file:
+GetDLSys	decklink.cpp	/^static struct decklink_sys_t *GetDLSys(vlc_object_t *obj)$/;"	f	file:
+GetDesktopHandle	msw/events.c	/^static HWND GetDesktopHandle(vout_display_t *vd)$/;"	f	file:
+GetDisplayEXT	egl.c	/^static EGLDisplay GetDisplayEXT(EGLenum plat, void *dpy, const EGLint *attrs)$/;"	f	file:
+GetProgramInfoLog	opengl.c	/^    PFNGLGETPROGRAMINFOLOGPROC GetProgramInfoLog;$/;"	m	struct:vout_display_opengl_t	file:
+GetProgramiv	opengl.c	/^    PFNGLGETPROGRAMIVPROC  GetProgramiv;$/;"	m	struct:vout_display_opengl_t	file:
+GetShaderInfoLog	opengl.c	/^    PFNGLGETSHADERINFOLOGPROC GetShaderInfoLog;$/;"	m	struct:vout_display_opengl_t	file:
+GetShaderiv	opengl.c	/^    PFNGLGETSHADERIVPROC   GetShaderiv;$/;"	m	struct:vout_display_opengl_t	file:
+GetSymbol	egl.c	/^static void *GetSymbol(vlc_gl_t *gl, const char *procname)$/;"	f	file:
+GetSymbol	glx.c	/^static void *GetSymbol(vlc_gl_t *gl, const char *procname)$/;"	f	file:
+GetUniformLocation	opengl.c	/^    PFNGLGETUNIFORMLOCATIONPROC      GetUniformLocation;$/;"	m	struct:vout_display_opengl_t	file:
+GfxMode	fb.c	/^static void GfxMode(int tty)$/;"	f	file:
+HAVE_EVAS_CALLBACK_KEY_UP	evas.c	43;"	d	file:
+HWND_LONGTEXT	drawable.c	35;"	d	file:
+HWND_TEXT	drawable.c	34;"	d	file:
+HW_ACCEL_LONGTEXT	fb.c	71;"	d	file:
+HW_ACCEL_TEXT	fb.c	70;"	d	file:
+HW_BLENDING_LONGTEXT	msw/direct3d11.c	62;"	d	file:
+HW_BLENDING_LONGTEXT	msw/direct3d9.c	64;"	d	file:
+HW_BLENDING_TEXT	msw/direct3d11.c	61;"	d	file:
+HW_BLENDING_TEXT	msw/direct3d9.c	63;"	d	file:
+HW_GPU_AFFINITY_TEXT	msw/glwin32.c	45;"	d	file:
+HW_YUV_LONGTEXT	msw/directdraw.c	66;"	d	file:
+HW_YUV_TEXT	msw/directdraw.c	65;"	d	file:
+HandleButtonPress	xcb/events.c	/^static void HandleButtonPress (vout_display_t *vd,$/;"	f	file:
+HandleButtonRelease	xcb/events.c	/^static void HandleButtonRelease (vout_display_t *vd,$/;"	f	file:
+HandleMotionNotify	xcb/events.c	/^static void HandleMotionNotify (vout_display_t *vd, xcb_connection_t *conn,$/;"	f	file:
+HandleVisibilityNotify	xcb/events.c	/^static void HandleVisibilityNotify (vout_display_t *vd, bool *visible,$/;"	f	file:
+HasExtension	opengl.h	/^static inline bool HasExtension(const char *apis, const char *api)$/;"	f
+IDM_TOGGLE_ON_TOP	msw/common.h	282;"	d
+INITGUID	msw/direct3d11.c	35;"	d	file:
+Init	msw/wingdi.c	/^static int Init(vout_display_t *vd,$/;"	f	file:
+InitGestures	msw/win32touch.c	/^BOOL InitGestures( HWND hwnd, win32_gesture_sys_t **pp_gesture )$/;"	f
+InitJNIFields	android/utils.c	/^InitJNIFields(JNIEnv *env, vlc_object_t *p_obj, AWindowHandler *p_awh)$/;"	f	file:
+IsLuminance16Supported	opengl.c	/^static bool IsLuminance16Supported(int target)$/;"	f	file:
+JNI_CALL	android/utils.c	456;"	d	file:
+KVALock	kva.c	/^static int KVALock( picture_t *picture )$/;"	f	file:
+KVAUnlock	kva.c	/^static void KVAUnlock( picture_t *picture )$/;"	f	file:
+KVA_FIXT23_LONGTEXT	kva.c	51;"	d	file:
+KVA_FIXT23_TEXT	kva.c	49;"	d	file:
+KVA_VIDEO_MODE_LONGTEXT	kva.c	56;"	d	file:
+KVA_VIDEO_MODE_TEXT	kva.c	54;"	d	file:
+LOCAL_ARM_MODE	Android.mk	/^LOCAL_ARM_MODE := arm$/;"	m
+LOCAL_CFLAGS	Android.mk	/^LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS)$/;"	m
+LOCAL_C_INCLUDES	Android.mk	/^LOCAL_C_INCLUDES := $(LOCAL_PATH)\/..\/..\/include \\$/;"	m
+LOCAL_MODULE	Android.mk	/^LOCAL_MODULE := $(MODULE_TARGET)$/;"	m
+LOCAL_MODULE_TAGS	Android.mk	/^LOCAL_MODULE_TAGS := optional$/;"	m
+LOCAL_PATH	Android.mk	/^LOCAL_PATH := $(call my-dir)$/;"	m
+LOCAL_PRELINK_MODULE	Android.mk	/^LOCAL_PRELINK_MODULE := false$/;"	m
+LOCAL_SRC_FILES	Android.mk	/^LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)$/;"	m
+LOGD	android/nativewindowpriv.c	74;"	d	file:
+LOGE	android/nativewindowpriv.c	75;"	d	file:
+LOG_TAG	android/nativewindowpriv.c	72;"	d	file:
+LT_CHROMA	vmem.c	52;"	d	file:
+LT_HEIGHT	vmem.c	46;"	d	file:
+LT_PITCH	vmem.c	49;"	d	file:
+LT_WIDTH	vmem.c	43;"	d	file:
+LinkProgram	opengl.c	/^    PFNGLLINKPROGRAMPROC   LinkProgram;$/;"	m	struct:vout_display_opengl_t	file:
+ListShaders	msw/direct3d9.c	/^static void ListShaders(enum_context_t *ctx)$/;"	f	file:
+LoadNativeSurfaceAPI	android/utils.c	/^LoadNativeSurfaceAPI(AWindowHandler *p_awh)$/;"	f	file:
+LoadNativeWindowAPI	android/utils.c	/^LoadNativeWindowAPI(AWindowHandler *p_awh)$/;"	f	file:
+LoadNativeWindowPrivAPI	android/utils.c	/^LoadNativeWindowPrivAPI(native_window_priv_api_t *native)$/;"	f	file:
+Lock	directfb.c	/^static int Lock(picture_t *pic)$/;"	f	file:
+Lock	vmem.c	/^static void Lock(void *data, picture_t *pic)$/;"	f	file:
+MACOS_OPENGL	opengl.h	42;"	d
+MAX_PICTURES	wayland/shm.c	45;"	d	file:
+MAX_PICTURES	xcb/x11.c	62;"	d	file:
+MAX_PICTURES	xcb/xvideo.c	78;"	d	file:
+MAX_SHADER_FILE_SIZE	msw/direct3d9.c	1314;"	d	file:
+MODE_LONGTEXT	decklink.cpp	81;"	d	file:
+MODE_TEXT	decklink.cpp	80;"	d	file:
+MODULE_NAME	Android.mk	/^MODULE_NAME := androidwindow$/;"	m
+MODULE_NAME	Android.mk	/^MODULE_NAME := nativewindow$/;"	m
+MODULE_TARGET	Android.mk	/^MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)$/;"	m
+MODULE_VARNAME	gl.c	49;"	d	file:
+MakeCurrent	egl.c	/^static int MakeCurrent (vlc_gl_t *gl)$/;"	f	file:
+MakeCurrent	glx.c	/^static int MakeCurrent (vlc_gl_t *gl)$/;"	f	file:
+Manage	aa.c	/^static void Manage(vout_display_t *vd)$/;"	f	file:
+Manage	android/android_window.c	/^static void Manage(vout_display_t *vd)$/;"	f	file:
+Manage	caca.c	/^static void Manage(vout_display_t *vd)$/;"	f	file:
+Manage	evas.c	/^Manage( vout_display_t *vd )$/;"	f	file:
+Manage	kva.c	/^static void Manage( vout_display_t *vd )$/;"	f	file:
+Manage	msw/direct2d.c	/^static void Manage(vout_display_t *vd)$/;"	f	file:
+Manage	msw/direct3d11.c	/^static void Manage(vout_display_t *vd)$/;"	f	file:
+Manage	msw/direct3d9.c	/^static void Manage (vout_display_t *vd)$/;"	f	file:
+Manage	msw/directdraw.c	/^static void Manage(vout_display_t *vd)$/;"	f	file:
+Manage	msw/glwin32.c	/^static void Manage (vout_display_t *vd)$/;"	f	file:
+Manage	msw/wingdi.c	/^static void Manage(vout_display_t *vd)$/;"	f	file:
+Manage	sdl.c	/^static void Manage(vout_display_t *vd)$/;"	f	file:
+Manage	xcb/glx.c	/^static void Manage (vout_display_t *vd)$/;"	f	file:
+Manage	xcb/x11.c	/^static void Manage (vout_display_t *vd)$/;"	f	file:
+Manage	xcb/xvideo.c	/^static void Manage (vout_display_t *vd)$/;"	f	file:
+MorphToPM	kva.c	/^static void MorphToPM( void )$/;"	f	file:
+MousePressed	kva.c	/^static void MousePressed( vout_display_t *vd, HWND hwnd, unsigned button )$/;"	f	file:
+MousePressed	msw/events.c	/^static void MousePressed( event_thread_t *p_event, HWND hwnd, unsigned button )$/;"	f	file:
+MouseReleased	kva.c	/^static void MouseReleased( vout_display_t *vd, unsigned button )$/;"	f	file:
+MouseReleased	msw/events.c	/^static void MouseReleased( event_thread_t *p_event, unsigned button )$/;"	f	file:
+MyFrameWndProc	kva.c	/^static MRESULT EXPENTRY MyFrameWndProc( HWND hwnd, ULONG msg, MPARAM mp1,$/;"	f	file:
+NET_WM_STATE_ADD	xcb/window.c	134;"	d	file:
+NET_WM_STATE_REMOVE	xcb/window.c	133;"	d	file:
+NET_WM_STATE_TOGGLE	xcb/window.c	135;"	d	file:
+NOSIGNAL_IMAGE_LONGTEXT	decklink.cpp	73;"	d	file:
+NOSIGNAL_IMAGE_TEXT	decklink.cpp	72;"	d	file:
+NOSIGNAL_INDEX_LONGTEXT	decklink.cpp	67;"	d	file:
+NOSIGNAL_INDEX_TEXT	decklink.cpp	66;"	d	file:
+NO_ERROR	android/nativewindowpriv.c	57;"	d	file:
+NativeSurface	android/utils.c	/^} NativeSurface;$/;"	t	typeref:struct:__anon11	file:
+NativeSurface_Load	android/utils.c	/^NativeSurface_Load(const char *psz_lib, NativeSurface *p_ns)$/;"	f	file:
+NativeSurface_fromSurface	android/utils.c	/^NativeSurface_fromSurface(JNIEnv *p_env, jobject jsurf)$/;"	f	file:
+NativeSurface_getHandle	android/utils.c	/^NativeSurface_getHandle(JNIEnv *p_env, jobject jsurf)$/;"	f	file:
+NativeSurface_lock	android/utils.c	/^NativeSurface_lock(ANativeWindow *p_anw, ANativeWindow_Buffer *p_anb,$/;"	f	file:
+NativeSurface_release	android/utils.c	/^NativeSurface_release(ANativeWindow* p_anw)$/;"	f	file:
+NativeSurface_unlockAndPost	android/utils.c	/^NativeSurface_unlockAndPost(ANativeWindow *p_anw)$/;"	f	file:
+ORDER	xcb/pictures.h	24;"	d
+ORDER	xcb/pictures.h	26;"	d
+Open	aa.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	android/android_window.c	/^static int Open(vlc_object_t *p_this)$/;"	f	file:
+Open	android/nativewindow.c	/^static int Open(vout_window_t *wnd, const vout_window_cfg_t *cfg)$/;"	f	file:
+Open	caca.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	directfb.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	drawable.c	/^static int Open (vout_window_t *wnd, const vout_window_cfg_t *cfg)$/;"	f	file:
+Open	egl.c	/^static int Open (vlc_object_t *obj, const struct gl_api *api)$/;"	f	file:
+Open	evas.c	/^Open( vlc_object_t *p_this )$/;"	f	file:
+Open	fb.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	gl.c	/^static int Open (vlc_object_t *obj)$/;"	f	file:
+Open	glx.c	/^static int Open (vlc_object_t *obj)$/;"	f	file:
+Open	kva.c	/^static int Open ( vlc_object_t *object )$/;"	f	file:
+Open	msw/direct2d.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	msw/direct3d11.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	msw/direct3d9.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	msw/directdraw.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	msw/glwin32.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	msw/wingdi.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	sdl.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	vdummy.c	/^static int Open(vlc_object_t *object,$/;"	f	file:
+Open	vmem.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+Open	wayland/shell_surface.c	/^static int Open(vout_window_t *wnd, const vout_window_cfg_t *cfg)$/;"	f	file:
+Open	wayland/shm.c	/^static int Open(vlc_object_t *obj)$/;"	f	file:
+Open	xcb/glx.c	/^static int Open (vlc_object_t *obj)$/;"	f	file:
+Open	xcb/window.c	/^static int Open (vout_window_t *wnd, const vout_window_cfg_t *cfg)$/;"	f	file:
+Open	xcb/x11.c	/^static int Open (vlc_object_t *obj)$/;"	f	file:
+Open	xcb/xvideo.c	/^static int Open (vlc_object_t *obj)$/;"	f	file:
+Open	yuv.c	/^static int Open(vlc_object_t *object)$/;"	f	file:
+OpenAudio	decklink.cpp	/^static int OpenAudio(vlc_object_t *p_this)$/;"	f	file:
+OpenDecklink	decklink.cpp	/^static struct decklink_sys_t *OpenDecklink(vout_display_t *vd)$/;"	f	file:
+OpenDisplay	fb.c	/^static int OpenDisplay(vout_display_t *vd, bool force_resolution)$/;"	f	file:
+OpenDisplay	kva.c	/^static int OpenDisplay( vout_display_t *vd, video_format_t *fmt )$/;"	f	file:
+OpenDummy	vdummy.c	/^static int OpenDummy(vlc_object_t *object)$/;"	f	file:
+OpenGL	egl.c	/^static int OpenGL (vlc_object_t *obj)$/;"	f	file:
+OpenGLES	egl.c	/^static int OpenGLES (vlc_object_t *obj)$/;"	f	file:
+OpenGLES2	egl.c	/^static int OpenGLES2 (vlc_object_t *obj)$/;"	f	file:
+OpenStats	vdummy.c	/^static int OpenStats(vlc_object_t *object)$/;"	f	file:
+OpenVideo	decklink.cpp	/^static int OpenVideo(vlc_object_t *p_this)$/;"	f	file:
+OurCloseGestureInfoHandle	msw/win32touch.h	/^    BOOL (WINAPI * OurCloseGestureInfoHandle)(HGESTUREINFO hGestureInfo);$/;"	m	struct:__anon23
+OurD3D11CreateDevice	msw/common.h	/^    PFN_D3D11_CREATE_DEVICE                OurD3D11CreateDevice;$/;"	m	struct:vout_display_sys_t
+OurD3D11CreateDeviceAndSwapChain	msw/common.h	/^    PFN_D3D11_CREATE_DEVICE_AND_SWAP_CHAIN OurD3D11CreateDeviceAndSwapChain;$/;"	m	struct:vout_display_sys_t
+OurD3DCompile	msw/common.h	/^    pD3DCompile                            OurD3DCompile;$/;"	m	struct:vout_display_sys_t
+OurGetGestureInfo	msw/win32touch.h	/^    BOOL (WINAPI * OurGetGestureInfo)(HGESTUREINFO hGestureInfo, PGESTUREINFO pGestureInfo);$/;"	m	struct:__anon23
+OurGetProcAddress	msw/glwin32.c	/^static void *OurGetProcAddress(vlc_gl_t *gl, const char *name)$/;"	f	file:
+PFNGLATTACHSHADERPROC	opengl.c	67;"	d	file:
+PFNGLBINDBUFFERPROC	opengl.c	69;"	d	file:
+PFNGLBUFFERDATAPROC	opengl.c	70;"	d	file:
+PFNGLCOMPILESHADERPROC	opengl.c	61;"	d	file:
+PFNGLCREATEPROGRAMPROC	opengl.c	63;"	d	file:
+PFNGLCREATESHADERPROC	opengl.c	59;"	d	file:
+PFNGLDELETEBUFFERSPROC	opengl.c	71;"	d	file:
+PFNGLDELETEPROGRAMPROC	opengl.c	66;"	d	file:
+PFNGLDELETESHADERPROC	opengl.c	62;"	d	file:
+PFNGLENABLEVERTEXATTRIBARRAYPROC	opengl.c	54;"	d	file:
+PFNGLGENBUFFERSPROC	opengl.c	68;"	d	file:
+PFNGLGETATTRIBLOCATIONPROC	opengl.c	52;"	d	file:
+PFNGLGETPROGRAMINFOLOGPROC	opengl.c	48;"	d	file:
+PFNGLGETPROGRAMIVPROC	opengl.c	47;"	d	file:
+PFNGLGETSHADERINFOLOGPROC	opengl.c	50;"	d	file:
+PFNGLGETSHADERIVPROC	opengl.c	49;"	d	file:
+PFNGLGETUNIFORMLOCATIONPROC	opengl.c	51;"	d	file:
+PFNGLLINKPROGRAMPROC	opengl.c	64;"	d	file:
+PFNGLSHADERSOURCEPROC	opengl.c	60;"	d	file:
+PFNGLUNIFORM1IPROC	opengl.c	58;"	d	file:
+PFNGLUNIFORM4FPROC	opengl.c	57;"	d	file:
+PFNGLUNIFORM4FVPROC	opengl.c	56;"	d	file:
+PFNGLUNIFORMMATRIX4FVPROC	opengl.c	55;"	d	file:
+PFNGLUSEPROGRAMPROC	opengl.c	65;"	d	file:
+PFNGLVERTEXATTRIBPOINTERPROC	opengl.c	53;"	d	file:
+PFN_CREATE_DXGI_FACTORY	msw/direct3d11.c	/^typedef HRESULT(WINAPI *PFN_CREATE_DXGI_FACTORY)(REFIID riid, void **ppFactory);$/;"	t	file:
+PIXEL_SHADER_FILE_LONGTEXT	msw/direct3d9.c	71;"	d	file:
+PIXEL_SHADER_FILE_TEXT	msw/direct3d9.c	70;"	d	file:
+PIXEL_SHADER_LONGTEXT	msw/direct3d9.c	68;"	d	file:
+PIXEL_SHADER_TEXT	msw/direct3d9.c	67;"	d	file:
+PMThread	kva.c	/^static void PMThread( void *arg )$/;"	f	file:
+PRECISION	opengl.c	81;"	d	file:
+PRECISION	opengl.c	93;"	d	file:
+PRIV_WINDOW_FORMAT_YV12	android/android_window.c	134;"	d	file:
+PROVIDER_LONGTEXT	gl.c	43;"	d	file:
+ParseFormat	xcb/xvideo.c	/^static vlc_fourcc_t ParseFormat (vlc_object_t *obj,$/;"	f	file:
+PictureAlloc	android/android_window.c	/^static picture_t *PictureAlloc(vout_display_sys_t *sys, video_format_t *fmt,$/;"	f	file:
+PictureAlloc	evas.c	/^PictureAlloc( vout_display_t *vd )$/;"	f	file:
+PictureAttach	wayland/shm.c	/^static void PictureAttach(void *data, picture_t *pic)$/;"	f	file:
+PictureDestroy	wayland/shm.c	/^static void PictureDestroy(picture_t *pic)$/;"	f	file:
+PictureDetach	wayland/shm.c	/^static void PictureDetach(void *data, picture_t *pic)$/;"	f	file:
+PictureDisplay	aa.c	/^static void PictureDisplay(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+PictureDisplay	caca.c	/^static void PictureDisplay(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+PictureDisplay	gl.c	/^static void PictureDisplay (vout_display_t *vd, picture_t *pic, subpicture_t *subpicture)$/;"	f	file:
+PictureDisplay	sdl.c	/^static void PictureDisplay(vout_display_t *vd, picture_t *p_pic, subpicture_t *p_subpicture)$/;"	f	file:
+PictureDisplay	xcb/glx.c	/^static void PictureDisplay (vout_display_t *vd, picture_t *pic, subpicture_t *subpicture)$/;"	f	file:
+PictureRender	gl.c	/^static void PictureRender (vout_display_t *vd, picture_t *pic, subpicture_t *subpicture)$/;"	f	file:
+PictureRender	xcb/glx.c	/^static void PictureRender (vout_display_t *vd, picture_t *pic, subpicture_t *subpicture)$/;"	f	file:
+Place	caca.c	/^static void Place(vout_display_t *vd, vout_display_place_t *place)$/;"	f	file:
+PlayAudio	decklink.cpp	/^static void PlayAudio(audio_output_t *aout, block_t *audio)$/;"	f	file:
+Pool	aa.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	android/android_window.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned requested_count)$/;"	f	file:
+Pool	caca.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	directfb.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	evas.c	/^Pool( vout_display_t *vd, unsigned i_requested_count )$/;"	f	file:
+Pool	fb.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	gl.c	/^static picture_pool_t *Pool (vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	kva.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	msw/direct2d.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	msw/direct3d11.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned pool_size)$/;"	f	file:
+Pool	msw/direct3d9.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	msw/directdraw.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	msw/glwin32.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	msw/wingdi.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	sdl.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	vdummy.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	vmem.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+Pool	wayland/shm.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned req)$/;"	f	file:
+Pool	xcb/glx.c	/^static picture_pool_t *Pool (vout_display_t *vd, unsigned requested_count)$/;"	f	file:
+Pool	xcb/x11.c	/^static picture_pool_t *Pool (vout_display_t *vd, unsigned requested_count)$/;"	f	file:
+Pool	xcb/xvideo.c	/^static picture_pool_t *Pool (vout_display_t *vd, unsigned requested_count)$/;"	f	file:
+Pool	yuv.c	/^static picture_pool_t *Pool(vout_display_t *vd, unsigned count)$/;"	f	file:
+PoolAlloc	android/android_window.c	/^static picture_pool_t *PoolAlloc(vout_display_t *vd, unsigned requested_count)$/;"	f	file:
+PoolAlloc	evas.c	/^PoolAlloc( vout_display_t *vd, unsigned i_requested_count )$/;"	f	file:
+PoolAlloc	xcb/xvideo.c	/^static void PoolAlloc (vout_display_t *vd, unsigned requested_count)$/;"	f	file:
+PoolLockPicture	android/android_window.c	/^static int PoolLockPicture(picture_t *p_pic)$/;"	f	file:
+PoolLockPicture	evas.c	/^PoolLockPicture(picture_t *p_pic)$/;"	f	file:
+PoolUnlockPicture	android/android_window.c	/^static void PoolUnlockPicture(picture_t *p_pic)$/;"	f	file:
+PoolUnlockPicture	evas.c	/^PoolUnlockPicture(picture_t *p_pic)$/;"	f	file:
+PoolVideo	decklink.cpp	/^static picture_pool_t *PoolVideo(vout_display_t *vd, unsigned requested_count)$/;"	f	file:
+Prepare	aa.c	/^static void Prepare(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Prepare	android/android_window.c	/^static void Prepare(vout_display_t *vd, picture_t *picture,$/;"	f	file:
+Prepare	caca.c	/^static void Prepare(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Prepare	msw/direct2d.c	/^static void Prepare(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Prepare	msw/direct3d11.c	/^static void Prepare(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Prepare	msw/direct3d9.c	/^static void Prepare(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Prepare	msw/glwin32.c	/^static void Prepare(vout_display_t *vd, picture_t *picture, subpicture_t *subpicture)$/;"	f	file:
+Prepare	vmem.c	/^static void Prepare(vout_display_t *vd, picture_t *pic, subpicture_t *subpic)$/;"	f	file:
+Prepare	wayland/shm.c	/^static void Prepare(vout_display_t *vd, picture_t *pic, subpicture_t *subpic)$/;"	f	file:
+ProcessEvent	xcb/events.c	/^static int ProcessEvent (vout_display_t *vd, xcb_connection_t *conn,$/;"	f	file:
+ProcessEvent	xcb/window.c	/^static void ProcessEvent (vout_window_t *wnd, xcb_generic_event_t *ev)$/;"	f	file:
+RATE_LONGTEXT	decklink.cpp	92;"	d	file:
+RATE_TEXT	decklink.cpp	91;"	d	file:
+RECTHeight	msw/direct3d11.c	117;"	d	file:
+RECTWidth	msw/direct3d11.c	116;"	d	file:
+Refresh	caca.c	/^static void Refresh(vout_display_t *vd)$/;"	f	file:
+RegisterEvents	xcb/events.c	/^static void RegisterEvents (vlc_object_t *obj, xcb_connection_t *conn,$/;"	f	file:
+ReleaseCurrent	egl.c	/^static void ReleaseCurrent (vlc_gl_t *gl)$/;"	f	file:
+ReleaseCurrent	glx.c	/^static void ReleaseCurrent (vlc_gl_t *gl)$/;"	f	file:
+ReleaseDLSys	decklink.cpp	/^static void ReleaseDLSys(vlc_object_t *obj)$/;"	f	file:
+ReleaseDrawable	xcb/window.c	/^static void ReleaseDrawable (vlc_object_t *obj, xcb_window_t window)$/;"	f	file:
+ReleaseQuad	msw/direct3d11.c	/^static void ReleaseQuad(d3d_quad_t *quad)$/;"	f	file:
+ResetPictures	wayland/shm.c	/^static void ResetPictures(vout_display_t *vd)$/;"	f	file:
+ResetPictures	xcb/x11.c	/^static void ResetPictures (vout_display_t *vd)$/;"	f	file:
+Resize	egl.c	/^static void Resize (vlc_gl_t *gl, unsigned width, unsigned height)$/;"	f	file:
+Resize	egl.c	87;"	d	file:
+RestoreScreensaver	msw/common.c	/^static void RestoreScreensaver(vout_display_t *vd)$/;"	f	file:
+SELECTED_SHADER_FILE	msw/direct3d9.c	73;"	d	file:
+SUPPORTS_FIXED_PIPELINE	opengl.c	86;"	d	file:
+SUPPORTS_FIXED_PIPELINE	opengl.c	95;"	d	file:
+SUPPORTS_SHADERS	opengl.c	83;"	d	file:
+SUPPORTS_SHADERS	opengl.c	94;"	d	file:
+SYNC_IOC_MAGIC	android/nativewindowpriv.c	42;"	d	file:
+SYNC_IOC_WAIT	android/nativewindowpriv.c	43;"	d	file:
+SYSMEM_LONGTEXT	msw/directdraw.c	71;"	d	file:
+SYSMEM_TEXT	msw/directdraw.c	70;"	d	file:
+SendEventDisplaySize	android/android_window.c	/^static void SendEventDisplaySize(vout_display_t *vd)$/;"	f	file:
+SetRGBMask	android/android_window.c	/^static void SetRGBMask(video_format_t *p_fmt)$/;"	f	file:
+SetupPictureYV12	android/android_window.c	/^static void SetupPictureYV12(picture_t *p_picture, uint32_t i_in_stride)$/;"	f	file:
+ShaderSource	opengl.c	/^    PFNGLSHADERSOURCEPROC ShaderSource;$/;"	m	struct:vout_display_opengl_t	file:
+Start	decklink.cpp	/^static int Start(audio_output_t *aout, audio_sample_format_t *restrict fmt)$/;"	f	file:
+SubpicturePrepare	android/android_window.c	/^static void SubpicturePrepare(vout_display_t *vd, subpicture_t *subpicture)$/;"	f	file:
+SubtitleGetDirtyBounds	android/android_window.c	/^static void SubtitleGetDirtyBounds(vout_display_t *vd,$/;"	f	file:
+SubtitleRegionToBounds	android/android_window.c	/^static void SubtitleRegionToBounds(subpicture_t *subpicture,$/;"	f	file:
+Swap	msw/glwin32.c	/^static void Swap(vlc_gl_t *gl)$/;"	f	file:
+SwapBuffers	egl.c	/^static void SwapBuffers (vlc_gl_t *gl)$/;"	f	file:
+SwapBuffers	glx.c	/^static void SwapBuffers (vlc_gl_t *gl)$/;"	f	file:
+TBM_FORMAT_TO_VLC_LIST_COUNT	evas.c	1108;"	d	file:
+THREAD_NAME	android/android_window.c	70;"	d	file:
+THREAD_NAME	android/nativewindow.c	40;"	d	file:
+TRIPLEBUF_LONGTEXT	msw/directdraw.c	78;"	d	file:
+TRIPLEBUF_TEXT	msw/directdraw.c	77;"	d	file:
+TTY_LONGTEXT	fb.c	61;"	d	file:
+TTY_TEXT	fb.c	60;"	d	file:
+T_CHROMA	vmem.c	51;"	d	file:
+T_HEIGHT	vmem.c	45;"	d	file:
+T_PITCH	vmem.c	48;"	d	file:
+T_WIDTH	vmem.c	42;"	d	file:
+TbmSurfaceBufferLock	evas.c	/^TbmSurfaceBufferLock( struct buffer *p_buffer )$/;"	f	file:
+TbmSurfaceBufferUnlock	evas.c	/^TbmSurfaceBufferUnlock( struct buffer *p_buffer )$/;"	f	file:
+TbmSurfaceBuffersAlloc	evas.c	/^TbmSurfaceBuffersAlloc( vout_display_t *vd, video_format_t *p_fmt )$/;"	f	file:
+TbmSurfaceBuffersAllocMainloopCb	evas.c	/^TbmSurfaceBuffersAllocMainloopCb( vout_display_t *vd )$/;"	f	file:
+TbmSurfaceBuffersFree	evas.c	/^TbmSurfaceBuffersFree( vout_display_t *vd )$/;"	f	file:
+TbmSurfaceSetData	evas.c	/^TbmSurfaceSetData( vout_display_t *vd )$/;"	f	file:
+TbmSurfaceSetup	evas.c	/^TbmSurfaceSetup( vout_display_t *vd )$/;"	f	file:
+TbmSurfaceUpdateRatio	evas.c	/^TbmSurfaceUpdateRatio( vout_display_t *vd, double f_ratio )$/;"	f	file:
+TextMode	fb.c	/^static void TextMode(int tty)$/;"	f	file:
+Thread	wayland/shell_surface.c	/^static void *Thread(void *data)$/;"	f	file:
+Thread	xcb/window.c	/^static void *Thread (void *data)$/;"	f	file:
+TimeGet	decklink.cpp	/^static int TimeGet(audio_output_t *, mtime_t* restrict)$/;"	f	file:
+TtyExit	fb.c	/^static void TtyExit(vout_display_t *vd)$/;"	f	file:
+TtyInit	fb.c	/^static int TtyInit(vout_display_t *vd)$/;"	f	file:
+USE_ANWP	android/android_window.c	45;"	d	file:
+USE_OPENGL_ES	opengl.h	41;"	d
+USE_OPENGL_ES	opengl.h	45;"	d
+USE_OPENGL_ES	opengl.h	52;"	d
+Uniform1i	opengl.c	/^    PFNGLUNIFORM1IPROC          Uniform1i;$/;"	m	struct:vout_display_opengl_t	file:
+Uniform4f	opengl.c	/^    PFNGLUNIFORM4FPROC          Uniform4f;$/;"	m	struct:vout_display_opengl_t	file:
+Uniform4fv	opengl.c	/^    PFNGLUNIFORM4FVPROC         Uniform4fv;$/;"	m	struct:vout_display_opengl_t	file:
+UniformMatrix4fv	opengl.c	/^    PFNGLUNIFORMMATRIX4FVPROC   UniformMatrix4fv;$/;"	m	struct:vout_display_opengl_t	file:
+Unlock	vmem.c	/^static void Unlock(void *data, picture_t *pic)$/;"	f	file:
+UnlockPicture	android/android_window.c	/^static void UnlockPicture(picture_t *p_pic, bool b_render)$/;"	f	file:
+UpdateBackBuffer	msw/direct3d11.c	/^static HRESULT UpdateBackBuffer(vout_display_t *vd)$/;"	f	file:
+UpdateCursor	msw/events.c	/^static void UpdateCursor( event_thread_t *p_event, bool b_show )$/;"	f	file:
+UpdatePicQuadPosition	msw/direct3d11.c	/^static void UpdatePicQuadPosition(vout_display_t *vd)$/;"	f	file:
+UpdateQuadOpacity	msw/direct3d11.c	/^static void UpdateQuadOpacity(vout_display_t *vd, const d3d_quad_t *quad, float opacity)$/;"	f	file:
+UpdateRects	msw/common.c	/^void UpdateRects(vout_display_t *vd,$/;"	f
+UpdateWindowSize	android/android_window.c	/^static int UpdateWindowSize(vout_display_sys_t *sys, video_format_t *p_fmt,$/;"	f	file:
+Upload	opengl.c	/^static void Upload(vout_display_opengl_t *vgl, int in_width, int in_height,$/;"	f	file:
+UseProgram	opengl.c	/^    PFNGLUSEPROGRAMPROC    UseProgram;$/;"	m	struct:vout_display_opengl_t	file:
+VIDEO_CFG_PREFIX	decklink.cpp	110;"	d	file:
+VIDEO_CONNECTION_LONGTEXT	decklink.cpp	102;"	d	file:
+VIDEO_CONNECTION_TEXT	decklink.cpp	101;"	d	file:
+VIDEO_TENBITS_LONGTEXT	decklink.cpp	106;"	d	file:
+VIDEO_TENBITS_TEXT	decklink.cpp	105;"	d	file:
+VLCGL_PICTURE_MAX	opengl.c	80;"	d	file:
+VLCGL_PICTURE_MAX	opengl.c	92;"	d	file:
+VLCGL_TEXTURE_COUNT	opengl.c	79;"	d	file:
+VLCGL_TEXTURE_COUNT	opengl.c	91;"	d	file:
+VLC_CFLAGS	Android.mk	/^VLC_CFLAGS := -g -O2 -fstrict-aliasing -funsafe-math-optimizations -O2 -Wall -Wextra -Wsign-compare -Wundef -Wpointer-arith -Wvolatile-register-var -fvisibility=hidden -ffast-math -funroll-loops -std=gnu99$/;"	m
+VLC_CPPFLAGS	Android.mk	/^VLC_CPPFLAGS :=$/;"	m
+VLC_GESTURE_H_	msw/win32touch.h	25;"	d
+VLC_OPENGL_H	opengl.h	30;"	d
+VertexAttribPointer	opengl.c	/^    PFNGLVERTEXATTRIBPOINTERPROC     VertexAttribPointer;$/;"	m	struct:vout_display_opengl_t	file:
+WC_VLC_KVA	kva.c	133;"	d	file:
+WM_GESTURE	msw/win32touch.h	41;"	d
+WM_MOUSELEAVE	kva.c	954;"	d	file:
+WM_VLC_CHANGE_TEXT	msw/events.c	49;"	d	file:
+WM_VLC_FULLSCREEN_CHANGE	kva.c	138;"	d	file:
+WM_VLC_HIDE_MOUSE	msw/events.c	48;"	d	file:
+WM_VLC_MANAGE	kva.c	137;"	d	file:
+WM_VLC_SIZE_CHANGE	kva.c	139;"	d	file:
+WRITE_PIXELS	decklink.cpp	539;"	d	file:
+WRITE_PIXELS	decklink.cpp	561;"	d	file:
+WallpaperCallback	msw/directdraw.c	/^static int WallpaperCallback(vlc_object_t *object, char const *cmd,$/;"	f	file:
+WallpaperChange	msw/directdraw.c	/^static void WallpaperChange(vout_display_t *vd, bool use_wallpaper)$/;"	f	file:
+Win32VoutCloseWindow	msw/events.c	/^static void Win32VoutCloseWindow( event_thread_t *p_event )$/;"	f	file:
+Win32VoutConvertKey	msw/events.c	/^static int Win32VoutConvertKey( int i_key )$/;"	f	file:
+Win32VoutCreateWindow	msw/events.c	/^static int Win32VoutCreateWindow( event_thread_t *p_event )$/;"	f	file:
+WinVoutEventProc	msw/events.c	/^static long FAR PASCAL WinVoutEventProc( HWND hwnd, UINT message,$/;"	f	file:
+WndProc	kva.c	/^static MRESULT EXPENTRY WndProc( HWND hwnd, ULONG msg, MPARAM mp1, MPARAM mp2 )$/;"	f	file:
+XCB_CURSOR_NONE	xcb/events.h	24;"	d
+XCB_Manage	xcb/events.c	/^int XCB_Manage (vout_display_t *vd, xcb_connection_t *conn, bool *visible)$/;"	f
+XCB_cursor_Create	xcb/events.c	/^xcb_cursor_t XCB_cursor_Create (xcb_connection_t *conn,$/;"	f
+XCB_error_Check	xcb/events.c	/^int XCB_error_Check (vout_display_t *vd, xcb_connection_t *conn,$/;"	f
+XCB_keyHandler_Create	xcb/keys.c	/^key_handler_t *XCB_keyHandler_Create (vlc_object_t *obj,$/;"	f
+XCB_keyHandler_Destroy	xcb/keys.c	/^void XCB_keyHandler_Destroy (key_handler_t *ctx)$/;"	f
+XCB_keyHandler_Process	xcb/keys.c	/^int XCB_keyHandler_Process (key_handler_t *ctx, xcb_generic_event_t *ev)$/;"	f
+XCB_parent_Create	xcb/events.c	/^vout_window_t *XCB_parent_Create (vout_display_t *vd,$/;"	f
+XCB_picture_Alloc	xcb/pictures.c	/^int XCB_picture_Alloc (vout_display_t *vd, picture_resource_t *res,$/;"	f
+XCB_picture_Destroy	xcb/pictures.c	/^static void XCB_picture_Destroy (picture_t *pic)$/;"	f	file:
+XCB_picture_GetSegment	xcb/pictures.h	/^static inline xcb_shm_seg_t XCB_picture_GetSegment(const picture_t *pic)$/;"	f
+XCB_picture_NewFromResource	xcb/pictures.c	/^picture_t *XCB_picture_NewFromResource (const video_format_t *restrict fmt,$/;"	f
+XCB_shm_Check	xcb/pictures.c	/^bool XCB_shm_Check (vlc_object_t *obj, xcb_connection_t *conn)$/;"	f
+XID_LONGTEXT	xcb/window.c	645;"	d	file:
+XID_TEXT	xcb/window.c	644;"	d	file:
+YUV4MPEG2_LONGTEXT	yuv.c	49;"	d	file:
+YUV4MPEG2_TEXT	yuv.c	48;"	d	file:
+YUV_FILE_LONGTEXT	yuv.c	42;"	d	file:
+YUV_FILE_TEXT	yuv.c	41;"	d	file:
+_GNU_SOURCE	xcb/keysym.c	23;"	d	file:
+_WIN32_WINNT	msw/win32touch.h	28;"	d
+_WIN32_WINNT	msw/win32touch.h	30;"	d
+aa_context	aa.c	/^    struct aa_context*  aa_context;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::aa_context	file:
+affinityHDC	msw/common.h	/^    HDC                   affinityHDC; \/\/ DC for the selected GPU$/;"	m	struct:vout_display_sys_t
+allow_hw_yuv	msw/common.h	/^    bool allow_hw_yuv;    \/* Should we use hardware YUV->RGB conversions *\/$/;"	m	struct:vout_display_sys_t
+alpha	opengl.c	/^    float    alpha;$/;"	m	struct:__anon14	file:
+android_getEnv	android/utils.c	/^android_getEnv(vlc_object_t *p_obj, const char *psz_name)$/;"	f
+android_getEnvCommon	android/utils.c	/^android_getEnvCommon(vlc_object_t *p_obj, JavaVM *jvm, const char *psz_name)$/;"	f	file:
+android_window	android/android_window.c	/^struct android_window$/;"	s	file:
+android_window	android/android_window.c	/^typedef struct android_window android_window;$/;"	t	typeref:struct:android_window	file:
+anw	android/android_window.c	/^    native_window_api_t *anw;$/;"	m	struct:vout_display_sys_t	file:
+anw	android/nativewindowpriv.c	/^    ANativeWindow *anw;$/;"	m	struct:native_window_priv	file:
+anw_api	android/utils.c	/^    native_window_api_t anw_api;$/;"	m	struct:AWindowHandler	file:
+anwp	android/android_window.c	/^    native_window_priv_api_t *anwp;$/;"	m	struct:vout_display_sys_t	file:
+anwpriv_api	android/utils.c	/^    native_window_priv_api_t anwpriv_api;$/;"	m	struct:AWindowHandler	file:
+api	egl.c	/^   EGLenum    api;$/;"	m	struct:gl_api	file:
+attr	egl.c	/^   EGLint     attr[3];$/;"	m	struct:gl_api	file:
+b_2fingers	msw/win32touch.h	/^    bool        b_2fingers;             \/* Did we detect 2 fingers? *\/$/;"	m	struct:__anon23
+b_apply_rotation	evas.c	/^    bool             b_apply_rotation;$/;"	m	struct:vout_display_sys_t	file:
+b_done	msw/events.c	/^    bool         b_done;$/;"	m	struct:event_thread_t	file:
+b_error	msw/events.c	/^    bool         b_error;$/;"	m	struct:event_thread_t	file:
+b_evas_changed	evas.c	/^    bool             b_evas_changed;$/;"	m	struct:vout_display_sys_t	file:
+b_has_subpictures	android/android_window.c	/^    bool b_has_subpictures;$/;"	m	struct:vout_display_sys_t	file:
+b_locked	android/android_window.h	/^    bool b_locked;$/;"	m	struct:picture_sys_t
+b_locked	evas.c	/^    bool b_locked;$/;"	m	struct:buffer	file:
+b_opaque	android/android_window.c	/^    bool b_opaque;$/;"	m	struct:android_window	file:
+b_ready	msw/events.c	/^    bool         b_ready;$/;"	m	struct:event_thread_t	file:
+b_registered	android/utils.c	/^        bool b_registered;$/;"	m	struct:AWindowHandler::__anon6	file:
+b_signal	evas.c	/^    bool b_signal;$/;"	m	struct:mainloop_cb_args	file:
+b_sub_invalid	android/android_window.c	/^    bool b_sub_invalid;$/;"	m	struct:vout_display_sys_t	file:
+b_sub_pic_locked	android/android_window.c	/^    bool b_sub_pic_locked;$/;"	m	struct:vout_display_sys_t	file:
+b_use_priv	android/android_window.c	/^    bool b_use_priv;$/;"	m	struct:android_window	file:
+b_yuv	evas.c	/^            bool                b_yuv;$/;"	m	struct:vout_display_sys_t::__anon17::evas	file:
+bitmapinfo	msw/common.h	/^        BITMAPINFO bitmapinfo;$/;"	m	struct:vout_display_sys_t::__anon34
+blue	msw/common.h	/^        RGBQUAD    blue;$/;"	m	struct:vout_display_sys_t::__anon34
+bmask	msw/direct3d9.c	/^    uint32_t     bmask;$/;"	m	struct:__anon27	file:
+bottom	opengl.c	/^    float    bottom;$/;"	m	struct:__anon14	file:
+bounds	android/android_window.c	/^    ARect bounds;$/;"	m	struct:buffer_bounds	file:
+buf	android/android_window.h	/^            ANativeWindow_Buffer buf;$/;"	m	struct:picture_sys_t::__anon2::__anon4
+buffer	evas.c	/^struct buffer$/;"	s	file:
+buffer_bounds	android/android_window.c	/^struct buffer_bounds$/;"	s	file:
+buffer_bounds	android/android_window.c	/^typedef struct buffer_bounds buffer_bounds;$/;"	t	typeref:struct:buffer_bounds	file:
+buffer_cbs	wayland/shm.c	/^static const struct wl_buffer_listener buffer_cbs =$/;"	v	typeref:struct:wl_buffer_listener	file:
+buffer_fifo	evas.c	/^    struct fifo      buffer_fifo;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::fifo	file:
+buffer_release_cb	wayland/shm.c	/^static void buffer_release_cb(void *data, struct wl_buffer *buffer)$/;"	f	file:
+builtin_shader_t	msw/builtin_shaders.h	/^} builtin_shader_t;$/;"	t	typeref:struct:__anon24
+builtin_shaders	msw/builtin_shaders.h	/^static const builtin_shader_t builtin_shaders[] =$/;"	v
+button_pressed	msw/events.c	/^    unsigned button_pressed;$/;"	m	struct:event_thread_t	file:
+bytes_per_pixel	fb.c	/^    int      bytes_per_pixel;$/;"	m	struct:vout_display_sys_t	file:
+caca	caca.c	/^    int caca;$/;"	m	struct:__anon20	file:
+caca	caca.c	/^    int caca;$/;"	m	struct:__anon21	file:
+can_blit_fourcc	msw/common.h	/^    bool            can_blit_fourcc;$/;"	m	struct:vout_display_sys_t
+cancel	android/utils.h	/^    ptr_ANativeWindowPriv_cancel cancel;$/;"	m	struct:__anon13
+cancel_fence	android/nativewindowpriv.c	/^static int cancel_fence( native_window_priv *priv, void *p_handle,$/;"	f	file:
+cb_lock	evas.c	/^    vlc_mutex_t      cb_lock;$/;"	m	struct:vout_display_sys_t	file:
+cb_wait	evas.c	/^    vlc_cond_t       cb_wait;$/;"	m	struct:vout_display_sys_t	file:
+cfg_saved	msw/common.h	/^    vout_display_cfg_t cfg_saved; \/* configuration used before going into desktop mode *\/$/;"	m	struct:vout_display_sys_t
+ch_desktop	msw/common.h	/^    bool           ch_desktop;$/;"	m	struct:vout_display_sys_t
+ch_wallpaper	msw/common.h	/^    bool           ch_wallpaper;$/;"	m	struct:vout_display_sys_t
+change_wm_state	xcb/window.c	/^static void change_wm_state (vout_window_t *wnd, bool on, xcb_atom_t state)$/;"	f	file:
+changes	msw/common.h	/^    unsigned changes;        \/* changes made to the video display *\/$/;"	m	struct:vout_display_sys_t
+chroma	fb.c	/^    vlc_fourcc_t chroma;$/;"	m	struct:vout_display_sys_t	file:
+chroma	opengl.c	/^    const vlc_chroma_description_t *chroma;$/;"	m	struct:vout_display_opengl_t	file:
+class_main	msw/events.c	/^    TCHAR class_main[256];$/;"	m	struct:event_thread_t	file:
+class_video	msw/events.c	/^    TCHAR class_video[256];$/;"	m	struct:event_thread_t	file:
+cleanup	vmem.c	/^    void (*cleanup)(void *sys);$/;"	m	struct:vout_display_sys_t	file:
+cleanup_wl_display_read	wayland/shell_surface.c	/^static void cleanup_wl_display_read(void *data)$/;"	f	file:
+clear_scene	msw/common.h	/^    bool                    clear_scene;$/;"	m	struct:vout_display_sys_t
+clip	decklink.cpp	/^static inline int clip(int a)$/;"	f	file:
+clipper	msw/common.h	/^    LPDIRECTDRAWCLIPPER  clipper;             \/* clipper used for blitting *\/$/;"	m	struct:vout_display_sys_t
+cmpkey	xcb/keysym.c	/^static int cmpkey (const void *va, const void *vb)$/;"	f	file:
+code	msw/builtin_shaders.h	/^    const char *code;$/;"	m	struct:__anon24
+codec	msw/directdraw.c	/^    vlc_fourcc_t codec;$/;"	m	struct:__anon38	file:
+color_bkg	msw/common.h	/^    COLORREF        color_bkg;$/;"	m	struct:vout_display_sys_t
+color_bkgtxt	msw/common.h	/^    COLORREF        color_bkgtxt;$/;"	m	struct:vout_display_sys_t
+compositor	wayland/shell_surface.c	/^    struct wl_compositor *compositor;$/;"	m	struct:vout_window_sys_t	typeref:struct:vout_window_sys_t::wl_compositor	file:
+cond	decklink.cpp	/^    vlc_cond_t cond;$/;"	m	struct:decklink_sys_t	file:
+conn	xcb/window.c	/^    xcb_connection_t *conn;$/;"	m	struct:vout_window_sys_t	file:
+connect	android/utils.h	/^    ptr_ANativeWindowPriv_connect connect;$/;"	m	struct:__anon13
+context	egl.c	/^    EGLContext context;$/;"	m	struct:vlc_gl_sys_t	file:
+count	msw/direct3d9.c	/^    size_t count;$/;"	m	struct:__anon28	file:
+count	msw/directdraw.c	/^    size_t count;$/;"	m	struct:__anon39	file:
+count	vmem.c	/^    unsigned        count;$/;"	m	struct:vout_display_sys_t	file:
+cropViewport	msw/common.h	/^    D3D11_VIEWPORT            cropViewport;$/;"	m	struct:__anon32
+ctx	glx.c	/^    GLXContext ctx;$/;"	m	struct:vlc_gl_sys_t	file:
+cursor_arrow	msw/events.c	/^    HCURSOR cursor_arrow;$/;"	m	struct:event_thread_t	file:
+cursor_empty	msw/events.c	/^    HCURSOR cursor_empty;$/;"	m	struct:event_thread_t	file:
+cv	caca.c	/^    cucul_canvas_t *cv;$/;"	m	struct:vout_display_sys_t	file:
+d2_bitmap	msw/common.h	/^    ID2D1Bitmap            *d2_bitmap;                            \/* D2 bitmap *\/$/;"	m	struct:vout_display_sys_t
+d2_dll	msw/common.h	/^    HINSTANCE              d2_dll;            \/* handle of the opened d2d1 dll *\/$/;"	m	struct:vout_display_sys_t
+d2_factory	msw/common.h	/^    ID2D1Factory           *d2_factory;                         \/* D2D factory *\/$/;"	m	struct:vout_display_sys_t
+d2_render_target	msw/common.h	/^    ID2D1HwndRenderTarget  *d2_render_target;          \/* D2D rendering target *\/$/;"	m	struct:vout_display_sys_t
+d3dPxShader	msw/common.h	/^    const char               *d3dPxShader;$/;"	m	struct:vout_display_sys_t
+d3d_format_t	msw/direct3d9.c	/^} d3d_format_t;$/;"	t	typeref:struct:__anon27	file:
+d3d_formats	msw/direct3d9.c	/^static const d3d_format_t d3d_formats[] = {$/;"	v	file:
+d3d_quad_cfg_t	msw/common.h	/^} d3d_quad_cfg_t;$/;"	t	typeref:struct:__anon31
+d3d_quad_t	msw/common.h	/^} d3d_quad_t;$/;"	t	typeref:struct:__anon32
+d3d_region_t	msw/direct3d9.c	/^typedef struct d3d_region_t {$/;"	s	file:
+d3d_region_t	msw/direct3d9.c	/^} d3d_region_t;$/;"	t	typeref:struct:d3d_region_t	file:
+d3d_subpicture_chromas	msw/direct3d9.c	/^static const vlc_fourcc_t d3d_subpicture_chromas[] = {$/;"	v	file:
+d3d_vertex_t	msw/direct3d11.c	/^typedef struct d3d_vertex_t {$/;"	s	file:
+d3d_vertex_t	msw/direct3d11.c	/^} d3d_vertex_t;$/;"	t	typeref:struct:d3d_vertex_t	file:
+d3dcaps	msw/common.h	/^    D3DCAPS9                d3dcaps;$/;"	m	struct:vout_display_sys_t
+d3dcontext	msw/common.h	/^    ID3D11DeviceContext      *d3dcontext;      \/* D3D context *\/$/;"	m	struct:vout_display_sys_t
+d3ddepthStencilView	msw/common.h	/^    ID3D11DepthStencilView   *d3ddepthStencilView;$/;"	m	struct:vout_display_sys_t
+d3ddev	msw/common.h	/^    LPDIRECT3DDEVICE9       d3ddev;$/;"	m	struct:vout_display_sys_t
+d3ddevice	msw/common.h	/^    ID3D11Device             *d3ddevice;       \/* D3D device *\/$/;"	m	struct:vout_display_sys_t
+d3dobj	msw/common.h	/^    LPDIRECT3D9             d3dobj;$/;"	m	struct:vout_display_sys_t
+d3dpixelShader	msw/common.h	/^    ID3D11PixelShader         *d3dpixelShader;$/;"	m	struct:__anon32
+d3dpp	msw/common.h	/^    D3DPRESENT_PARAMETERS   d3dpp;$/;"	m	struct:vout_display_sys_t
+d3dregion	msw/common.h	/^    struct d3d_region_t     *d3dregion;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::d3d_region_t
+d3dregion_count	msw/common.h	/^    int                      d3dregion_count;$/;"	m	struct:vout_display_sys_t
+d3dregion_count	msw/common.h	/^    int                     d3dregion_count;$/;"	m	struct:vout_display_sys_t
+d3dregion_format	msw/common.h	/^    D3DFORMAT               d3dregion_format;$/;"	m	struct:vout_display_sys_t
+d3dregion_format	msw/common.h	/^    DXGI_FORMAT              d3dregion_format;$/;"	m	struct:vout_display_sys_t
+d3dregions	msw/common.h	/^    picture_t                **d3dregions;$/;"	m	struct:vout_display_sys_t
+d3drenderTargetView	msw/common.h	/^    ID3D11RenderTargetView   *d3drenderTargetView;$/;"	m	struct:vout_display_sys_t
+d3dresViewUV	msw/common.h	/^    ID3D11ShaderResourceView  *d3dresViewUV;$/;"	m	struct:__anon32
+d3dresViewY	msw/common.h	/^    ID3D11ShaderResourceView  *d3dresViewY;$/;"	m	struct:__anon32
+d3dtex	msw/common.h	/^    LPDIRECT3DTEXTURE9      d3dtex;$/;"	m	struct:vout_display_sys_t
+d3dvtc	msw/common.h	/^    LPDIRECT3DVERTEXBUFFER9 d3dvtc;$/;"	m	struct:vout_display_sys_t
+d3dx_shader	msw/common.h	/^    IDirect3DPixelShader9*  d3dx_shader;$/;"	m	struct:vout_display_sys_t
+ddobject	msw/common.h	/^    LPDIRECTDRAW2        ddobject;                    \/* DirectDraw object *\/$/;"	m	struct:vout_display_sys_t
+decklink_sys_t	decklink.cpp	/^struct decklink_sys_t$/;"	s	file:
+dequeue	android/utils.h	/^    ptr_ANativeWindowPriv_dequeue dequeue;$/;"	m	struct:__anon13
+dequeue_fence	android/nativewindowpriv.c	/^static int dequeue_fence( native_window_priv *priv, void **pp_handle,$/;"	f	file:
+descs	msw/direct3d9.c	/^    char **descs;$/;"	m	struct:__anon28	file:
+descs	msw/directdraw.c	/^    char **descs;$/;"	m	struct:__anon39	file:
+desktop_height	sdl.c	/^    unsigned int         desktop_height;$/;"	m	struct:vout_display_sys_t	file:
+desktop_requested	msw/common.h	/^    bool           desktop_requested;$/;"	m	struct:vout_display_sys_t
+desktop_save	msw/common.h	/^    } desktop_save;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::__anon33
+desktop_width	sdl.c	/^    unsigned int         desktop_width;$/;"	m	struct:vout_display_sys_t	file:
+diffuse	msw/direct3d9.c	/^    D3DCOLOR    diffuse;    \/\/ diffuse color$/;"	m	struct:__anon26	file:
+directfb	directfb.c	/^    IDirectFB        *directfb;$/;"	m	struct:vout_display_sys_t	file:
+disconnect	android/utils.h	/^    ptr_ANativeWindowPriv_disconnect disconnect;$/;"	m	struct:__anon13
+display	egl.c	/^    EGLDisplay display;$/;"	m	struct:vlc_gl_sys_t	file:
+display	glx.c	/^    Display *display;$/;"	m	struct:vlc_gl_sys_t	file:
+display	msw/common.h	/^    LPDIRECTDRAWSURFACE2 display;                        \/* Display device *\/$/;"	m	struct:vout_display_sys_t
+display	sdl.c	/^    SDL_Surface          *display;$/;"	m	struct:vout_display_sys_t	file:
+display	vmem.c	/^    void (*display)(void *sys, void *id);$/;"	m	struct:vout_display_sys_t	file:
+display_bpp	sdl.c	/^    int                  display_bpp;$/;"	m	struct:vout_display_sys_t	file:
+display_driver	msw/common.h	/^    GUID                 *display_driver;$/;"	m	struct:vout_display_sys_t
+display_flags	sdl.c	/^    uint32_t             display_flags;$/;"	m	struct:vout_display_sys_t	file:
+dither	caca.c	/^    cucul_dither_t *dither;$/;"	m	struct:vout_display_sys_t	file:
+dp	caca.c	/^    caca_display_t *dp;$/;"	m	struct:vout_display_sys_t	file:
+dx_format_t	msw/directdraw.c	/^} dx_format_t;$/;"	t	typeref:struct:__anon38	file:
+dxgifactory	msw/common.h	/^    IDXGIFactory             *dxgifactory;     \/* DXGI factory *\/$/;"	m	struct:vout_display_sys_t
+dxgiswapChain	msw/common.h	/^    IDXGISwapChain           *dxgiswapChain;   \/* DXGI 1.0 swap chain *\/$/;"	m	struct:vout_display_sys_t
+dxgiswapChain	msw/common.h	/^    IDXGISwapChain1          *dxgiswapChain;   \/* DXGI 1.1 swap chain *\/$/;"	m	struct:vout_display_sys_t
+dxkeys_to_vlckeys	msw/events.c	/^} dxkeys_to_vlckeys[] =$/;"	v	typeref:struct:__anon25	file:
+embed	wayland/shm.c	/^    vout_window_t *embed; \/* VLC window *\/$/;"	m	struct:vout_display_sys_t	file:
+embedded	xcb/window.c	/^    bool embedded;$/;"	m	struct:vout_window_sys_t	file:
+enumWindowsProc	msw/events.c	/^enumWindowsProc(HWND hwnd, LPARAM lParam)$/;"	f	file:
+enum_context_t	msw/direct3d9.c	/^} enum_context_t;$/;"	t	typeref:struct:__anon28	file:
+enum_context_t	msw/directdraw.c	/^} enum_context_t;$/;"	t	typeref:struct:__anon39	file:
+evas	evas.c	/^        struct evas$/;"	s	union:vout_display_sys_t::__anon17	file:
+evas	evas.c	/^        } evas;$/;"	m	union:vout_display_sys_t::__anon17	typeref:struct:vout_display_sys_t::__anon17::evas	file:
+event	android/utils.c	/^    } event;$/;"	m	struct:AWindowHandler	typeref:struct:AWindowHandler::__anon6	file:
+event	evas.c	/^struct event$/;"	s	file:
+event	msw/common.h	/^    event_thread_t *event;$/;"	m	struct:vout_display_sys_t
+event_cfg_t	msw/events.h	/^} event_cfg_t;$/;"	t	typeref:struct:__anon29
+event_fifo	evas.c	/^    struct fifo      event_fifo;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::fifo	file:
+event_hwnd_t	msw/events.h	/^} event_hwnd_t;$/;"	t	typeref:struct:__anon30
+event_thread_t	msw/events.c	/^struct event_thread_t$/;"	s	file:
+event_thread_t	msw/events.h	/^typedef struct event_thread_t event_thread_t;$/;"	t	typeref:struct:event_thread_t
+eventq	wayland/shm.c	/^    struct wl_event_queue *eventq;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::wl_event_queue	file:
+f	yuv.c	/^    FILE *f;$/;"	m	struct:vout_display_sys_t	file:
+f_ratio	evas.c	/^            double              f_ratio;$/;"	m	struct:vout_display_sys_t::__anon17::__anon18	file:
+fallback	msw/direct3d9.c	/^    picture_t          *fallback;$/;"	m	struct:picture_sys_t	file:
+fb_cmap	fb.c	/^    struct fb_cmap              fb_cmap;                \/* original colormap *\/$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::fb_cmap	file:
+fd	fb.c	/^    int                         fd;                       \/* device handle *\/$/;"	m	struct:vout_display_sys_t	file:
+fifo	evas.c	/^struct fifo$/;"	s	file:
+fifo_deinit	evas.c	/^fifo_deinit( struct fifo *p_fifo )$/;"	f	file:
+fifo_init	evas.c	/^fifo_init( struct fifo *p_fifo )$/;"	f	file:
+fifo_item	evas.c	/^    struct fifo_item fifo_item;$/;"	m	struct:buffer	typeref:struct:buffer::fifo_item	file:
+fifo_item	evas.c	/^    struct fifo_item fifo_item;$/;"	m	struct:event	typeref:struct:event::fifo_item	file:
+fifo_item	evas.c	/^struct fifo_item$/;"	s	file:
+fifo_pop	evas.c	/^fifo_pop( struct fifo *p_fifo )$/;"	f	file:
+fifo_push	evas.c	/^fifo_push( struct fifo *p_fifo, struct fifo_item *p_new )$/;"	f	file:
+fmt	android/android_window.c	/^    video_format_t fmt;$/;"	m	struct:android_window	file:
+fmt	opengl.c	/^    video_format_t fmt;$/;"	m	struct:vout_display_opengl_t	file:
+format	msw/direct3d9.c	/^    D3DFORMAT          format;$/;"	m	struct:d3d_region_t	file:
+format	msw/direct3d9.c	/^    D3DFORMAT    format;    \/* D3D format *\/$/;"	m	struct:__anon27	file:
+format	opengl.c	/^    unsigned format;$/;"	m	struct:__anon14	file:
+fourcc	msw/direct3d9.c	/^    vlc_fourcc_t fourcc;    \/* VLC fourcc *\/$/;"	m	struct:__anon27	file:
+fourcc	msw/directdraw.c	/^    DWORD        fourcc;$/;"	m	struct:__anon38	file:
+frameduration	decklink.cpp	/^    BMDTimeValue frameduration;$/;"	m	struct:decklink_sys_t	file:
+fs_height	wayland/shell_surface.c	/^    uint32_t fs_height;$/;"	m	struct:vout_window_sys_t	file:
+fs_width	wayland/shell_surface.c	/^    uint32_t fs_width;$/;"	m	struct:vout_window_sys_t	file:
+fullscreen	wayland/shell_surface.c	/^    bool fullscreen;$/;"	m	struct:vout_window_sys_t	file:
+getMaxBufferCount	android/utils.h	/^    ptr_ANativeWindowPriv_getMaxBufferCount getMaxBufferCount;$/;"	m	struct:__anon13
+getMinUndequeued	android/utils.h	/^    ptr_ANativeWindowPriv_getMinUndequeued getMinUndequeued;$/;"	m	struct:__anon13
+getSubtitlesSurface	android/utils.c	/^        jmethodID getSubtitlesSurface;$/;"	m	struct:__anon9::__anon10	file:
+getVConn	decklink.cpp	/^static BMDVideoConnection getVConn(vout_display_t *vd)$/;"	f	file:
+getVideoSurface	android/utils.c	/^        jmethodID getVideoSurface;$/;"	m	struct:__anon9::__anon10	file:
+get_atom	xcb/window.c	/^xcb_atom_t get_atom (xcb_connection_t *conn, xcb_intern_atom_cookie_t ck)$/;"	f	file:
+gl	msw/common.h	/^    vlc_gl_t              gl;$/;"	m	struct:vout_display_sys_t
+gl	opengl.c	/^    vlc_gl_t   *gl;$/;"	m	struct:vout_display_opengl_t	file:
+glActiveTexture	opengl.c	506;"	d	file:
+glActiveTexture	opengl.h	/^    PFNGLACTIVETEXTUREPROC glActiveTexture;$/;"	v
+glActiveTexture	opengl.h	62;"	d
+glClientActiveTexture	opengl.c	507;"	d	file:
+glClientActiveTexture	opengl.c	84;"	d	file:
+glClientActiveTexture	opengl.h	/^    PFNGLCLIENTACTIVETEXTUREPROC glClientActiveTexture;$/;"	v
+glClientActiveTexture	opengl.h	61;"	d
+gl_api	egl.c	/^struct gl_api$/;"	s	file:
+gl_region_t	opengl.c	/^} gl_region_t;$/;"	t	typeref:struct:__anon14	file:
+gl_subpicture_chromas	opengl.h	/^static const vlc_fourcc_t gl_subpicture_chromas[] = {$/;"	v
+globPixelShaderBiplanarI420_BT601_2RGB	msw/direct3d11.c	/^static const char *globPixelShaderBiplanarI420_BT601_2RGB = "\\$/;"	v	file:
+globPixelShaderBiplanarI420_BT709_2RGB	msw/direct3d11.c	/^static const char *globPixelShaderBiplanarI420_BT709_2RGB = "\\$/;"	v	file:
+globPixelShaderBiplanarYUV_BT601_2RGB	msw/direct3d11.c	/^static const char *globPixelShaderBiplanarYUV_BT601_2RGB = "\\$/;"	v	file:
+globPixelShaderBiplanarYUV_BT709_2RGB	msw/direct3d11.c	/^static const char *globPixelShaderBiplanarYUV_BT709_2RGB = "\\$/;"	v	file:
+globPixelShaderDefault	msw/direct3d11.c	/^static const char* globPixelShaderDefault = "\\$/;"	v	file:
+globVertexShaderDefault	msw/direct3d11.c	/^static const char* globVertexShaderDefault = "\\$/;"	v	file:
+gmask	msw/direct3d9.c	/^    uint32_t     gmask;$/;"	m	struct:__anon27	file:
+gralloc	android/nativewindowpriv.c	/^    gralloc_module_t const* gralloc;$/;"	m	struct:native_window_priv	file:
+green	msw/common.h	/^        RGBQUAD    green;$/;"	m	struct:vout_display_sys_t::__anon34
+hGLDC	msw/common.h	/^    HDC                   hGLDC;$/;"	m	struct:vout_display_sys_t
+hGLRC	msw/common.h	/^    HGLRC                 hGLRC;$/;"	m	struct:vout_display_sys_t
+has_moved	msw/events.c	/^    bool has_moved;$/;"	m	struct:event_thread_t	file:
+has_pan	fb.c	/^    bool                        has_pan;   \/* does device supports panning ? *\/$/;"	m	struct:vout_display_sys_t	file:
+hash	android/android_window.c	/^    uint8_t hash[16];$/;"	m	struct:vout_display_sys_t	file:
+hd3d11_dll	msw/common.h	/^    HINSTANCE                hd3d11_dll;       \/* handle of the opened d3d11 dll *\/$/;"	m	struct:vout_display_sys_t
+hd3d9_dll	msw/common.h	/^    HINSTANCE               hd3d9_dll;       \/* handle of the opened d3d9 dll *\/$/;"	m	struct:vout_display_sys_t
+hd3d9x_dll	msw/common.h	/^    HINSTANCE               hd3d9x_dll;      \/* handle of the opened d3d9x dll *\/$/;"	m	struct:vout_display_sys_t
+hd3dcompiler_dll	msw/common.h	/^    HINSTANCE                hd3dcompiler_dll; \/* handle of the opened d3dcompiler dll *\/$/;"	m	struct:vout_display_sys_t
+hddraw_dll	msw/common.h	/^    HINSTANCE            hddraw_dll;       \/* handle of the opened ddraw dll *\/$/;"	m	struct:vout_display_sys_t
+hdxgi_dll	msw/common.h	/^    HINSTANCE                hdxgi_dll;        \/* handle of the opened dxgi dll *\/$/;"	m	struct:vout_display_sys_t
+height	egl.c	/^    unsigned width, height;$/;"	m	struct:vlc_gl_sys_t	file:
+height	fb.c	/^    uint32_t height;$/;"	m	struct:vout_display_sys_t	file:
+height	msw/direct3d9.c	/^    unsigned           height;$/;"	m	struct:d3d_region_t	file:
+height	msw/events.c	/^    unsigned width, height;$/;"	m	struct:event_thread_t	file:
+height	msw/events.h	/^    unsigned height;$/;"	m	struct:__anon29
+height	opengl.c	/^    unsigned height;$/;"	m	struct:__anon14	file:
+hfswnd	msw/common.h	/^    HWND                 hfswnd;          \/* Handle of the fullscreen window *\/$/;"	m	struct:vout_display_sys_t
+hfswnd	msw/events.c	/^    HWND hfswnd;$/;"	m	struct:event_thread_t	file:
+hfswnd	msw/events.h	/^    HWND hfswnd;$/;"	m	struct:__anon30
+hmonitor	msw/common.h	/^    HMONITOR             hmonitor;          \/* handle of the current monitor *\/$/;"	m	struct:vout_display_sys_t
+hparent	msw/common.h	/^    HWND                 hparent;             \/* Handle of the parent window *\/$/;"	m	struct:vout_display_sys_t
+hparent	msw/events.c	/^    HWND hparent;$/;"	m	struct:event_thread_t	file:
+hparent	msw/events.h	/^    HWND hparent;$/;"	m	struct:__anon30
+huser_dll	msw/win32touch.h	/^    HINSTANCE   huser_dll;              \/* user32.dll *\/$/;"	m	struct:__anon23
+hvideownd	msw/common.h	/^    HWND                 hvideownd;        \/* Handle of the video sub-window *\/$/;"	m	struct:vout_display_sys_t
+hvideownd	msw/events.c	/^    HWND hvideownd;$/;"	m	struct:event_thread_t	file:
+hvideownd	msw/events.h	/^    HWND hvideownd;$/;"	m	struct:__anon30
+hw	android/android_window.h	/^        } hw;$/;"	m	union:picture_sys_t::__anon2	typeref:struct:picture_sys_t::__anon2::__anon3
+hwnd	msw/common.h	/^    HWND                 hwnd;                  \/* Handle of the main window *\/$/;"	m	struct:vout_display_sys_t
+hwnd	msw/events.c	/^    HWND hwnd;$/;"	m	struct:event_thread_t	file:
+hwnd	msw/events.h	/^    HWND hwnd;$/;"	m	struct:__anon30
+i_action	android/utils.c	/^            int i_action, i_button, i_x, i_y;$/;"	m	struct:AWindowHandler::__anon6::__anon7	file:
+i_action	msw/win32touch.h	/^    int         i_action;               \/* GESTURE_ACTION *\/$/;"	m	struct:__anon23
+i_align_dest_boundary	msw/common.h	/^    int          i_align_dest_boundary;$/;"	m	struct:vout_display_sys_t
+i_align_dest_size	msw/common.h	/^    int          i_align_dest_size;$/;"	m	struct:vout_display_sys_t
+i_align_src_boundary	msw/common.h	/^    int          i_align_src_boundary;$/;"	m	struct:vout_display_sys_t
+i_align_src_size	msw/common.h	/^    int          i_align_src_size;$/;"	m	struct:vout_display_sys_t
+i_android_hal	android/android_window.c	/^    int i_android_hal;$/;"	m	struct:android_window	file:
+i_angle	android/android_window.c	/^    unsigned int i_angle;$/;"	m	struct:android_window	file:
+i_angle	evas.c	/^            int                 i_angle;$/;"	m	struct:vout_display_sys_t::__anon17::__anon18	file:
+i_beginx	msw/win32touch.h	/^    int         i_beginx;               \/* Start X position *\/$/;"	m	struct:__anon23
+i_beginy	msw/win32touch.h	/^    int         i_beginy;               \/* Start Y position *\/$/;"	m	struct:__anon23
+i_button	android/utils.c	/^            int i_action, i_button, i_x, i_y;$/;"	m	struct:AWindowHandler::__anon6::__anon7	file:
+i_button	evas.c	/^        int i_button;$/;"	m	union:event::__anon15	file:
+i_chroma_shift	kva.c	/^    int i_chroma_shift;$/;"	m	struct:picture_sys_t	file:
+i_colorkey	msw/common.h	/^    uint32_t        i_colorkey;                 \/* colorkey used by the overlay *\/$/;"	m	struct:vout_display_sys_t
+i_colorspace	evas.c	/^            Evas_Colorspace     i_colorspace;$/;"	m	struct:vout_display_sys_t::__anon17::evas	file:
+i_depth	msw/common.h	/^    int  i_depth;$/;"	m	struct:vout_display_sys_t
+i_display_height	android/android_window.c	/^    int i_display_height;$/;"	m	struct:vout_display_sys_t	file:
+i_display_width	android/android_window.c	/^    int i_display_width;$/;"	m	struct:vout_display_sys_t	file:
+i_dxkey	msw/events.c	/^    int i_dxkey;$/;"	m	struct:__anon25	file:
+i_format	evas.c	/^            tbm_format          i_format;$/;"	m	struct:vout_display_sys_t::__anon17::__anon18	file:
+i_height	android/utils.c	/^            int i_width, i_height;$/;"	m	struct:AWindowHandler::__anon6::__anon8	file:
+i_height	decklink.cpp	/^    int i_height;$/;"	m	struct:decklink_sys_t	file:
+i_height	evas.c	/^    int              i_width, i_height;$/;"	m	struct:vout_display_sys_t	file:
+i_index	android/android_window.h	/^            int i_index;$/;"	m	struct:picture_sys_t::__anon2::__anon3
+i_key	evas.c	/^        int i_key;$/;"	m	union:event::__anon15	file:
+i_lasty	msw/win32touch.h	/^    int         i_lasty;                \/* Last known Y position for PAN *\/$/;"	m	struct:__anon23
+i_min_undequeued	android/android_window.c	/^    unsigned int i_min_undequeued;$/;"	m	struct:android_window	file:
+i_nb_buffers	evas.c	/^    unsigned int     i_nb_buffers;$/;"	m	struct:vout_display_sys_t	file:
+i_nb_planes	evas.c	/^    unsigned int     i_nb_planes;$/;"	m	struct:vout_display_sys_t	file:
+i_pic_count	android/android_window.c	/^    unsigned int i_pic_count;$/;"	m	struct:android_window	file:
+i_planes_order	evas.c	/^    int              i_planes_order[PICTURE_PLANE_MAX];$/;"	m	struct:vout_display_sys_t	file:
+i_pmkey	kva.c	/^    USHORT i_pmkey;$/;"	m	struct:__anon19	file:
+i_rate	decklink.cpp	/^    int i_rate;$/;"	m	struct:decklink_sys_t	file:
+i_ret	evas.c	/^    int i_ret;$/;"	m	struct:mainloop_cb_args	file:
+i_rgb_colorkey	msw/common.h	/^    uint32_t        i_rgb_colorkey;      \/* colorkey in RGB used by the overlay *\/$/;"	m	struct:vout_display_sys_t
+i_spi_screensaveactive	msw/common.h	/^    UINT i_spi_screensaveactive;$/;"	m	struct:vout_display_sys_t
+i_sub_last_order	android/android_window.c	/^    int64_t i_sub_last_order;$/;"	m	struct:vout_display_sys_t	file:
+i_tbm_format	evas.c	/^   tbm_format  i_tbm_format;$/;"	m	struct:tbm_format_to_vlc	file:
+i_type	evas.c	/^    int i_type;$/;"	m	struct:event	file:
+i_type	msw/win32touch.h	/^    DWORD       i_type;                 \/* Gesture ID *\/$/;"	m	struct:__anon23
+i_ullArguments	msw/win32touch.h	/^    ULONGLONG   i_ullArguments;         \/* Base values to compare between 2 zoom gestures *\/$/;"	m	struct:__anon23
+i_vlc_chroma	evas.c	/^   vlc_fourcc_t i_vlc_chroma;$/;"	m	struct:tbm_format_to_vlc	file:
+i_vlckey	kva.c	/^    int    i_vlckey;$/;"	m	struct:__anon19	file:
+i_vlckey	msw/events.c	/^    int i_vlckey;$/;"	m	struct:__anon25	file:
+i_width	android/utils.c	/^            int i_width, i_height;$/;"	m	struct:AWindowHandler::__anon6::__anon8	file:
+i_width	decklink.cpp	/^    int i_width;$/;"	m	struct:decklink_sys_t	file:
+i_width	evas.c	/^    int              i_width, i_height;$/;"	m	struct:vout_display_sys_t	file:
+i_window_style	msw/events.c	/^    int i_window_style;$/;"	m	struct:event_thread_t	file:
+i_x	android/utils.c	/^            int i_action, i_button, i_x, i_y;$/;"	m	struct:AWindowHandler::__anon6::__anon7	file:
+i_x	evas.c	/^            int i_x, i_y;$/;"	m	struct:event::__anon15::__anon16	file:
+i_y	android/utils.c	/^            int i_action, i_button, i_x, i_y;$/;"	m	struct:AWindowHandler::__anon6::__anon7	file:
+i_y	evas.c	/^            int i_x, i_y;$/;"	m	struct:event::__anon15::__anon16	file:
+id	android/android_window.c	/^    enum AWindow_ID id;$/;"	m	struct:android_window	typeref:enum:android_window::AWindow_ID	file:
+identity	opengl.c	/^static const GLfloat identity[] = {$/;"	v	file:
+idx	directfb.c	/^    int             idx;$/;"	m	struct:vout_display_sys_t	file:
+intern_string	xcb/window.c	/^xcb_intern_atom_cookie_t intern_string (xcb_connection_t *c, const char *s)$/;"	f	file:
+isKeyEvent	msw/events.c	/^static inline bool isKeyEvent( WPARAM type )$/;"	f	file:
+isMouseEvent	msw/events.c	/^static inline bool isMouseEvent( WPARAM type )$/;"	f	file:
+is_cursor_hidden	msw/events.c	/^    bool is_cursor_hidden;$/;"	m	struct:event_thread_t	file:
+is_first	yuv.c	/^    bool  is_first;$/;"	m	struct:vout_display_sys_t	file:
+is_first_display	msw/common.h	/^    bool is_first_display;$/;"	m	struct:vout_display_sys_t
+is_fullscreen	msw/common.h	/^        bool is_fullscreen;$/;"	m	struct:vout_display_sys_t::__anon33
+is_hw_accel	fb.c	/^    bool                        is_hw_accel;         \/* has hardware support *\/$/;"	m	struct:vout_display_sys_t	file:
+is_on_top	msw/common.h	/^        bool is_on_top;$/;"	m	struct:vout_display_sys_t::__anon33
+is_on_top	msw/common.h	/^    bool is_on_top;$/;"	m	struct:vout_display_sys_t
+is_tty	fb.c	/^    bool                is_tty;$/;"	m	struct:vout_display_sys_t	file:
+is_uv_swapped	sdl.c	/^    bool                 is_uv_swapped;$/;"	m	struct:vout_display_sys_t	file:
+is_yuv4mpeg2	yuv.c	/^    bool  is_yuv4mpeg2;$/;"	m	struct:vout_display_sys_t	file:
+jfields	android/utils.c	/^} jfields;$/;"	v	typeref:struct:__anon9	file:
+jlong_AWindowHandler	android/utils.c	/^static inline AWindowHandler *jlong_AWindowHandler(jlong handle)$/;"	f	file:
+jni_callbacks	android/utils.c	/^const JNINativeMethod jni_callbacks[] = {$/;"	v
+jni_detach_thread	android/utils.c	/^jni_detach_thread(void *data)$/;"	f	file:
+jni_env_key	android/utils.c	/^static pthread_key_t jni_env_key;$/;"	v	file:
+jni_env_key_create	android/utils.c	/^static void jni_env_key_create()$/;"	f	file:
+jni_env_key_once	android/utils.c	/^static pthread_once_t jni_env_key_once = PTHREAD_ONCE_INIT;$/;"	v	file:
+jobj	android/utils.c	/^    jobject jobj;$/;"	m	struct:AWindowHandler	file:
+jsurface	android/utils.c	/^        jobject jsurface;$/;"	m	struct:AWindowHandler::__anon5	file:
+key_handler_t	xcb/events.h	/^typedef struct key_handler_t key_handler_t;$/;"	t	typeref:struct:key_handler_t
+key_handler_t	xcb/keys.c	/^struct key_handler_t$/;"	s	file:
+keys	caca.c	/^} keys[] = {$/;"	v	typeref:struct:__anon20	file:
+keys	xcb/window.c	/^    key_handler_t *keys;$/;"	m	struct:vout_window_sys_t	file:
+keysym	xcb/keysym.c	/^struct keysym$/;"	s	file:
+keysymcmp	xcb/keys.c	/^static int keysymcmp (const void *pa, const void *pb)$/;"	f	file:
+left	opengl.c	/^    float    left;$/;"	m	struct:__anon14	file:
+libandroidwindow_plugin_la_SOURCES	Android.mk	/^libandroidwindow_plugin_la_SOURCES := android\/android_window.c android\/android_window.h android\/utils.ci android\/utils.h$/;"	m
+libfb_plugin_la_SOURCES	Android.mk	/^libfb_plugin_la_SOURCES := fb.c$/;"	m
+libnativewindow_plugin_la_SOURCES	Android.mk	/^libnativewindow_plugin_la_SOURCES := android\/nativewindow.c android\/utils.c android\/utils.h$/;"	m
+libvdummy_plugin_la_SOURCES	Android.mk	/^libvdummy_plugin_la_SOURCES := vdummy.c$/;"	m
+libvmem_plugin_la_SOURCES	Android.mk	/^libvmem_plugin_la_SOURCES := vmem.c$/;"	m
+libyuv_plugin_la_SOURCES	Android.mk	/^libyuv_plugin_la_SOURCES := yuv.c$/;"	m
+line_length	fb.c	/^    uint32_t line_length;$/;"	m	struct:vout_display_sys_t	file:
+lines	vmem.c	/^    unsigned lines[PICTURE_PLANE_MAX];$/;"	m	struct:vout_display_sys_t	file:
+local_count	opengl.c	/^    int        local_count;$/;"	m	struct:vout_display_opengl_t	file:
+local_value	opengl.c	/^    GLfloat    local_value[16];$/;"	m	struct:vout_display_opengl_t	file:
+lock	android/android_window.h	/^            vlc_mutex_t lock;$/;"	m	struct:picture_sys_t::__anon2::__anon3
+lock	android/utils.c	/^    vlc_mutex_t lock;$/;"	m	struct:AWindowHandler	file:
+lock	android/utils.h	/^    ptr_ANativeWindowPriv_lock lock;$/;"	m	struct:__anon13
+lock	decklink.cpp	/^    vlc_mutex_t lock;$/;"	m	struct:decklink_sys_t	file:
+lock	evas.c	/^    vlc_mutex_t lock;$/;"	m	struct:fifo	file:
+lock	msw/common.h	/^    vlc_mutex_t    lock;$/;"	m	struct:vout_display_sys_t
+lock	msw/events.c	/^    vlc_mutex_t  lock;$/;"	m	struct:event_thread_t	file:
+lock	vmem.c	/^    void *(*lock)(void *sys, void **plane);$/;"	m	struct:vout_display_sys_t	file:
+lock	wayland/shell_surface.c	/^    vlc_mutex_t lock;$/;"	m	struct:vout_window_sys_t	file:
+lockData	android/utils.h	/^    ptr_ANativeWindowPriv_lockData lockData;$/;"	m	struct:__anon13
+lost_not_ready	msw/common.h	/^    bool                    lost_not_ready;$/;"	m	struct:vout_display_sys_t
+main	xcb/keysym.c	/^int main (void)$/;"	f
+mainloop_cb	evas.c	/^typedef int (*mainloop_cb)( vout_display_t *vd );$/;"	t	file:
+mainloop_cb_args	evas.c	/^struct mainloop_cb_args$/;"	s	file:
+mainloop_evas_anim_cb	evas.c	/^mainloop_evas_anim_cb( void *p_opaque )$/;"	f	file:
+min_minor	egl.c	/^   EGLint     min_minor;$/;"	m	struct:gl_api	file:
+mouse	android/utils.c	/^        } mouse;$/;"	m	struct:AWindowHandler::__anon6	typeref:struct:AWindowHandler::__anon6::__anon7	file:
+mouses	caca.c	/^} mouses[] = {$/;"	v	typeref:struct:__anon21	file:
+name	egl.c	/^   const char name[10];$/;"	m	struct:gl_api	file:
+name	msw/builtin_shaders.h	/^    const char *name;$/;"	m	struct:__anon24
+name	msw/direct3d9.c	/^    const char   *name;$/;"	m	struct:__anon27	file:
+native_window_api_t	android/utils.h	/^} native_window_api_t;$/;"	t	typeref:struct:__anon12
+native_window_priv	android/nativewindowpriv.c	/^struct native_window_priv$/;"	s	file:
+native_window_priv	android/nativewindowpriv.c	/^typedef struct native_window_priv native_window_priv;$/;"	t	typeref:struct:native_window_priv	file:
+native_window_priv	android/utils.h	/^typedef struct native_window_priv native_window_priv;$/;"	t	typeref:struct:native_window_priv
+native_window_priv_api_t	android/utils.h	/^} native_window_priv_api_t;$/;"	t	typeref:struct:__anon13
+nosignal_delay	decklink.cpp	/^    int nosignal_delay;$/;"	m	struct:vout_display_sys_t	file:
+obj	xcb/keys.c	/^    vlc_object_t      *obj;$/;"	m	struct:key_handler_t	file:
+off_bitmap	msw/common.h	/^    HBITMAP    off_bitmap;$/;"	m	struct:vout_display_sys_t
+off_dc	msw/common.h	/^    HDC        off_dc;$/;"	m	struct:vout_display_sys_t
+offset	decklink.cpp	/^    mtime_t offset;$/;"	m	struct:decklink_sys_t	file:
+old_info	fb.c	/^    struct fb_var_screeninfo    old_info;       \/* original mode information *\/$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::fb_var_screeninfo	file:
+old_termios	fb.c	/^    struct termios      old_termios;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::termios	file:
+opacity	msw/direct3d11.c	/^    FLOAT       opacity;$/;"	m	struct:d3d_vertex_t	file:
+opaque	vmem.c	/^    void *opaque;$/;"	m	struct:vout_display_sys_t	file:
+orientationTransformMatrix	opengl.c	/^void orientationTransformMatrix(GLfloat matrix[static 16], video_orientation_t orientation) {$/;"	f
+orientationVertexOrder	msw/direct3d9.c	/^static void orientationVertexOrder(video_orientation_t orientation, int vertex_order[static 4])$/;"	f	file:
+output	wayland/shell_surface.c	/^    struct wl_output *output;$/;"	m	struct:vout_window_sys_t	typeref:struct:vout_window_sys_t::wl_output	file:
+output_cbs	wayland/shell_surface.c	/^const struct wl_output_listener output_cbs =$/;"	v	typeref:struct:wl_output_listener
+output_geometry_cb	wayland/shell_surface.c	/^static void output_geometry_cb(void *data, struct wl_output *output, int32_t x,$/;"	f	file:
+output_mode_cb	wayland/shell_surface.c	/^static void output_mode_cb(void *data, struct wl_output *output,$/;"	f	file:
+overlay	sdl.c	/^    SDL_Overlay          *overlay;$/;"	m	struct:vout_display_sys_t	file:
+p	evas.c	/^    uint8_t *p[PICTURE_PLANE_MAX];$/;"	m	struct:buffer	file:
+pSPUPixelShader	msw/common.h	/^    ID3D11PixelShader        *pSPUPixelShader;$/;"	m	struct:vout_display_sys_t
+pSubpictureChromas	msw/common.h	/^    vlc_fourcc_t             pSubpictureChromas[2];$/;"	m	struct:vout_display_sys_t
+pTexture	msw/common.h	/^    ID3D11Texture2D           *pTexture;$/;"	m	struct:__anon32
+pVertexBuffer	msw/common.h	/^    ID3D11Buffer              *pVertexBuffer;$/;"	m	struct:__anon32
+p_anim	evas.c	/^    Ecore_Animator  *p_anim;$/;"	m	struct:vout_display_sys_t	file:
+p_anw	android/utils.c	/^        ANativeWindow *p_anw;$/;"	m	struct:AWindowHandler::__anon5	file:
+p_anw_dl	android/utils.c	/^    void *p_anw_dl;$/;"	m	struct:AWindowHandler	file:
+p_awh	android/android_window.c	/^    AWindowHandler *p_awh;$/;"	m	struct:vout_display_sys_t	file:
+p_buffer	evas.c	/^    struct buffer *p_buffer;$/;"	m	struct:picture_sys_t	typeref:struct:picture_sys_t::buffer	file:
+p_buffers	evas.c	/^    struct buffer   *p_buffers;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::buffer	file:
+p_cb	evas.c	/^    mainloop_cb p_cb;$/;"	m	struct:mainloop_cb_args	file:
+p_current_buffer	evas.c	/^    struct buffer   *p_current_buffer;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::buffer	file:
+p_dec	android/android_window.h	/^            decoder_t *p_dec;$/;"	m	struct:picture_sys_t::__anon2::__anon3
+p_dl_handle	android/utils.c	/^    void *p_dl_handle;$/;"	m	struct:__anon11	file:
+p_evas	evas.c	/^    Evas_Object     *p_evas;$/;"	m	struct:vout_display_sys_t	file:
+p_first	evas.c	/^    struct fifo_item *p_first;$/;"	m	struct:fifo	typeref:struct:fifo::fifo_item	file:
+p_gesture	msw/events.c	/^    win32_gesture_sys_t *p_gesture;$/;"	m	struct:event_thread_t	file:
+p_handle	android/android_window.c	/^    ANativeWindow *p_handle;$/;"	m	struct:android_window	file:
+p_handle	android/android_window.h	/^            void *p_handle;$/;"	m	struct:picture_sys_t::__anon2::__anon4
+p_handle_priv	android/android_window.c	/^    native_window_priv *p_handle_priv;$/;"	m	struct:android_window	file:
+p_jvm	android/utils.c	/^    JavaVM *p_jvm;$/;"	m	struct:AWindowHandler	file:
+p_last	evas.c	/^    struct fifo_item *p_last;$/;"	m	struct:fifo	typeref:struct:fifo::fifo_item	file:
+p_new_buffer	evas.c	/^    struct buffer   *p_new_buffer;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::buffer	file:
+p_next	evas.c	/^    struct fifo_item *p_next;$/;"	m	struct:fifo_item	typeref:struct:fifo_item::fifo_item	file:
+p_output	decklink.cpp	/^    IDeckLinkOutput *p_output;$/;"	m	struct:decklink_sys_t	file:
+p_pixels	android/android_window.c	/^    uint8_t *p_pixels;$/;"	m	struct:buffer_bounds	file:
+p_planes	evas.c	/^    plane_t          p_planes[PICTURE_PLANE_MAX];$/;"	m	struct:vout_display_sys_t	file:
+p_pool	evas.c	/^    picture_pool_t  *p_pool;$/;"	m	struct:vout_display_sys_t	file:
+p_spu_blend	android/android_window.c	/^    filter_t *p_spu_blend;$/;"	m	struct:vout_display_sys_t	file:
+p_sub_buffer_bounds	android/android_window.c	/^    buffer_bounds *p_sub_buffer_bounds;$/;"	m	struct:vout_display_sys_t	file:
+p_sub_pic	android/android_window.c	/^    picture_t *p_sub_pic;$/;"	m	struct:vout_display_sys_t	file:
+p_sub_window	android/android_window.c	/^    android_window *p_sub_window;$/;"	m	struct:vout_display_sys_t	file:
+p_surface_handle	android/utils.c	/^    void *p_surface_handle;$/;"	m	struct:__anon11	file:
+p_tbm_surface	evas.c	/^    tbm_surface_h p_tbm_surface;$/;"	m	struct:buffer	file:
+p_vd_sys	android/android_window.h	/^    vout_display_sys_t *p_vd_sys;$/;"	m	struct:picture_sys_t
+p_vd_sys	evas.c	/^    vout_display_sys_t *p_vd_sys;$/;"	m	struct:picture_sys_t	file:
+p_window	android/android_window.c	/^    android_window *p_window;$/;"	m	struct:vout_display_sys_t	file:
+palette	aa.c	/^    aa_palette          palette;$/;"	m	struct:vout_display_sys_t	file:
+palette	fb.c	/^    uint16_t                    *palette;                \/* original palette *\/$/;"	m	struct:vout_display_sys_t	file:
+parent_window	msw/common.h	/^    struct vout_window_t *parent_window;         \/* Parent window VLC object *\/$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::vout_window_t
+parent_window	msw/events.c	/^    vout_window_t *parent_window;$/;"	m	struct:event_thread_t	file:
+parent_window	msw/events.h	/^    vout_window_t *parent_window;$/;"	m	struct:__anon30
+parse	xcb/keysym.c	/^static int parse (FILE *in)$/;"	f	file:
+pf_buffers_alloc	evas.c	/^    int     (*pf_buffers_alloc)( vout_display_t *, video_format_t * );$/;"	m	struct:vout_display_sys_t	file:
+pf_buffers_free	evas.c	/^    void    (*pf_buffers_free)( vout_display_t * );$/;"	m	struct:vout_display_sys_t	file:
+pf_lock	android/utils.c	/^    AndroidSurface_lock pf_lock;$/;"	m	struct:__anon11	file:
+pf_lock2	android/utils.c	/^    AndroidSurface_lock2 pf_lock2;$/;"	m	struct:__anon11	file:
+pf_release	android/android_window.h	/^            void (*pf_release)(decoder_t *p_dec, unsigned int i_index,$/;"	m	struct:picture_sys_t::__anon2::__anon3
+pf_set_data	evas.c	/^    int     (*pf_set_data)( vout_display_t * );$/;"	m	struct:vout_display_sys_t	file:
+pf_unlockAndPost	android/utils.c	/^    AndroidSurface_unlockAndPost pf_unlockAndPost;$/;"	m	struct:__anon11	file:
+pf_update_ratio	evas.c	/^    void    (*pf_update_ratio)( vout_display_t *, double );$/;"	m	struct:vout_display_sys_t	file:
+pf_winFromSurface	android/utils.c	/^    ptr_ANativeWindow_fromSurface pf_winFromSurface;$/;"	m	struct:AWindowHandler	file:
+pf_winRelease	android/utils.c	/^    ptr_ANativeWindow_release pf_winRelease;$/;"	m	struct:AWindowHandler	file:
+picQuad	msw/common.h	/^    d3d_quad_t               picQuad;$/;"	m	struct:vout_display_sys_t
+picQuadConfig	msw/common.h	/^    d3d_quad_cfg_t           picQuadConfig;$/;"	m	struct:vout_display_sys_t
+pic_nosignal	decklink.cpp	/^    picture_t *pic_nosignal;$/;"	m	struct:vout_display_sys_t	file:
+pics	directfb.c	/^    picture_t      *pics[3];$/;"	m	struct:vout_display_sys_t	file:
+picsys	msw/common.h	/^    picture_sys_t           *picsys;$/;"	m	struct:vout_display_sys_t
+picsys	msw/common.h	/^    picture_sys_t        *picsys;$/;"	m	struct:vout_display_sys_t
+picture	fb.c	/^    picture_t       *picture;$/;"	m	struct:vout_display_sys_t	file:
+picture_sys_pool_t	msw/direct3d11.c	/^} picture_sys_pool_t;$/;"	t	typeref:struct:__anon35	file:
+picture_sys_t	android/android_window.h	/^struct picture_sys_t$/;"	s
+picture_sys_t	directfb.c	/^struct picture_sys_t {$/;"	s	file:
+picture_sys_t	evas.c	/^struct picture_sys_t$/;"	s	file:
+picture_sys_t	kva.c	/^struct picture_sys_t$/;"	s	file:
+picture_sys_t	msw/direct3d9.c	/^struct picture_sys_t$/;"	s	file:
+pitches	vmem.c	/^    unsigned pitches[PICTURE_PLANE_MAX];$/;"	m	struct:vout_display_sys_t	file:
+place	msw/events.c	/^    vout_display_place_t place;$/;"	m	struct:event_thread_t	file:
+place	sdl.c	/^    vout_display_place_t place;$/;"	m	struct:vout_display_sys_t	file:
+pmkeys_to_vlckeys	kva.c	/^} pmkeys_to_vlckeys[] =$/;"	v	typeref:struct:__anon19	file:
+point	evas.c	/^        } point;$/;"	m	union:event::__anon15	typeref:struct:event::__anon15::__anon16	file:
+pool	aa.c	/^    picture_pool_t      *pool;$/;"	m	struct:vout_display_sys_t	file:
+pool	android/android_window.c	/^    picture_pool_t *pool;$/;"	m	struct:vout_display_sys_t	file:
+pool	caca.c	/^    picture_pool_t *pool;$/;"	m	struct:vout_display_sys_t	file:
+pool	decklink.cpp	/^    picture_pool_t *pool;$/;"	m	struct:vout_display_sys_t	file:
+pool	directfb.c	/^    picture_pool_t *pool;$/;"	m	struct:vout_display_sys_t	file:
+pool	fb.c	/^    picture_pool_t  *pool;$/;"	m	struct:vout_display_sys_t	file:
+pool	msw/common.h	/^    picture_pool_t *pool;$/;"	m	struct:vout_display_sys_t
+pool	opengl.c	/^    picture_pool_t *pool;$/;"	m	struct:vout_display_opengl_t	file:
+pool	sdl.c	/^    picture_pool_t       *pool;$/;"	m	struct:vout_display_sys_t	file:
+pool	vmem.c	/^    picture_pool_t *pool;$/;"	m	struct:vout_display_sys_t	file:
+pool	wayland/shm.c	/^    picture_pool_t *pool; \/* picture pool *\/$/;"	m	struct:vout_display_sys_t	file:
+pool	yuv.c	/^    picture_pool_t *pool;$/;"	m	struct:vout_display_sys_t	file:
+position	msw/direct3d11.c	/^    } position;$/;"	m	struct:d3d_vertex_t	typeref:struct:d3d_vertex_t::__anon36	file:
+ppsz_kva_video_mode	kva.c	/^static const char *const ppsz_kva_video_mode[] = {$/;"	v	file:
+ppsz_kva_video_mode_text	kva.c	/^static const char *const ppsz_kva_video_mode_text[] = {$/;"	v	file:
+ppsz_videoconns	decklink.cpp	/^static const char *const ppsz_videoconns[] = {$/;"	v	file:
+ppsz_videoconns_text	decklink.cpp	/^static const char *const ppsz_videoconns_text[] = {$/;"	v	file:
+ppsz_vout_options	yuv.c	/^static const char *const ppsz_vout_options[] = {$/;"	v	file:
+primary	directfb.c	/^    IDirectFBSurface *primary;$/;"	m	struct:vout_display_sys_t	file:
+printkey	xcb/keysym.c	/^static void printkey (const void *node, const VISIT which, const int depth)$/;"	f	file:
+priv	android/android_window.h	/^    } priv;$/;"	m	struct:picture_sys_t	typeref:union:picture_sys_t::__anon2
+program	opengl.c	/^    GLuint     program[2];$/;"	m	struct:vout_display_opengl_t	file:
+psz_rgbaPxShader	msw/common.h	/^    const char               *psz_rgbaPxShader;$/;"	m	struct:vout_display_sys_t
+psz_title	msw/events.c	/^    char *psz_title;$/;"	m	struct:event_thread_t	file:
+psz_video_mode	kva.c	/^static const char *psz_video_mode[ 4 ] = {"DIVE", "WarpOverlay!", "SNAP",$/;"	v	file:
+ptr_ANativeWindowPriv_cancel	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_cancel) (native_window_priv *, void *);$/;"	t
+ptr_ANativeWindowPriv_connect	android/utils.h	/^typedef native_window_priv *(*ptr_ANativeWindowPriv_connect) (ANativeWindow *);$/;"	t
+ptr_ANativeWindowPriv_dequeue	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_dequeue) (native_window_priv *, void **);$/;"	t
+ptr_ANativeWindowPriv_disconnect	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_disconnect) (native_window_priv *);$/;"	t
+ptr_ANativeWindowPriv_getMaxBufferCount	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_getMaxBufferCount) (native_window_priv *, unsigned int *);$/;"	t
+ptr_ANativeWindowPriv_getMinUndequeued	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_getMinUndequeued) (native_window_priv *, unsigned int *);$/;"	t
+ptr_ANativeWindowPriv_lock	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_lock) (native_window_priv *, void *);$/;"	t
+ptr_ANativeWindowPriv_lockData	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_lockData) (native_window_priv *, void **, ANativeWindow_Buffer *);$/;"	t
+ptr_ANativeWindowPriv_queue	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_queue) (native_window_priv *, void *);$/;"	t
+ptr_ANativeWindowPriv_setBufferCount	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_setBufferCount) (native_window_priv *, unsigned int );$/;"	t
+ptr_ANativeWindowPriv_setBuffersGeometry	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_setBuffersGeometry) (native_window_priv *, int, int, int );$/;"	t
+ptr_ANativeWindowPriv_setCrop	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_setCrop) (native_window_priv *, int, int, int, int);$/;"	t
+ptr_ANativeWindowPriv_setOrientation	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_setOrientation) (native_window_priv *, int);$/;"	t
+ptr_ANativeWindowPriv_setUsage	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_setUsage) (native_window_priv *, bool, int );$/;"	t
+ptr_ANativeWindowPriv_unlockData	android/utils.h	/^typedef int (*ptr_ANativeWindowPriv_unlockData) (native_window_priv *, void *, bool b_render);$/;"	t
+ptr_ANativeWindow_fromSurface	android/utils.c	/^typedef ANativeWindow* (*ptr_ANativeWindow_fromSurface)(JNIEnv*, jobject);$/;"	t	file:
+ptr_ANativeWindow_lock	android/utils.h	/^typedef int32_t (*ptr_ANativeWindow_lock)(ANativeWindow*, ANativeWindow_Buffer*, ARect*);$/;"	t
+ptr_ANativeWindow_release	android/utils.c	/^typedef void (*ptr_ANativeWindow_release)(ANativeWindow*);$/;"	t	file:
+ptr_ANativeWindow_setBuffersGeometry	android/utils.h	/^typedef int32_t (*ptr_ANativeWindow_setBuffersGeometry)(ANativeWindow*, int32_t, int32_t, int32_t);$/;"	t
+ptr_ANativeWindow_unlockAndPost	android/utils.h	/^typedef void (*ptr_ANativeWindow_unlockAndPost)(ANativeWindow*);$/;"	t
+put_le32	decklink.cpp	/^static inline void put_le32(uint8_t **p, uint32_t d)$/;"	f	file:
+queue	android/utils.h	/^    ptr_ANativeWindowPriv_queue queue;$/;"	m	struct:__anon13
+queue_fence	android/nativewindowpriv.c	/^static int queue_fence( native_window_priv *priv, void *p_handle,$/;"	f	file:
+rect_dest	msw/common.c	138;"	d	file:
+rect_dest	msw/common.c	343;"	d	file:
+rect_dest	msw/common.h	/^    RECT         rect_dest;$/;"	m	struct:vout_display_sys_t
+rect_dest	msw/wingdi.c	134;"	d	file:
+rect_dest	msw/wingdi.c	163;"	d	file:
+rect_dest_clipped	msw/common.c	139;"	d	file:
+rect_dest_clipped	msw/common.c	344;"	d	file:
+rect_dest_clipped	msw/common.h	/^    RECT         rect_dest_clipped;$/;"	m	struct:vout_display_sys_t
+rect_dest_clipped	msw/wingdi.c	135;"	d	file:
+rect_dest_clipped	msw/wingdi.c	164;"	d	file:
+rect_display	msw/common.h	/^    RECT         rect_display;$/;"	m	struct:vout_display_sys_t
+rect_parent	msw/common.h	/^    RECT         rect_parent;$/;"	m	struct:vout_display_sys_t
+rect_src	msw/common.c	136;"	d	file:
+rect_src	msw/common.c	341;"	d	file:
+rect_src	msw/common.h	/^    RECT         rect_src;$/;"	m	struct:vout_display_sys_t
+rect_src	msw/wingdi.c	132;"	d	file:
+rect_src	msw/wingdi.c	161;"	d	file:
+rect_src_clipped	msw/common.c	137;"	d	file:
+rect_src_clipped	msw/common.c	342;"	d	file:
+rect_src_clipped	msw/common.h	/^    RECT         rect_src_clipped;$/;"	m	struct:vout_display_sys_t
+rect_src_clipped	msw/wingdi.c	133;"	d	file:
+rect_src_clipped	msw/wingdi.c	162;"	d	file:
+red	msw/common.h	/^        RGBQUAD    red;$/;"	m	struct:vout_display_sys_t::__anon34
+region	opengl.c	/^    gl_region_t *region;$/;"	m	struct:vout_display_opengl_t	file:
+region_count	opengl.c	/^    int         region_count;$/;"	m	struct:vout_display_opengl_t	file:
+registry_cbs	wayland/shell_surface.c	/^static const struct wl_registry_listener registry_cbs =$/;"	v	typeref:struct:wl_registry_listener	file:
+registry_cbs	wayland/shm.c	/^static const struct wl_registry_listener registry_cbs =$/;"	v	typeref:struct:wl_registry_listener	file:
+registry_global_cb	wayland/shell_surface.c	/^static void registry_global_cb(void *data, struct wl_registry *registry,$/;"	f	file:
+registry_global_cb	wayland/shm.c	/^static void registry_global_cb(void *data, struct wl_registry *registry,$/;"	f	file:
+registry_global_remove_cb	wayland/shell_surface.c	/^static void registry_global_remove_cb(void *data, struct wl_registry *registry,$/;"	f	file:
+registry_global_remove_cb	wayland/shm.c	/^static void registry_global_remove_cb(void *data, struct wl_registry *registry,$/;"	f	file:
+render_bit	egl.c	/^   EGLint     render_bit;$/;"	m	struct:gl_api	file:
+reopen_device	msw/common.h	/^    bool                    reopen_device;$/;"	m	struct:vout_display_sys_t
+reset_device	msw/common.h	/^    bool                    reset_device;$/;"	m	struct:vout_display_sys_t
+resourceFormatUV	msw/common.h	/^    DXGI_FORMAT   resourceFormatUV;$/;"	m	struct:__anon31
+resourceFormatYRGB	msw/common.h	/^    DXGI_FORMAT   resourceFormatYRGB;$/;"	m	struct:__anon31
+restore_overlay	msw/common.h	/^    bool   restore_overlay;$/;"	m	struct:vout_display_sys_t
+rhw	msw/direct3d9.c	/^    FLOAT       rhw;        \/\/ eye distance$/;"	m	struct:__anon26	file:
+right	opengl.c	/^    float    right;$/;"	m	struct:__anon14	file:
+rmask	msw/direct3d9.c	/^    uint32_t     rmask;$/;"	m	struct:__anon27	file:
+root	xcb/window.c	/^    xcb_window_t root;$/;"	m	struct:vout_window_sys_t	file:
+scaler	wayland/shm.c	/^    struct wl_scaler *scaler;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::wl_scaler	file:
+sdl_key	sdl.c	/^    SDLKey sdl_key;$/;"	m	struct:__anon1	file:
+sdl_lock	sdl.c	/^static vlc_mutex_t sdl_lock = VLC_STATIC_MUTEX;$/;"	v	file:
+sdlkeys_to_vlckeys	sdl.c	/^} sdlkeys_to_vlckeys[] = {$/;"	v	typeref:struct:__anon1	file:
+serializer	drawable.c	/^static vlc_mutex_t serializer = VLC_STATIC_MUTEX;$/;"	v	file:
+serializer	xcb/window.c	/^static vlc_mutex_t serializer = VLC_STATIC_MUTEX;$/;"	v	file:
+setBufferCount	android/utils.h	/^    ptr_ANativeWindowPriv_setBufferCount setBufferCount;$/;"	m	struct:__anon13
+setBuffersGeometry	android/utils.c	/^        jmethodID setBuffersGeometry;$/;"	m	struct:__anon9::__anon10	file:
+setBuffersGeometry	android/utils.h	/^    ptr_ANativeWindowPriv_setBuffersGeometry setBuffersGeometry;$/;"	m	struct:__anon13
+setBuffersGeometry	android/utils.h	/^    ptr_ANativeWindow_setBuffersGeometry setBuffersGeometry; \/* can be NULL *\/$/;"	m	struct:__anon12
+setCallback	android/utils.c	/^        jmethodID setCallback;$/;"	m	struct:__anon9::__anon10	file:
+setCrop	android/utils.h	/^    ptr_ANativeWindowPriv_setCrop setCrop;$/;"	m	struct:__anon13
+setOrientation	android/utils.h	/^    ptr_ANativeWindowPriv_setOrientation setOrientation;$/;"	m	struct:__anon13
+setUsage	android/utils.h	/^    ptr_ANativeWindowPriv_setUsage setUsage;$/;"	m	struct:__anon13
+setWindowLayout	android/utils.c	/^        jmethodID setWindowLayout;$/;"	m	struct:__anon9::__anon10	file:
+set_ascii_prop	xcb/window.c	/^void set_ascii_prop (xcb_connection_t *conn, xcb_window_t window,$/;"	f	file:
+set_callbacks	gl.c	/^    set_callbacks (Open, Close)$/;"	f
+set_callbacks	msw/direct3d11.c	/^    set_callbacks(Open, Close)$/;"	f
+set_callbacks	vdummy.c	/^    set_callbacks( OpenDummy, Close )$/;"	f
+set_category	android/nativewindow.c	/^    set_category(CAT_VIDEO)$/;"	f
+set_category	kva.c	/^    set_category( CAT_VIDEO )$/;"	f
+set_category	vmem.c	/^    set_category(CAT_VIDEO)$/;"	f
+set_category	xcb/glx.c	/^    set_category (CAT_VIDEO)$/;"	f
+set_category	xcb/x11.c	/^    set_category (CAT_VIDEO)$/;"	f
+set_category	xcb/xvideo.c	/^    set_category (CAT_VIDEO)$/;"	f
+set_help	msw/directdraw.c	/^    set_help(DX_HELP)$/;"	f
+set_hostname_prop	xcb/window.c	/^void set_hostname_prop (xcb_connection_t *conn, xcb_window_t window)$/;"	f	file:
+set_string	xcb/window.c	/^void set_string (xcb_connection_t *conn, xcb_window_t window,$/;"	f	file:
+set_wm_hints	xcb/window.c	/^void set_wm_hints (xcb_connection_t *conn, xcb_window_t window)$/;"	f	file:
+set_wm_state	xcb/window.c	/^static void set_wm_state (vout_window_t *wnd, const vout_window_cfg_t *cfg)$/;"	f	file:
+shader	opengl.c	/^    GLint      shader[3]; \/\/3. is for the common vertex shader$/;"	m	struct:vout_display_opengl_t	file:
+shader_convert601to709_source	msw/builtin_shaders.h	/^static const char shader_convert601to709_source[] =$/;"	v
+shader_disabled_source	msw/builtin_shaders.h	/^static const char shader_disabled_source[] =$/;"	v
+shader_gammacorrection18_source	msw/builtin_shaders.h	/^static const char shader_gammacorrection18_source[] =$/;"	v
+shader_gammacorrection22_source	msw/builtin_shaders.h	/^static const char shader_gammacorrection22_source[] =$/;"	v
+shader_gammacorrectionbt709_source	msw/builtin_shaders.h	/^static const char shader_gammacorrectionbt709_source[] =$/;"	v
+shader_grayscale_source	msw/builtin_shaders.h	/^static const char shader_grayscale_source[] =$/;"	v
+shader_invert_source	msw/builtin_shaders.h	/^static const char shader_invert_source[] =$/;"	v
+shader_widencolorspace_source	msw/builtin_shaders.h	/^static const char shader_widencolorspace_source[] =$/;"	v
+shell	wayland/shell_surface.c	/^    struct wl_shell *shell;$/;"	m	struct:vout_window_sys_t	typeref:struct:vout_window_sys_t::wl_shell	file:
+shell_surface	wayland/shell_surface.c	/^    struct wl_shell_surface *shell_surface;$/;"	m	struct:vout_window_sys_t	typeref:struct:vout_window_sys_t::wl_shell_surface	file:
+shell_surface_cbs	wayland/shell_surface.c	/^static const struct wl_shell_surface_listener shell_surface_cbs =$/;"	v	typeref:struct:wl_shell_surface_listener	file:
+shell_surface_configure_cb	wayland/shell_surface.c	/^static void shell_surface_configure_cb(void *data,$/;"	f	file:
+shell_surface_ping_cb	wayland/shell_surface.c	/^static void shell_surface_ping_cb(void *data,$/;"	f	file:
+shell_surface_popup_done_cb	wayland/shell_surface.c	/^static void shell_surface_popup_done_cb(void *data,$/;"	f	file:
+shm	wayland/shm.c	/^    struct wl_shm *shm;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::wl_shm	file:
+shm_cbs	wayland/shm.c	/^static const struct wl_shm_listener shm_cbs =$/;"	v	typeref:struct:wl_shm_listener	file:
+shm_format_cb	wayland/shm.c	/^static void shm_format_cb(void *data, struct wl_shm *shm, uint32_t format)$/;"	f	file:
+shmdt	xcb/pictures.c	36;"	d	file:
+source	msw/events.c	/^    video_format_t       source;$/;"	m	struct:event_thread_t	file:
+state	aa.c	/^    vout_display_cfg_t  state;$/;"	m	struct:vout_display_sys_t	file:
+status_t	android/nativewindowpriv.c	/^typedef int32_t status_t;$/;"	t	file:
+sub_last_region	android/android_window.c	/^    ARect sub_last_region;$/;"	m	struct:vout_display_sys_t	file:
+subpicture_buffer_object	opengl.c	/^    GLuint *subpicture_buffer_object;$/;"	m	struct:vout_display_opengl_t	file:
+subpicture_buffer_object_count	opengl.c	/^    int    subpicture_buffer_object_count;$/;"	m	struct:vout_display_opengl_t	file:
+subpicture_chromas	android/android_window.c	/^static const vlc_fourcc_t subpicture_chromas[] =$/;"	v	file:
+supports_npot	opengl.c	/^    bool supports_npot;$/;"	m	struct:vout_display_opengl_t	file:
+surface	egl.c	/^    EGLSurface surface;$/;"	m	struct:vlc_gl_sys_t	file:
+surface	msw/direct3d9.c	/^    LPDIRECT3DSURFACE9 surface;$/;"	m	struct:picture_sys_t	file:
+sw	android/android_window.h	/^        } sw;$/;"	m	union:picture_sys_t::__anon2	typeref:struct:picture_sys_t::__anon2::__anon4
+syms	xcb/keys.c	/^    xcb_key_symbols_t *syms;$/;"	m	struct:key_handler_t	file:
+sys	directfb.c	/^    vout_display_sys_t *sys;$/;"	m	struct:picture_sys_t	file:
+sys_lock	decklink.cpp	/^static vlc_mutex_t sys_lock = VLC_STATIC_MUTEX;$/;"	v	file:
+tbm	evas.c	/^        } tbm;$/;"	m	union:vout_display_sys_t::__anon17	typeref:struct:vout_display_sys_t::__anon17::__anon18	file:
+tbm_format_to_vlc	evas.c	/^struct tbm_format_to_vlc$/;"	s	file:
+tbm_format_to_vlc_list	evas.c	/^struct tbm_format_to_vlc tbm_format_to_vlc_list[] = {$/;"	v	typeref:struct:tbm_format_to_vlc
+tenbits	decklink.cpp	/^    bool tenbits;$/;"	m	struct:vout_display_sys_t	file:
+tex_format	opengl.c	/^    int        tex_format;$/;"	m	struct:vout_display_opengl_t	file:
+tex_height	opengl.c	/^    float    tex_height;$/;"	m	struct:__anon14	file:
+tex_height	opengl.c	/^    int        tex_height[PICTURE_PLANE_MAX];$/;"	m	struct:vout_display_opengl_t	file:
+tex_internal	opengl.c	/^    int        tex_internal;$/;"	m	struct:vout_display_opengl_t	file:
+tex_target	opengl.c	/^    int        tex_target;$/;"	m	struct:vout_display_opengl_t	file:
+tex_type	opengl.c	/^    int        tex_type;$/;"	m	struct:vout_display_opengl_t	file:
+tex_width	opengl.c	/^    float    tex_width;$/;"	m	struct:__anon14	file:
+tex_width	opengl.c	/^    int        tex_width[PICTURE_PLANE_MAX];$/;"	m	struct:vout_display_opengl_t	file:
+texture	msw/direct3d11.c	/^    ID3D11Texture2D               *texture;$/;"	m	struct:__anon35	file:
+texture	msw/direct3d11.c	/^    } texture;$/;"	m	struct:d3d_vertex_t	typeref:struct:d3d_vertex_t::__anon37	file:
+texture	msw/direct3d9.c	/^    LPDIRECT3DTEXTURE9 texture;$/;"	m	struct:d3d_region_t	file:
+texture	opengl.c	/^    GLuint     texture[VLCGL_TEXTURE_COUNT][PICTURE_PLANE_MAX];$/;"	m	struct:vout_display_opengl_t	file:
+texture	opengl.c	/^    GLuint   texture;$/;"	m	struct:__anon14	file:
+textureFormat	msw/common.h	/^    DXGI_FORMAT   textureFormat;$/;"	m	struct:__anon31
+texture_buffer_object	opengl.c	/^    GLuint texture_buffer_object[PICTURE_PLANE_MAX];$/;"	m	struct:vout_display_opengl_t	file:
+texture_temp_buf	opengl.c	/^    uint8_t *texture_temp_buf;$/;"	m	struct:vout_display_opengl_t	file:
+texture_temp_buf_size	opengl.c	/^    int      texture_temp_buf_size;$/;"	m	struct:vout_display_opengl_t	file:
+thread	msw/events.c	/^    vlc_thread_t thread;$/;"	m	struct:event_thread_t	file:
+thread	wayland/shell_surface.c	/^    vlc_thread_t thread;$/;"	m	struct:vout_window_sys_t	file:
+thread	xcb/window.c	/^    vlc_thread_t thread;$/;"	m	struct:vout_window_sys_t	file:
+timescale	decklink.cpp	/^    BMDTimeScale timescale;$/;"	m	struct:decklink_sys_t	file:
+top	opengl.c	/^    float    top;$/;"	m	struct:__anon14	file:
+top_height	wayland/shell_surface.c	/^    uint32_t top_height;$/;"	m	struct:vout_window_sys_t	file:
+top_width	wayland/shell_surface.c	/^    uint32_t top_width;$/;"	m	struct:vout_window_sys_t	file:
+tty	fb.c	/^    int                 tty;                          \/* tty device handle *\/$/;"	m	struct:vout_display_sys_t	file:
+tu	msw/direct3d9.c	/^    FLOAT       tu, tv;     \/\/ texture relative coordinates$/;"	m	struct:__anon26	file:
+tv	msw/direct3d9.c	/^    FLOAT       tu, tv;     \/\/ texture relative coordinates$/;"	m	struct:__anon26	file:
+type	opengl.c	/^    unsigned type;$/;"	m	struct:__anon14	file:
+u	evas.c	/^    } u;$/;"	m	struct:event	typeref:union:event::__anon15	file:
+u	evas.c	/^    } u;$/;"	m	struct:vout_display_sys_t	typeref:union:vout_display_sys_t::__anon17	file:
+uname	xcb/keysym.c	/^    char uname[64];$/;"	m	struct:keysym	file:
+unlock	vmem.c	/^    void (*unlock)(void *sys, void *id, void *const *plane);$/;"	m	struct:vout_display_sys_t	file:
+unlockAndPost	android/utils.h	/^    ptr_ANativeWindow_unlockAndPost unlockAndPost;$/;"	m	struct:__anon12
+unlockData	android/utils.h	/^    ptr_ANativeWindowPriv_unlockData unlockData;$/;"	m	struct:__anon13
+usage	android/nativewindowpriv.c	/^    int usage;$/;"	m	struct:native_window_priv	file:
+use_buffer_transform	wayland/shm.c	/^    bool use_buffer_transform;$/;"	m	struct:vout_display_sys_t	file:
+use_desktop	msw/common.h	/^    bool use_desktop;$/;"	m	struct:vout_display_sys_t
+use_desktop	msw/events.c	/^    bool use_desktop;$/;"	m	struct:event_thread_t	file:
+use_desktop	msw/events.h	/^    bool use_desktop; \/* direct3d *\/$/;"	m	struct:__anon29
+use_multitexture	opengl.c	/^    bool use_multitexture;$/;"	m	struct:vout_display_opengl_t	file:
+use_overlay	msw/common.h	/^    bool   use_overlay;     \/* Are we using an overlay surface *\/$/;"	m	struct:vout_display_sys_t
+use_overlay	msw/events.c	/^    bool use_overlay;$/;"	m	struct:event_thread_t	file:
+use_overlay	msw/events.h	/^    bool use_overlay; \/* directdraw *\/$/;"	m	struct:__anon29
+use_wallpaper	msw/common.h	/^    bool   use_wallpaper;   \/* show as desktop wallpaper ? *\/$/;"	m	struct:vout_display_sys_t
+used	drawable.c	/^static uintptr_t *used = NULL;$/;"	v	file:
+users	decklink.cpp	/^    uint8_t users;$/;"	m	struct:decklink_sys_t	file:
+usym	xcb/keysym.c	/^    uint32_t usym;$/;"	m	struct:keysym	file:
+v210_convert	decklink.cpp	/^static void v210_convert(void *frame_bytes, picture_t *pic, int dst_stride)$/;"	f	file:
+values	msw/direct3d9.c	/^    char **values;$/;"	m	struct:__anon28	file:
+values	msw/directdraw.c	/^    char **values;$/;"	m	struct:__anon39	file:
+var_info	fb.c	/^    struct fb_var_screeninfo    var_info;        \/* current mode information *\/$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::fb_var_screeninfo	file:
+vd	evas.c	/^    vout_display_t *vd;$/;"	m	struct:mainloop_cb_args	file:
+vd	msw/direct3d11.c	/^    vout_display_t                *vd;$/;"	m	struct:__anon35	file:
+vd	msw/events.c	/^    vout_display_t *vd;$/;"	m	struct:event_thread_t	file:
+vertex	msw/direct3d9.c	/^    CUSTOMVERTEX       vertex[4];$/;"	m	struct:d3d_region_t	file:
+vertex_buffer_object	opengl.c	/^    GLuint vertex_buffer_object;$/;"	m	struct:vout_display_opengl_t	file:
+vgl	msw/common.h	/^    vout_display_opengl_t *vgl;$/;"	m	struct:vout_display_sys_t
+video_ptr	fb.c	/^    uint8_t     *video_ptr;                                 \/* base address *\/$/;"	m	struct:vout_display_sys_t	file:
+video_size	fb.c	/^    size_t      video_size;                                    \/* page size *\/$/;"	m	struct:vout_display_sys_t	file:
+viewport	wayland/shm.c	/^    struct wl_viewport *viewport;$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::wl_viewport	file:
+views	android/utils.c	/^    } views[AWindow_Max];$/;"	m	struct:AWindowHandler	typeref:struct:AWindowHandler::__anon5	file:
+vlc	caca.c	/^    int vlc;$/;"	m	struct:__anon20	file:
+vlc	caca.c	/^    int vlc;$/;"	m	struct:__anon21	file:
+vlc_format_cb	vmem.c	/^typedef unsigned (*vlc_format_cb)(void **, char *, unsigned *, unsigned *,$/;"	t	file:
+vlc_gl_sys_t	egl.c	/^typedef struct vlc_gl_sys_t$/;"	s	file:
+vlc_gl_sys_t	egl.c	/^} vlc_gl_sys_t;$/;"	t	typeref:struct:vlc_gl_sys_t	file:
+vlc_gl_sys_t	glx.c	/^typedef struct vlc_gl_sys_t$/;"	s	file:
+vlc_gl_sys_t	glx.c	/^} vlc_gl_sys_t;$/;"	t	typeref:struct:vlc_gl_sys_t	file:
+vlc_icon	msw/events.c	/^    HICON vlc_icon;$/;"	m	struct:event_thread_t	file:
+vlckey	sdl.c	/^    int    vlckey;$/;"	m	struct:__anon1	file:
+vout_display_opengl_Delete	opengl.c	/^void vout_display_opengl_Delete(vout_display_opengl_t *vgl)$/;"	f
+vout_display_opengl_Display	opengl.c	/^int vout_display_opengl_Display(vout_display_opengl_t *vgl,$/;"	f
+vout_display_opengl_GetPool	opengl.c	/^picture_pool_t *vout_display_opengl_GetPool(vout_display_opengl_t *vgl, unsigned requested_count)$/;"	f
+vout_display_opengl_New	opengl.c	/^vout_display_opengl_t *vout_display_opengl_New(video_format_t *fmt,$/;"	f
+vout_display_opengl_Prepare	opengl.c	/^int vout_display_opengl_Prepare(vout_display_opengl_t *vgl,$/;"	f
+vout_display_opengl_t	opengl.c	/^struct vout_display_opengl_t {$/;"	s	file:
+vout_display_opengl_t	opengl.h	/^typedef struct vout_display_opengl_t vout_display_opengl_t;$/;"	t	typeref:struct:vout_display_opengl_t
+vout_display_sys_t	aa.c	/^struct vout_display_sys_t {$/;"	s	file:
+vout_display_sys_t	android/android_window.c	/^struct vout_display_sys_t$/;"	s	file:
+vout_display_sys_t	caca.c	/^struct vout_display_sys_t {$/;"	s	file:
+vout_display_sys_t	decklink.cpp	/^struct vout_display_sys_t$/;"	s	file:
+vout_display_sys_t	directfb.c	/^struct vout_display_sys_t {$/;"	s	file:
+vout_display_sys_t	evas.c	/^struct vout_display_sys_t$/;"	s	file:
+vout_display_sys_t	fb.c	/^struct vout_display_sys_t {$/;"	s	file:
+vout_display_sys_t	msw/common.h	/^struct vout_display_sys_t$/;"	s
+vout_display_sys_t	sdl.c	/^struct vout_display_sys_t {$/;"	s	file:
+vout_display_sys_t	vmem.c	/^struct vout_display_sys_t {$/;"	s	file:
+vout_display_sys_t	wayland/shm.c	/^struct vout_display_sys_t$/;"	s	file:
+vout_display_sys_t	yuv.c	/^struct vout_display_sys_t {$/;"	s	file:
+vout_window_sys_t	wayland/shell_surface.c	/^struct vout_window_sys_t$/;"	s	file:
+vout_window_sys_t	xcb/window.c	/^struct vout_window_sys_t$/;"	s	file:
+vt_mode	fb.c	/^    struct vt_mode              vt_mode;                 \/* previous VT mode *\/$/;"	m	struct:vout_display_sys_t	typeref:struct:vout_display_sys_t::vt_mode	file:
+wait	msw/events.c	/^    vlc_cond_t   wait;$/;"	m	struct:event_thread_t	file:
+wallpaper_requested	msw/common.h	/^    bool           wallpaper_requested;$/;"	m	struct:vout_display_sys_t
+width	egl.c	/^    unsigned width, height;$/;"	m	struct:vlc_gl_sys_t	file:
+width	fb.c	/^    uint32_t width;$/;"	m	struct:vout_display_sys_t	file:
+width	msw/direct3d9.c	/^    unsigned           width;$/;"	m	struct:d3d_region_t	file:
+width	msw/events.c	/^    unsigned width, height;$/;"	m	struct:event_thread_t	file:
+width	msw/events.h	/^    unsigned width;$/;"	m	struct:__anon29
+width	opengl.c	/^    unsigned width;$/;"	m	struct:__anon14	file:
+win	glx.c	/^    GLXWindow win;$/;"	m	struct:vlc_gl_sys_t	file:
+win	msw/common.h	/^        RECT win;$/;"	m	struct:vout_display_sys_t::__anon33
+win32_gesture_sys_t	msw/win32touch.h	/^} win32_gesture_sys_t;$/;"	t	typeref:struct:__anon23
+winLock	android/utils.h	/^    ptr_ANativeWindow_lock winLock;$/;"	m	struct:__anon12
+window	android/utils.c	/^        } window;$/;"	m	struct:AWindowHandler::__anon6	typeref:struct:AWindowHandler::__anon6::__anon8	file:
+window	egl.c	/^    struct wl_egl_window *window;$/;"	m	struct:vlc_gl_sys_t	typeref:struct:vlc_gl_sys_t::wl_egl_window	file:
+window_connect	android/nativewindowpriv.c	/^static int window_connect( ANativeWindow *anw )$/;"	f	file:
+window_disconnect	android/nativewindowpriv.c	/^static int window_disconnect( ANativeWindow *anw )$/;"	f	file:
+wm_state	xcb/window.c	/^    xcb_atom_t wm_state;$/;"	m	struct:vout_window_sys_t	file:
+wm_state_above	xcb/window.c	/^    xcb_atom_t wm_state_above;$/;"	m	struct:vout_window_sys_t	file:
+wm_state_below	xcb/window.c	/^    xcb_atom_t wm_state_below;$/;"	m	struct:vout_window_sys_t	file:
+wm_state_fullscreen	xcb/window.c	/^    xcb_atom_t wm_state_fullscreen;$/;"	m	struct:vout_window_sys_t	file:
+x	msw/direct3d11.c	/^        FLOAT x;$/;"	m	struct:d3d_vertex_t::__anon36	file:
+x	msw/direct3d11.c	/^        FLOAT x;$/;"	m	struct:d3d_vertex_t::__anon37	file:
+x	msw/direct3d9.c	/^    FLOAT       x,y,z;      \/\/ vertex untransformed position$/;"	m	struct:__anon26	file:
+x	msw/events.c	/^    int x, y;$/;"	m	struct:event_thread_t	file:
+x	msw/events.h	/^    int x;$/;"	m	struct:__anon29
+x	wayland/shm.c	/^    int x;$/;"	m	struct:vout_display_sys_t	file:
+x11	egl.c	/^    Display *x11;$/;"	m	struct:vlc_gl_sys_t	file:
+xname	xcb/keysym.c	/^    char xname[32];$/;"	m	struct:keysym	file:
+xsym	xcb/keysym.c	/^    uint32_t xsym;$/;"	m	struct:keysym	file:
+y	msw/direct3d11.c	/^        FLOAT y;$/;"	m	struct:d3d_vertex_t::__anon36	file:
+y	msw/direct3d11.c	/^        FLOAT y;$/;"	m	struct:d3d_vertex_t::__anon37	file:
+y	msw/direct3d9.c	/^    FLOAT       x,y,z;      \/\/ vertex untransformed position$/;"	m	struct:__anon26	file:
+y	msw/events.c	/^    int x, y;$/;"	m	struct:event_thread_t	file:
+y	msw/events.h	/^    int y;$/;"	m	struct:__anon29
+y	wayland/shm.c	/^    int y;$/;"	m	struct:vout_display_sys_t	file:
+z	msw/direct3d11.c	/^        FLOAT z;$/;"	m	struct:d3d_vertex_t::__anon36	file:
+z	msw/direct3d9.c	/^    FLOAT       x,y,z;      \/\/ vertex untransformed position$/;"	m	struct:__anon26	file:

@@ -1,0 +1,97 @@
+diff --git a/include/media/MediaPlayerInterface.h b/include/media/MediaPlayerInterface.h
+index c4d51b0..d471210 100644
+--- a/include/media/MediaPlayerInterface.h
++++ b/include/media/MediaPlayerInterface.h
+@@ -61,6 +61,7 @@ enum player_type {
+     IMG_PLAYER = 9,
+     // MStar Android Patch End
+     MI_PLAYER = 10,
++    MY_PLAYER = 11,
+ };
+ 
+ 
+diff --git a/media/libmediaplayerservice/MediaPlayerFactory.cpp b/media/libmediaplayerservice/MediaPlayerFactory.cpp
+index 198b651..1d6436c 100644
+--- a/media/libmediaplayerservice/MediaPlayerFactory.cpp
++++ b/media/libmediaplayerservice/MediaPlayerFactory.cpp
+@@ -659,6 +659,72 @@ class MstarPlayerFactory : public MediaPlayerFactory::IFactory {
+ #endif
+ // MStar Android Patch End
+ 
++//MyPlayer
++class MyPlayerFactory :
++    public MediaPlayerFactory::IFactory {
++  virtual float scoreFactory(const sp<IMediaPlayer>& client,
++                               const char* url,
++                               float curScore) {
++        static const float kOurScore = 1.0;
++        char value[PROPERTY_VALUE_MAX];
++
++        if (property_get("myplayer.disable", value, NULL)
++                && !strcmp("true", value))
++            return 0.0;
++
++        if (!strncasecmp("http://", url, 7)
++                || !strncasecmp("https://", url, 8)
++                || !strncasecmp("file://", url, 7)) {
++            return kOurScore;
++        }
++
++        return 0.0;
++    }
++
++    virtual float scoreFactory(const sp<IMediaPlayer>& client,
++                               int fd,
++                               int64_t offset,
++                               int64_t length,
++                               float curScore) {
++        static const float kOurScore = 1.0;
++        char value[PROPERTY_VALUE_MAX];
++
++        if (property_get("myplayer.disable", value, NULL)
++                && !strcmp("true", value))
++            return 0.0;
++
++        if (client == NULL)
++            return 0.0;
++
++        return kOurScore;
++    }
++
++    virtual sp<MediaPlayerBase> createPlayer() {
++        struct MyPlayer;
++        typedef MyPlayer* (*CreateMyPlayer_Func)(void);
++        void* handle = NULL;
++        ALOGV("create MyPlayer");
++        handle= dlopen("libmyplayer.so", RTLD_NOW);
++        if (handle != NULL) {
++            CreateMyPlayer_Func myplayerHandle = NULL;
++            ALOGV("libmyplayer.so is loaded sucessfully");
++            myplayerHandle = (CreateMyPlayer_Func)
++                    dlsym(handle, "_Z15Create_MyPlayerv");
++            if (myplayerHandle != NULL) {
++                ALOGV("Create MYPLAYER Success!");
++                return (MediaPlayerBase*)myplayerHandle();
++            } else {
++                ALOGE("Failed to find symbol _ZL15Create_MyPlayerv");
++                return NULL;
++            }
++        } else {
++            ALOGE("Failed to load libmyplayer.so!!! %s", dlerror());
++            return NULL;
++        }
++    }
++};
++
++
+ void MediaPlayerFactory::registerBuiltinFactories() {
+     Mutex::Autolock lock_(&sLock);
+ 
+@@ -670,6 +736,7 @@ void MediaPlayerFactory::registerBuiltinFactories() {
+     registerFactory_l(new SonivoxPlayerFactory(), SONIVOX_PLAYER);
+     registerFactory_l(new TestPlayerFactory(), TEST_PLAYER);
+     registerFactory_l(new MiPlayerFactory(), MI_PLAYER);
++    registerFactory_l(new MyPlayerFactory(), MY_PLAYER);
+     // MStar Android Patch Begin
+ #ifdef BUILD_WITH_MSTAR_MM
+     registerFactory_l(new MstPlayerFactory(), MST_PLAYER);

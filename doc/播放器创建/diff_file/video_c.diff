@@ -1,0 +1,26 @@
+--- vlc-2.2.1/lib/video.c	2015-12-11 16:54:26.772680768 +0800
++++ backup/vlc-2.2.1/lib/video.c	2014-11-17 02:57:58.000000000 +0800
+@@ -105,23 +105,6 @@
+     free (pp_vouts);
+ }
+ 
+-void libvlc_set_nativewindow( libvlc_media_player_t *p_mi, void* p_window )
+-{
+-    /* This will work even if the video is not currently active */
+-    var_SetAddress (p_mi, "androidnativewindowptr", p_window);
+-
+-    /* Apply to current video outputs (if any) */
+-    size_t n;
+-    vout_thread_t **pp_vouts = GetVouts (p_mi, &n);
+-    for (size_t i = 0; i < n; i++)
+-    {
+-        var_SetAddress (pp_vouts[i], "newandroidnativewindowptr", p_window);
+-        vlc_object_release (pp_vouts[i]);
+-    }
+-    free (pp_vouts);
+-}
+-
+-
+ int libvlc_get_fullscreen( libvlc_media_player_t *p_mi )
+ {
+     return var_GetBool (p_mi, "fullscreen");

@@ -1,0 +1,26 @@
+--- vlc-2.2.1/include/vlc/libvlc.h	2015-12-11 15:50:07.452583577 +0800
++++ backup/vlc-2.2.1/include/vlc/libvlc.h	2014-08-14 15:20:03.000000000 +0800
+@@ -311,23 +311,6 @@
+                                         void *user_data );
+ 
+ /**
+- * Register for an event notification. It is async.
+- *
+- * \param p_event_manager the event manager to which you want to attach to.
+- *        Generally it is obtained by vlc_my_object_event_manager() where
+- *        my_object is the object you want to listen to.
+- * \param i_event_type the desired event to which we want to listen
+- * \param f_callback the function to call when i_event_type occurs
+- * \param user_data user provided data to carry with the event
+- * \return 0 on success, ENOMEM on error
+- */
+-LIBVLC_API int libvlc_event_attach_async( libvlc_event_manager_t *p_event_manager,
+-                                        libvlc_event_type_t i_event_type,
+-                                        libvlc_callback_t f_callback,
+-                                        void *user_data );
+-
+-
+-/**
+  * Unregister an event notification.
+  *
+  * \param p_event_manager the event manager

@@ -1,0 +1,28 @@
+--- vlc-2.2.1/lib/media.c	2015-12-11 18:49:42.372854926 +0800
++++ backup/vlc-2.2.1/lib/media.c	2014-12-19 04:00:38.000000000 +0800
+@@ -350,25 +350,6 @@
+     return p_md;
+ }
+ 
+-int libvlc_media_set_android_audiosink(libvlc_instance_t *p_instance, void * audiosink)
+-{
+-
+-    int ret = 0;
+-    if( !p_instance->p_libvlc_int)
+-        return -1;
+-    else
+-        var_CreateGetAddress(p_instance->p_libvlc_int, "android-audiosink");
+-
+-    if(var_SetAddress(p_instance->p_libvlc_int, "android-audiosink", audiosink)<0)
+-    {
+-        ret = -1;
+-    }
+-    else
+-        libvlc_printerr("%s:%d set android-audiosink success \n",__FUNCTION__,__LINE__);
+-    return ret;
+-}
+-
+-
+ libvlc_media_t *libvlc_media_new_path( libvlc_instance_t *p_instance,
+                                        const char *path )
+ {

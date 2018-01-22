@@ -1,0 +1,212 @@
+LOCAL_PATH := $(call my-dir)
+
+DEFS := -DHAVE_CONFIG_H
+AM_CFLAGS :=
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+VLC_CFLAGS := -g -O2 -fstrict-aliasing -funsafe-math-optimizations -Wall -Wextra -Wsign-compare -Wundef -Wpointer-arith -Wvolatile-register-var -fvisibility=hidden -ffast-math -funroll-loops -std=gnu99
+VLC_CPPFLAGS := -g
+
+### Files ###
+libattachment_plugin_la_SOURCES := attachment.c
+libfilesystem_plugin_la_SOURCES := fs.h file.c directory.c fs.c
+libidummy_plugin_la_SOURCES := idummy.c
+libimem_plugin_la_SOURCES := imem.c
+librar_plugin_la_SOURCES := rar/rar.c rar/rar.h \
+    rar/access.c rar/stream.c rar/module.c
+libsdp_plugin_la_SOURCES := sdp.c
+libtimecode_plugin_la_SOURCES := timecode.c
+libvdr_plugin_la_SOURCES := vdr.c
+libzip_plugin_la_SOURCES := zip/zip.h zip/zipstream.c zip/zipaccess.c
+libunzip_la_SOURCES := zip/unzip/unzip.c zip/unzip/unzip.h zip/unzip/crypt.h \
+    zip/unzip/ioapi.c zip/unzip/ioapi.h
+libshm_plugin_la_SOURCES := shm.c
+libaccess_bd_plugin_la_SOURCES := bd/bd.c bd/mpls.c bd/mpls.h bd/clpi.c bd/clpi.h
+### Network streams ###
+libftp_plugin_la_SOURCES := ftp.c
+libhttp_plugin_la_SOURCES := http.c
+libavio_plugin_la_SOURCES := avio.c avio.h
+libaccess_mms_plugin_la_SOURCES := \
+    mms/mms.c mms/mms.h \
+    mms/mmsh.c mms/mmsh.h \
+    mms/mmstu.c mms/mmstu.h \
+    mms/buffer.c mms/buffer.h \
+    mms/asf.h mms/asf.c \
+    demux/asf/libasf_guid.h
+libtcp_plugin_la_SOURCES := tcp.c
+libudp_plugin_la_SOURCES := udp.c
+liblive555_plugin_la_SOURCES := live555.cpp mms/asf.c mms/buffer.c
+libaccess_realrtsp_plugin_la_SOURCES := \
+    rtsp/access.c \
+    rtsp/rtsp.c rtsp/rtsp.h \
+    rtsp/real.c rtsp/real.h \
+    rtsp/real_rmff.c rtsp/real_rmff.h \
+    rtsp/real_sdpplin.c rtsp/real_sdpplin.h \
+    rtsp/real_asmrp.c
+librtp_plugin_la_SOURCES := \
+    rtp/input.c \
+    rtp/session.c \
+    rtp/xiph.c \
+    rtp/rtp.c rtp/rtp.h
+libmitvdvb_plugin_la_SOURCES := \
+    mitvdvb/mitvdvb.c \
+    mitvdvb/MidvbSourceInterface.cpp
+liblibbluray_plugin_la_SOURCES := bluray.c
+
+##########################add by me#####################################################
+include $(CLEAR_VARS)
+MODULE_NAME := attachment
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+LOCAL_SHARED_LIBRARIES += libutils libz libbinder
+LOCAL_SHARED_LIBRARIES += libcutils libdl
+include $(BUILD_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+MODULE_NAME := rar
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+LOCAL_SHARED_LIBRARIES += libutils libz libbinder
+LOCAL_SHARED_LIBRARIES += libcutils libdl
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# attachment plugins
+include $(CLEAR_VARS)
+MODULE_NAME := filesystem
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+LOCAL_SHARED_LIBRARIES += libutils libz libbinder
+LOCAL_SHARED_LIBRARIES += libcutils libdl
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# attachment plugins
+include $(CLEAR_VARS)
+MODULE_NAME := ftp
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+LOCAL_SHARED_LIBRARIES += libutils libz libbinder
+LOCAL_SHARED_LIBRARIES += libcutils libdl
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# attachment plugins
+include $(CLEAR_VARS)
+MODULE_NAME := http
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include \
+    $(LOCAL_PATH)/zip \
+    $(LOCAL_PATH)/zip/unzip \
+    external/zlib
+LOCAL_SHARED_LIBRARIES += libutils libz libbinder
+LOCAL_SHARED_LIBRARIES += libcutils libdl
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# attachment plugins
+include $(CLEAR_VARS)
+MODULE_NAME := avio
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include \
+    $(LOCAL_PATH)/zip \
+    $(LOCAL_PATH)/zip/unzip \
+    external/zlib \
+    $(LOCAL_PATH)/../../../../ffmpeg2-2/
+LOCAL_SHARED_LIBRARIES += libutils libz libbinder
+LOCAL_SHARED_LIBRARIES += libcutils libdl
+
+#include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# attachment plugins
+include $(CLEAR_VARS)
+MODULE_NAME := tcp
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+LOCAL_SHARED_LIBRARIES += libutils libz libbinder
+LOCAL_SHARED_LIBRARIES += libcutils libdl
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# attachment plugins
+include $(CLEAR_VARS)
+MODULE_NAME := udp
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+LOCAL_SHARED_LIBRARIES += libutils libz libbinder
+LOCAL_SHARED_LIBRARIES += libcutils libdl
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# attachment plugins
+include $(CLEAR_VARS)
+MODULE_NAME := rtp
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+LOCAL_SHARED_LIBRARIES += libutils libz libbinder
+LOCAL_SHARED_LIBRARIES += libcutils libdl
+include $(BUILD_STATIC_LIBRARY)
+

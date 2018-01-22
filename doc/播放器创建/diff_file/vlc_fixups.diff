@@ -1,0 +1,25 @@
+--- vlc-2.2.1/include/vlc_fixups.h	2015-12-02 19:05:36.912753421 +0800
++++ vlc-2.2.1_bak/include/vlc_fixups.h	2015-02-17 17:07:37.000000000 +0800
+@@ -222,12 +222,7 @@
+ #define LC_NUMERIC_MASK  0
+ #define LC_MESSAGES_MASK 0
+ #define LC_GLOBAL_LOCALE ((locale_t)(uintptr_t)1)
+-
+-#ifndef _XLOCALE_H_
+-#define _XLOCALE_H_
+-struct __locale_t;
+-typedef struct __locale_t* locale_t;
+-#endif /* _XLOCALE_H_ */
++typedef void *locale_t;
+ static inline locale_t uselocale(locale_t loc)
+ {
+     (void)loc;
+@@ -363,7 +358,7 @@
+ /* math.h */
+ 
+ #ifdef __ANDROID__
+-//#define nanf(tagp) NAN
++#define nanf(tagp) NAN
+ #endif
+ 
+ #ifdef _WIN32

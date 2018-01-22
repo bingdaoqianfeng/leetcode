@@ -1,0 +1,12 @@
+--- vlc-2.2.1/include/vlc/libvlc_media.h	2015-12-11 19:06:34.052880404 +0800
++++ backup/vlc-2.2.1/include/vlc/libvlc_media.h	2014-08-14 15:20:03.000000000 +0800
+@@ -241,9 +241,6 @@
+                                    libvlc_instance_t *p_instance,
+                                    const char * psz_mrl );
+ 
+-LIBVLC_API int libvlc_media_set_android_audiosink(libvlc_instance_t *p_instance, void *audiosink);
+-
+-
+ /**
+  * Create a media for a certain file path.
+  *

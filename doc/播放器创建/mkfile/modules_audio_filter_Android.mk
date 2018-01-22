@@ -1,0 +1,349 @@
+LOCAL_PATH := $(call my-dir)
+
+DEFS := -DHAVE_CONFIG_H
+AM_CFLAGS :=
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME)
+VLC_CFLAGS := -g -O2 -fstrict-aliasing -funsafe-math-optimizations -Wall -Wextra -Wsign-compare -Wundef -Wpointer-arith -Wvolatile-register-var -fvisibility=hidden -ffast-math -funroll-loops -std=gnu99 -DHAVE_POSIX_MEMALIGN
+VLC_CPPFLAGS :=
+
+libequalizer_plugin_la_SOURCES  := equalizer.c #equalizer_presets.h
+libcompressor_plugin_la_SOURCES := compressor.c
+libkaraoke_plugin_la_SOURCES    := karaoke.c
+libnormvol_plugin_la_SOURCES    := normvol.c
+libgain_plugin_la_SOURCES       := gain.c
+libaudiobargraph_plugin_la_SOURCES := audiobargraph_a.c
+libparam_eq_plugin_la_SOURCES := param_eq.c
+libscaletempo_plugin_la_SOURCES := scaletempo.c
+libchorus_flanger_plugin_la_SOURCES := chorus_flanger.c
+libstereo_widen_plugin_la_SOURCES := stereo_widen.c
+libspatializer_plugin_la_SOURCES := \
+    spatializer/allpass.cpp spatializer/allpass.hpp \
+    spatializer/comb.cpp spatializer/comb.hpp \
+    spatializer/denormals.h spatializer/denormals.c \
+    spatializer/tuning.h \
+    spatializer/revmodel.cpp spatializer/revmodel.hpp \
+    spatializer/spatializer.cpp
+
+# Channel mixers
+libtrivial_channel_mixer_plugin_la_SOURCES := channel_mixer/trivial.c
+libsimple_channel_mixer_plugin_la_SOURCES := channel_mixer/simple.c
+libheadphone_channel_mixer_plugin_la_SOURCES := channel_mixer/headphone.c
+libdolby_channel_mixer_plugin_la_SOURCES := channel_mixer/dolby.c
+libmono_plugin_la_SOURCES := channel_mixer/mono.c
+libremap_plugin_la_SOURCES := channel_mixer/remap.c
+
+# Converters
+#SOURCES_a52tospdif = converter/a52tospdif.c
+liba52tofloat32_plugin_la_SOURCES := converter/a52tofloat32.c
+#SOURCES_dtstospdif = converter/dtstospdif.c
+#SOURCES_dtstofloat32 = converter/dtstofloat32.c
+#libmpgatofixed32_plugin_la_SOURCES := converter/mpgatofixed32.c
+libaudio_format_plugin_la_SOURCES := converter/format.c
+#libaudio_format_plugin_la_CPPFLAGS = $(AM_CPPFLAGS)
+#libaudio_format_plugin_la_LIBADD = $(LIBM)
+
+# Resamplers
+libugly_resampler_plugin_la_SOURCES := resampler/ugly.c \
+                                       resampler/bandlimited.c
+
+###############################################################################
+# ugly_resampler plugin
+include $(CLEAR_VARS)
+MODULE_NAME := ugly_resampler
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME)
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS)
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET)
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# audio_format plugin
+include $(CLEAR_VARS)
+MODULE_NAME := audio_format
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+################################################################################
+# a52tofloat32 plugin
+#include $(CLEAR_VARS)
+#MODULE_NAME := a52tofloat32
+#MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+#AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+#LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+#LOCAL_ARM_MODE := arm
+#LOCAL_MODULE := $(MODULE_TARGET) 
+#LOCAL_PRELINK_MODULE := false
+#LOCAL_MODULE_TAGS := optional
+#LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+#LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include \
+					$(LOCAL_PATH)/../../third-party/include
+#include $(BUILD_STATIC_LIBRARY)
+
+################################################################################
+# remap plugin
+include $(CLEAR_VARS)
+MODULE_NAME := remap
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# mono plugin
+include $(CLEAR_VARS)
+MODULE_NAME := mono
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# dolby_chanel_mixer plugin
+include $(CLEAR_VARS)
+MODULE_NAME := dolby_channel_mixer
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# headphone_chanel_mixer plugin
+include $(CLEAR_VARS)
+MODULE_NAME := headphone_channel_mixer
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# simple_channel_mixer plugin
+include $(CLEAR_VARS)
+MODULE_NAME := simple_channel_mixer
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME)
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS)
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET)
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# trivial_chanel_mixer plugin
+include $(CLEAR_VARS)
+MODULE_NAME := trivial_channel_mixer
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME)
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS)
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET)
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# spatializer plugin
+include $(CLEAR_VARS)
+MODULE_NAME := spatializer
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include $(LOCAL_PATH)/spatializer
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# stereo_widen plugin
+include $(CLEAR_VARS)
+MODULE_NAME := stereo_widen
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# chorus_flanger plugin
+include $(CLEAR_VARS)
+MODULE_NAME := chorus_flanger
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# scaletempo plugin
+include $(CLEAR_VARS)
+MODULE_NAME := scaletempo
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# param_eq plugin
+include $(CLEAR_VARS)
+MODULE_NAME := param_eq
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# audiobargraph plugin
+include $(CLEAR_VARS)
+MODULE_NAME := audiobargraph
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# gain plugin
+include $(CLEAR_VARS)
+MODULE_NAME := gain
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# normvol plugin
+include $(CLEAR_VARS)
+MODULE_NAME := normvol
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# karaoke plugin
+include $(CLEAR_VARS)
+MODULE_NAME := karaoke
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+###############################################################################
+# compressor plugin
+include $(CLEAR_VARS)
+MODULE_NAME := compressor
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
+
+
+###############################################################################
+# equalizer plugin
+include $(CLEAR_VARS)
+MODULE_NAME := equalizer
+MODULE_TARGET := libvlc_plugin_$(MODULE_NAME)
+AM_CPPFLAGS := -DMODULE_STRING=\"$(MODULE_NAME)\" -DMODULE_NAME=$(MODULE_NAME) 
+LOCAL_CFLAGS := $(DEFS) $(VLC_CFLAGS) $(VLC_CPPFLAGS) $(AM_CFLAGS) $(AM_CPPFLAGS) 
+LOCAL_ARM_MODE := arm
+LOCAL_MODULE := $(MODULE_TARGET) 
+LOCAL_PRELINK_MODULE := false
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(lib$(MODULE_NAME)_plugin_la_SOURCES)
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+include $(BUILD_STATIC_LIBRARY)
